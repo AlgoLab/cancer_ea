@@ -1,3 +1,3 @@
-# cancer_gp
+# Cancer Phylogeny via genetic programming
 
 cancer phylogeny genetic programming
