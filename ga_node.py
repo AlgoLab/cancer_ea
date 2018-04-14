@@ -1,12 +1,13 @@
-# -*- coding: utf-8 -*-
+# Nodes of the GA Tree
 """
 Created on Thu Apr 12 11:44:04 2018
 
 @author: vlado.filipovic
 """
 
-# Nodes of the GP Tree
 from anytree import NodeMixin, RenderTree
+from bitstring import BitArray
+
 
 class GaNodeInfo(object):
     typeDescription = "GaNodeInfo"
@@ -23,7 +24,7 @@ class GaNode(GaNodeInfo, NodeMixin):  # Add Node feature
     def printGaSubtree( self, endS = '\n'):
         for pre, _, node in RenderTree(self):
             treestr = u"%s%s" % (pre, node.nodeLabel)
-            print(treestr.ljust(8), bin(node.binaryTag))
+            print(treestr.ljust(8), node.binaryTag.bin )
         print(end=endS);
     
      

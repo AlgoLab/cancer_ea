@@ -4,8 +4,9 @@ cancer phylogeny genetic programming
 
 Following Python libraries are used in this implementation:
 
-DEAP - https://github.com/deap/deap
+DEAP -      https://github.com/deap/deap
 
-anytree - http://anytree.readthedocs.io/en/2.4.3/index.html
+anytree -   http://anytree.readthedocs.io/en/2.4.3/index.html
 
-bitsting - https://github.com/scott-griffiths/bitstring 
+bitsting -  https://github.com/scott-griffiths/bitstring 
+            https://pypi.python.org/pypi/bitstring/3.1.3 
