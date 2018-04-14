@@ -34,20 +34,25 @@ if not first_re.match(args[0]):
 if options.debug:
     print("Input file name is: ", args[0])
 fileInput = open(args[0], 'r')
-linija = fileInput.readline()
-labelsMutation = linija.split()
+textLine = fileInput.readline().strip()
+while textLine.startswith("//") or textLine.startswith(";"):
+    textLine = fileInput.readline()
+labelsMutation = textLine.split()
 if options.debug:
     print("Mutation labels (from input):\n", labelsMutation)
     
 i = 1
-linija=fileInput.readline().strip()
+textLine=fileInput.readline().strip()
 reads = [];
-while linija!="":
-    bitovi = linija.replace(" ", "")
-    ba = BitArray(bin = bitovi)
+while textLine!="":
+    if textLine.startswith("//") or textLine.startswith(";"):
+        textLine = fileInput.readline()
+        continue
+    bitLine = textLine.replace(" ", "")
+    ba = BitArray(bin = bitLine)
     readElem = ReadElement(i, ba)
     reads.append(readElem)
-    linija=fileInput.readline().strip()
+    textLine=fileInput.readline().strip()
     i= i+1
 if options.debug:
     print("Reads (from input):")

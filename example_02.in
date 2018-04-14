@@ -1,4 +1,6 @@
+// Labels of mutations
 a b c 
+// Reads
 0 1 1
 1 0 1
 1 1 0
