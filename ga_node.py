@@ -20,13 +20,18 @@ class GaNode(GaNodeInfo, NodeMixin):  # Add Node feature
         self.binaryTag = binaryTag
         self.parent = parent
 
-    # function for printing GP subtree
+    # function for printing GA subtree
     def printGaSubtree( self, endS = '\n'):
         for pre, _, node in RenderTree(self):
             treestr = u"%s%s" % (pre, node.nodeLabel)
             print(treestr.ljust(8), node.binaryTag.bin )
-        print(end=endS);
+        print(end=endS)
+        return
     
+    # function for adding child GA node
+    def attachAsChild( self, child):
+        child.parent = self
+        return
      
 
 

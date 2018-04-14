@@ -13,11 +13,19 @@ from ga_node import GaNode
 root = GaNode('--', BitArray(bin = '0110000001100000'))
 my1 = GaNode('A+', BitArray(bin = '0111000001100000'), parent=root)
 my2 = GaNode('B+', BitArray(bin='0110100001100000'), parent=root)
-# printing GP tree
+# printing GA tree
 root.printGaSubtree()
 # rearanginig nodes
 my2.parent = my1
-# printing GP tree
+# printing GA tree
 root.printGaSubtree()
+
+# creating new root node
+my3 = GaNode('C+', BitArray(bin='0110110001100000'))
+# rearanginig nodes
+root.attachAsChild(my3)
+# printing GA tree
+root.printGaSubtree()
+
 
 
