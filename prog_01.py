@@ -5,9 +5,10 @@ Created on Thu Apr 12 11:44:04 2018
 @author: vlado.filipovic
 """
 
-from bitstring import BitArray
 from ga_node import GaNode
+
 from read_element import ReadElement
+
 
 import sys, re, optparse
 
@@ -58,6 +59,21 @@ if options.debug:
     print("Reads (from input):")
     for x in reads:
         x.printElement();
+
+from deap import base
+from deap import creator
+from deap import tools
+
+creator.create("FitnessMax", base.Fitness, weights=(1.0,))
+creator.create("Individual", GaNode, fitness=creator.FitnessMax)
+
+toolbox = base.Toolbox()
+# Attribute generator 
+toolbox.register("attr_bool", random.randint, 0, 1)
+# Structure initializers
+toolbox.register("individual", tools.initRepeat, creator.Individual, 
+    toolbox.attr_bool, 100)
+toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
 
 
