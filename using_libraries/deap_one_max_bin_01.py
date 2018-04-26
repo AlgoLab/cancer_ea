@@ -1,21 +1,9 @@
-#    This file is part of DEAP.
-#
-#    DEAP is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Lesser General Public License as
-#    published by the Free Software Foundation, either version 3 of
-#    the License, or (at your option) any later version.
-#
-#    DEAP is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-#    GNU Lesser General Public License for more details.
-#
-#    You should have received a copy of the GNU Lesser General Public
-#    License along with DEAP. If not, see <http://www.gnu.org/licenses/>.
+"""
+This module contains an example how to use Deap for GA
+that solves one-max problem.
 
-
-#    example which maximizes the sum of a list of integers
-#    each of which can be 0 or 1
+Copied from deap repository on Thu Apr 12 11:44:04 2018
+"""
 
 import random
 
@@ -23,7 +11,9 @@ from deap import base
 from deap import creator
 from deap import tools
 
+# fitness
 creator.create("FitnessMax", base.Fitness, weights=(1.0,))
+# individual
 creator.create("Individual", list, fitness=creator.FitnessMax)
 
 toolbox = base.Toolbox()
@@ -67,7 +57,6 @@ toolbox.register("mutate", tools.mutFlipBit, indpb=0.05)
 # drawn randomly from the current generation.
 toolbox.register("select", tools.selTournament, tournsize=3)
 
-#----------
 
 def main():
     random.seed(64)
@@ -157,6 +146,9 @@ def main():
     
     best_ind = tools.selBest(pop, 1)[0]
     print("Best individual is %s, %s" % (best_ind, best_ind.fitness.values))
+    return
 
+# this means that if this script is executed, then 
+# main() will be executed
 if __name__ == "__main__":
     main()
