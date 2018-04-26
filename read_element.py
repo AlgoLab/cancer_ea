@@ -1,23 +1,43 @@
-# -*- coding: utf-8 -*-
 """
-Spyder Editor
+This module contains ReadInfo and ReadElement classes.
 
-This is a temporary script file.
+Created on Thu Apr 12 11:44:04 2018
+
+@author: vlado.filipovic
 """
-from bitstring import BitArray
+
 
 class ReadInfo(object):
+    """
+    Represents informations about reads.
+    """
     typeDescription = "ReadInfo"
 
 
 class ReadElement(ReadInfo):  
+    """
+    Represents one read.
+    """
     
-    def __init__(self, readLabel, binaryRead):
+    def __init__(self, read_label, binary_read):
+        """
+        Instance initialization.
+        """
         super(ReadInfo, self).__init__()
-        self.readLabel = readLabel
-        self.binaryRead = binaryRead
-        
-    def printElement(self, endS = '\n'):
-        print( self.readLabel, ": ", self.binaryRead.bin, end=endS)
+        self.read_label = read_label
+        self.binary_read = binary_read
+    
+    def __repr__(self):
+        """
+        Obtaining represetnation of the instance.
+        """
+        return "%s: %s" % (self.read_label, self.binary_read.bin)
+ 
+    def __str__(self):
+        """
+        Obtaining string representation of the instance.
+        """
+        return "%s: %s" % (self.read_label, self.binary_read.bin)
+           
         
     

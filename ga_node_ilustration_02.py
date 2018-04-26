@@ -1,24 +1,35 @@
-# -*- coding: utf-8 -*-
 """
+This module contains an example how to GA methods that uses Deap.
+
 Created on Thu Apr 12 11:44:04 2018
 
 @author: vlado.filipovic
 """
 
-from bitstring import BitArray
 from ga_node import GaNode
+from ga_node import init_ga_node_individual, mutation_ga_node
+
+import random
 
 
-# creating GA tree
-def initIndividual(ind_class, labels, size):
-    rootBitArray = BitArray(int = 0, length = size)
-    root = ind_class('--', rootBitArray)
-    root.initializeSubtree( labels, size)
-    return root;
-        
-x = initIndividual(GaNode, ['a','b','c','d','e'], 10)  
-x.printGaSubtree() 
+def main():
+    random.seed( 111133 )
+          
+    x = init_ga_node_individual(GaNode, ['a','b','c','d','e'], 10)  
+    x.tree_print() 
+    
+    y = init_ga_node_individual(GaNode, ['a','b','c','d','e'], 10)  
+    y.tree_print() 
+    
+    z = init_ga_node_individual(GaNode, ['a','b','c','d','e'], 10)  
+    z.tree_print() 
+    
+    mutation_ga_node(z)
+   
+    return
 
-
-
+# this means that if this script is executed, then 
+# main() will be executed
+if __name__ == '__main__':
+    main()
 
