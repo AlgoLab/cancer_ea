@@ -1,9 +1,7 @@
 """
-This module contains GaNodeInfo and GaNode classes.
+The :mod:`ga-node` module contains GaNodeInfo and GaNode classes.
 
-Created on Thu Apr 12 11:44:04 2018
-
-@author: vlado.filipovic
+GaNode class is an node of the mutation tree to be build and evaluated.
 """
 
 import random

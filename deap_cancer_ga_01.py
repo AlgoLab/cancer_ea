@@ -5,9 +5,6 @@ that solves problem we are dealing with.
 Example for command-line parameters:
 inputFile=example_01.in randomSeed=1113 --debug
 
-Created on Thu Apr 12 11:44:04 2018
-
-@author: vlado.filipovic
 """
 
 import optparse

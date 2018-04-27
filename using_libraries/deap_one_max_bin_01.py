@@ -2,7 +2,6 @@
 This module contains an example how to use Deap for GA
 that solves one-max problem.
 
-Copied from deap repository on Thu Apr 12 11:44:04 2018
 """
 
 import random

@@ -1,9 +1,6 @@
 """
 This module contains ReadInfo and ReadElement classes.
 
-Created on Thu Apr 12 11:44:04 2018
-
-@author: vlado.filipovic
 """
 
 

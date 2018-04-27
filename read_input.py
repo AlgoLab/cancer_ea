@@ -1,9 +1,6 @@
 """
 This module is used for reading input file.
 
-Created on Thu Apr 19 22:37:58 2018
-
-@author: vlado.filipovic
 """
 
 from bitstring import BitArray
