@@ -233,6 +233,17 @@ def assign_reads_to_tree( root, reads):
     """
     Assigns all the reads to the closest nodes in the tree,
     respectively.
+    
+    :param root: root of the tree to whose nodes reads should be assigned.
+    :param reads: list of the reads that should be assigned to various nodes 
+                  in the tree.
+    :returns: list that contains two components: 
+              1) list of the asignments  - list of pairs (node, read);
+              2) sum of the distances among reads and the closest nodes that
+                 are assigned to those reads respectively.
+    
+    This function uses the :func:`~GaNode.closest_node_in_tree` function 
+    from the :mod:`ga_node` module.
     """
     total_distance = 0
     complete_assignment = {}
