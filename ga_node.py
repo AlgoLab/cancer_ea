@@ -1,5 +1,5 @@
 """
-The :mod:`ga-node` module contains GaNodeInfo and GaNode classes.
+The :mod:`ga_node` module contains GaNodeInfo and GaNode classes.
 
 GaNode class is an node of the mutation tree to be build and evaluated.
 """
@@ -13,20 +13,23 @@ from collection_helpers import count, index_of, last_index_of
 from read_element import ReadElement
 
 class GaNodeInfo(object):
-    """
-    Information about nodes of the GA Tree.
+    """ Information about nodes of the GA Tree.
     """
     typeDescription = "GaNodeInfo"
 
 
 class GaNode(GaNodeInfo, NodeMixin): 
-    """
-    Node of the GA tree.
+    """ Node of the GA tree.
     """
     
     def __init__(self, node_label, binary_tag, parent=None):
-        """
-        Instance initialization.
+        """ Instance initialization.
+        
+         Args:
+            node_label (str): Parameter `node_label`represents the label of the 
+                node.
+            binary_tag (:BitArray): Parameter `binary_tag` represents the
+                binary number that is atached to node of the GaTree.
         """
         super(GaNodeInfo, self).__init__()
         self.node_label = node_label
@@ -34,8 +37,13 @@ class GaNode(GaNodeInfo, NodeMixin):
         self.parent = parent
 
     def __repr__(self):
-        """
-        Obtaining representation of the instance.
+        """ Obtaining representation of the instance.
+   
+        Representation of the node instance is the whole tree formed by the 
+        descendats of that nide instance.
+    
+        Returns:
+            str: Representation of the instance.
         """
         ret = ""
         for pre, _, node in RenderTree(self):
@@ -44,8 +52,13 @@ class GaNode(GaNodeInfo, NodeMixin):
         return ret
     
     def __str__(self):
-        """
-        Obtaining string representation of the instance.
+        """ Obtaining string representation of the instance.
+
+        String representation of the node instance is the whole tree formed by 
+        the descendats of that nide instance.
+
+        Returns:
+            str: String representation of the instance.
         """
         ret = ""
         for pre, _, node in RenderTree(self):
@@ -54,8 +67,11 @@ class GaNode(GaNodeInfo, NodeMixin):
         return ret
     
     def tree_print( self, endS = '\n'):
-        """
-        Function for printing GA tree.
+        """ Function for printing GA tree.
+
+         Args:
+            endS (str, optional): Parameter `endS` serve to decide what shuod be
+            printed at the end of the method.
         """
         for pre, _, node in RenderTree(self):
             treestr = u"%s%s " % (pre, node.node_label)
@@ -64,15 +80,17 @@ class GaNode(GaNodeInfo, NodeMixin):
         return
     
     def attach_child( self, child):
-        """
-        Function for adding child GA node.
+        """ Function for adding child GA node.
+
+         Args:
+            child (GaNode): Parameter `child` is a GaNode that shouls be 
+            attached as direct descendent of the current GaNode.
         """
         child.parent = self
         return
 
     def flip_node_label(self):
-        """
-        Flipping the label of the node.
+        """ Flipping the label of the node.
         """
         self.node_label = self.node_label.strip()
         if(self.node_label.endswith('+')):
@@ -82,8 +100,7 @@ class GaNode(GaNodeInfo, NodeMixin):
         return
 
     def tree_initialize(self, labels, size):
-        """
-        Initialization od the tree.
+        """ Initialization od the tree.
         """
         current_tree_size = 1
         probability_of_node_creation = 0.9
@@ -131,15 +148,13 @@ class GaNode(GaNodeInfo, NodeMixin):
         return
       
     def tree_compress_horizontal(self):
-        """
-        Horizontal compression od the tree.
+        """ Horizontal compression od the tree.
         """
         print( "Tree Compress horizontal" )
         return
         
     def tree_compress_vertical(self):
-        """
-        Vertical compression od the tree.
+        """ Vertical compression od the tree.
         """
         print( "Tree Compress vertical" )
         #for n in self.children:
@@ -158,8 +173,7 @@ class GaNode(GaNodeInfo, NodeMixin):
         return
  
     def children_set_binary_tags(self, labels):
-        """
-        Set binary tag of all children according to label.
+        """ Set binary tag of all children according to label.
         """
         for node in self.children:
             node.binary_tag.append( self.binary_tag )
@@ -180,40 +194,15 @@ class GaNode(GaNodeInfo, NodeMixin):
         return
 
     def tree_set_binary_tags(self, labels):
-        """
-        Set binary tag of all descendants according to node label.
+        """ Set binary tag of all descendants according to node label.
         """
         self.children_set_binary_tags(labels)
         for node in self.children:
             node.tree_set_binary_tags(labels)
         return
-
-    def children_set_binary_tags_hamming(self):
-        """
-        Set binary tag of all children according to Hamming distances.
-        """
-        last_pos_of_one= last_index_of( self.binary_tag, True)
-        if( last_pos_of_one == -1):
-            last_pos_of_one = 0
-        i = last_pos_of_one +1
-        for node in self.children:
-            node.binary_tag.append( self.binary_tag )
-            node.binary_tag.invert(i)
-            i = i+1
-        return
-
-    def tree_set_binary_tags_hamming(self):
-        """
-        Set binary tag of all descendants according to Hamming distances.
-        """
-        self.children_set_binary_tags_hamming()
-        for node in self.children:
-            node.tree_set_binary_tags_hamming()
-        return
     
     def closest_node_in_tree( self, read ):
-        """
-        Finds the closest node in the tree for the given read.
+        """ Finds the closest node in the tree for the given read.
         """
         closest = self
         closest_bit_array = self.binary_tag ^ read.binary_read 
@@ -234,16 +223,20 @@ def assign_reads_to_tree( root, reads):
     Assigns all the reads to the closest nodes in the tree,
     respectively.
     
-    :param root: root of the tree to whose nodes reads should be assigned.
-    :param reads: list of the reads that should be assigned to various nodes 
+     Args:
+         root (GaNode): root of the tree to whose nodes reads should be assigned.
+         reads (lst): list of the reads that should be assigned to various nodes 
                   in the tree.
-    :returns: list that contains two components: 
-              1) list of the asignments  - list of pairs (node, read);
-              2) sum of the distances among reads and the closest nodes that
-                 are assigned to those reads respectively.
+     
+    Returns:            
+        list that contains two components: 
+            1) list of the asignments  - list of pairs (node, read);
+            2) sum of the distances among reads and the closest nodes that
+            are assigned to those reads respectively.
     
-    This function uses the :func:`~GaNode.closest_node_in_tree` function 
-    from the :mod:`ga_node` module.
+    Note:
+        Function uses the func:`~GaNode.closest_node_in_tree` function 
+        from the :mod:`ga_node` module.
     """
     total_distance = 0
     complete_assignment = {}
@@ -255,8 +248,7 @@ def assign_reads_to_tree( root, reads):
     
     
 def init_ga_node_individual(ind_class, labels, size):
-    """
-    Initialization of the individual.
+    """ Initialization of the individual.
     """
     rootBitArray = BitArray(int = 0, length = len(labels) )
     root = ind_class('--', rootBitArray)
@@ -264,8 +256,7 @@ def init_ga_node_individual(ind_class, labels, size):
     return root
 
 def evaluation_ga_node(reads, individual):
-    """
-    evaluation of the individual.
+    """ Evaluation of the individual.
     """
     objection_value = 0
     for read in reads:
@@ -274,15 +265,13 @@ def evaluation_ga_node(reads, individual):
     return (objection_value,)    
 
 def crossover_ga_node(individual1, individual2):
-    """
-    Crossover between individual1 and individual2.
+    """ Crossover between individual1 and individual2.
     """
     print( "In crossover" )
     return (individual1, individual2)
 
 def mutation_ga_node(individual):
-    """
-    Mutatuion of the individual.
+    """ Mutatuion of the individual.
     """
     print( "In mutation" )
     #randomIndex = random.choice(individual.children)

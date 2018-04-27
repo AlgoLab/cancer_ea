@@ -1,5 +1,5 @@
 """
-This module contains helper functions for collection.
+The :mod:`collection_helpers` module contains  contains helper functions for collection.
 
 """
 
