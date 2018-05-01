@@ -1,5 +1,4 @@
-"""
-This module is used for reading input file.
+""" The :mod:`read_input` module is used for reading input file.
 
 """
 
@@ -9,8 +8,16 @@ from read_element import ReadElement
 
 
 def read_labels_reads(options, parameters):
-    """
-    Reads labels and reads from input.
+    """ Reads labels and reads from input.
+
+    Args:
+        options : Parameter `options` represents options of the execution.
+        parameters (:dictionary): Parameter `parameters` represents the 
+            execution parameters.
+ 
+    Returns:
+        tuple: A pair where first component is list of labels and second 
+            paramater is a list of :ReadElem objects.
     """
     fileInput = open(parameters['InputFile'], 'r')
     textLine = fileInput.readline().strip()

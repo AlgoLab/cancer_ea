@@ -1,5 +1,4 @@
-"""
-This module contains an example how to use bitstring
+""" This module contains an example how to use bitstring
 library.
 
 """
@@ -7,6 +6,8 @@ library.
 from bitstring import BitArray
 
 def main():
+    """ This function is an entry  point of the application.
+    """
     a = BitArray(bin='00101')
     b = BitArray(bin='10101')
     

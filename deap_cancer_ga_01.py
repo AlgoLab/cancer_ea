@@ -1,5 +1,4 @@
-"""
-This module contains an example how to use Deap for GA
+""" The :mod:`deap_cancer_ga_01` module contains an example how to use Deap for GA
 that solves problem we are dealing with.
 
 Example for command-line parameters:
@@ -18,12 +17,12 @@ from deap import tools
 from command_line import get_execution_parameters
 from read_input import read_labels_reads
 from ga_node import GaNode
-from ga_node import init_ga_node_individual, evaluation_ga_node, mutation_ga_node
-from ga_node import assign_reads_to_tree
+from ga_node_operators import init_ga_node_individual  
+from ga_node_operators import assign_reads_to_tree, evaluate_ga_node_individual
+from ga_node_operators import mutate_ga_node_individual
 
 def main():
-    """
-    This function is an entry  point of the application.
+    """ This function is an entry  point of the application.
     """
     # reading command-line argumets and options
     parser = optparse.OptionParser()
@@ -66,14 +65,14 @@ def main():
                      labels=labels, 
                      size=3 * len(labels))
     # registering mutation operator to toolbbox 
-    toolbox.register("mutate", mutation_ga_node)
+    toolbox.register("mutate", mutate_ga_node_individual)
     # registering population to toolbbox 
     toolbox.register("population", 
                      tools.initRepeat, 
                      list, 
                      toolbox.individual)
  
-    toolbox.register("evaluate", evaluation_ga_node, reads)
+    toolbox.register("evaluate", evaluate_ga_node_individual, reads)
 
     
     # creating one individual via toolbox

@@ -1,5 +1,5 @@
-"""
-This module contains an example how to use methods from GaNode class.
+""" The :mod:`ga_node_ilustration_01` module contains an example how to use 
+methods from GaNode class.
 
 """
 
@@ -9,6 +9,8 @@ from ga_node import GaNode
 
 
 def main():
+    """ This function is an entry  point of the application.
+    """
     # creating GA tree
     root = GaNode('--', BitArray(bin = '0110000001100000'))
     my1 = GaNode('A+', BitArray(bin = '0111000001100000'), parent=root)

@@ -1,5 +1,4 @@
-"""
-This module is used for obtaining execution paramteters.
+""" The :mod:`command_line` module is used for obtaining execution paramteters.
 
 """
 
@@ -7,9 +6,14 @@ import re
 
 
 def get_execution_parameters(options, args):
-    """
-    Obtains execution paramteters.
-    """
+    """  Obtains execution parameters.
+ 
+    Args:
+        options : Parameter `options` represents options of the execution.
+        args (:list): Parameter `args` represents the argument list.
+    Returns:
+        dictionary: Execution parameters.
+      """
     randomSeed_re = re.compile(r'[R|r]andom[S|s]eed=[0-9]+')
     inputFile_re = re.compile(r'[I|i]nput[F|f]ile=.*\.in')
 

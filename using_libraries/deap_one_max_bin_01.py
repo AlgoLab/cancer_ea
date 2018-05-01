@@ -1,5 +1,4 @@
-"""
-This module contains an example how to use Deap for GA
+""" This module contains an example how to use Deap for GA
 that solves one-max problem.
 
 """
@@ -58,6 +57,8 @@ toolbox.register("select", tools.selTournament, tournsize=3)
 
 
 def main():
+    """ This function is an entry  point of the application.
+    """
     random.seed(64)
 
     # create an initial population of 300 individuals (where

@@ -1,12 +1,11 @@
-"""
-The :mod:`collection_helpers` module contains  contains helper functions for collection.
+""" The :mod:`collection_helpers` module contains  contains helper functions 
+for collection.
 
 """
 
 
 def count(collection):
-    """
-    Helper function that count elements in collection.
+    """ Helper function that count elements in collection.
     """
     i=0
     for node in collection:
@@ -15,9 +14,9 @@ def count(collection):
 
 
 def index_of(collection, element, start=0):
-    """
-    Helper function that fids a postion of the element in collection
-    (from the begining toward end).
+    """ Helper function that fids a postion of the element in collection.
+    
+    Search in this fuction is executed from the begining toward end.
     """
     for i in range(start, collection.length):
         if( i < start ):
@@ -27,9 +26,9 @@ def index_of(collection, element, start=0):
     return -1
 
 def last_index_of(collection, element):
-    """
-    Helper function that fids a postion of the element in collection
-    (from the end toward begining).
+    """     Helper function that fids a postion of the element in collection.
+    
+    Search in this fuction is executed from the end toward begining.
     """
     for i in range(collection.length-1, -1, -1):
         if( collection[i]==element):

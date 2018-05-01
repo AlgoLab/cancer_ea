@@ -1,5 +1,4 @@
-"""
-This module contains an example how to use Deap for GA
+""" The :mod:`deap_cancer_ga_02` module contains an example how to use Deap for GA
 that solves problem we are dealing with.
 
 Example for command-line parameters:
@@ -20,12 +19,13 @@ from command_line import get_execution_parameters
 from read_input import read_labels_reads
 
 from ga_node import GaNode
-from ga_node import init_ga_node_individual, evaluation_ga_node 
-from ga_node import crossover_ga_node, mutation_ga_node
+from ga_node_operators import init_ga_node_individual  
+from ga_node_operators import evaluate_ga_node_individual
+from ga_node_operators import crossover_ga_node_individuals
+from ga_node_operators import mutate_ga_node_individual
 
 def main():
-    """
-    This function is an entry  point of the application.
+    """  This function is an entry  point of the application.
     """
     # reading command-line argumets and options
     parser = optparse.OptionParser()
@@ -79,16 +79,16 @@ def main():
  
     # register evaluation function
     toolbox.register("evaluate", 
-                     evaluation_ga_node, 
+                     evaluate_ga_node_individual, 
                      reads)
 
     # register the crossover operator
     toolbox.register("mate", 
-                     crossover_ga_node)
+                     crossover_ga_node_individuals)
     
     # register a mutation operator 
     toolbox.register("mutate", 
-                     mutation_ga_node)
+                     mutate_ga_node_individual)
      
     # operator for selecting individuals for breeding the next
     # generation: each individual of the current generation

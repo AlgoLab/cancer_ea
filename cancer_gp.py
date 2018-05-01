@@ -1,5 +1,4 @@
-"""
-This module is an entry  point of the application.
+"""  The :mod:`cancer_gp` module represents an entry  point of the application.
 
 Example for command-line parameters:
 inputFile=example_01.in randomSeed=1113 --debug
@@ -19,12 +18,11 @@ from command_line import get_execution_parameters
 from read_input import read_labels_reads
 
 from ga_node import GaNode
-from ga_node import init_ga_node_individual, evaluation_ga_node 
-from ga_node import crossover_ga_node, mutation_ga_node
+from ga_node_operators import init_ga_node_individual, evaluate_ga_node_individual 
+from ga_node_operators import crossover_ga_node_individuals, mutate_ga_node_individual
 
 def main():
-    """
-    This function is an entry  point of the application.
+    """ This function is an entry  point of the application.
     """
     # reading command-line argumets and options
     parser = optparse.OptionParser()
@@ -78,16 +76,16 @@ def main():
  
     # register evaluation function
     toolbox.register("evaluate", 
-                     evaluation_ga_node, 
+                     evaluate_ga_node_individual, 
                      reads)
 
     # register the crossover operator
     toolbox.register("mate", 
-                     crossover_ga_node)
+                     crossover_ga_node_individuals)
     
     # register a mutation operator 
     toolbox.register("mutate", 
-                     mutation_ga_node)
+                     mutate_ga_node_individual)
      
     # operator for selecting individuals for breeding the next
     # generation: each individual of the current generation
@@ -201,9 +199,6 @@ def main():
         print (pop)  
     best_ind = tools.selBest(pop, 1)[0]
     print("Best individual is\n%s\n, with fitness %s" % (best_ind, best_ind.fitness.values))
-
-
- 
     return
 
 # this means that if this script is executed, then 

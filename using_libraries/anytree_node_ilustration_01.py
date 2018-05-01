@@ -1,5 +1,4 @@
-"""
-This module contains an example how to use anytree
+""" This module contains an example how to use anytree
 library.
 
 """
@@ -8,6 +7,8 @@ from anytree import AnyNode, RenderTree
 
 
 def main():    
+    """ This function is an entry  point of the application.
+    """
     root = AnyNode(id="root")
     s0 = AnyNode(id="sub0", parent=root)
     s0b = AnyNode(id="sub0B", parent=s0, foo=4, bar=109)

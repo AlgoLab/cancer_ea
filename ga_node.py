@@ -70,7 +70,7 @@ class GaNode(GaNodeInfo, NodeMixin):
         """ Function for printing GA tree.
 
          Args:
-            endS (str, optional): Parameter `endS` serve to decide what shuod be
+            endS (str, optional): Parameter `endS` serve to decide what shuold be
             printed at the end of the method.
         """
         for pre, _, node in RenderTree(self):
@@ -90,7 +90,10 @@ class GaNode(GaNodeInfo, NodeMixin):
         return
 
     def flip_node_label(self):
-        """ Flipping the label of the node.
+        """ Function for flipping the label of the node.
+        
+        If node label is finished with '+', its last character  will be flipped 
+        to '-' and vice versa.
         """
         self.node_label = self.node_label.strip()
         if(self.node_label.endswith('+')):
@@ -100,7 +103,13 @@ class GaNode(GaNodeInfo, NodeMixin):
         return
 
     def tree_initialize(self, labels, size):
-        """ Initialization od the tree.
+        """ Function for initialization od the tree.
+        
+        Args:
+            labels (list): Parameter `labels`represents the list of the labels
+                that are given to nodes with sufix '+' or '-'.
+            size (:int): Parameter `size` represents nuber of the nodes in the 
+                tree.
         """
         current_tree_size = 1
         probability_of_node_creation = 0.9
@@ -149,12 +158,18 @@ class GaNode(GaNodeInfo, NodeMixin):
       
     def tree_compress_horizontal(self):
         """ Horizontal compression od the tree.
+        
+        Whenever there are two childs of the node that have the same label, tree
+        should be compresed.
         """
         print( "Tree Compress horizontal" )
         return
         
     def tree_compress_vertical(self):
         """ Vertical compression od the tree.
+  
+        Whenever there are parent and the child that have oposite labels, tree
+        should be compresed.
         """
         print( "Tree Compress vertical" )
         #for n in self.children:
@@ -174,6 +189,9 @@ class GaNode(GaNodeInfo, NodeMixin):
  
     def children_set_binary_tags(self, labels):
         """ Set binary tag of all children according to label.
+        
+        Binary tag represents which mutations are activated and which are not.
+        Hamming distance between binary tags of parent and child node should be 1.
         """
         for node in self.children:
             node.binary_tag.append( self.binary_tag )
@@ -195,6 +213,9 @@ class GaNode(GaNodeInfo, NodeMixin):
 
     def tree_set_binary_tags(self, labels):
         """ Set binary tag of all descendants according to node label.
+        
+        Binary tag represents which mutations are activated and which are not.
+        Hamming distance between binary tags of parent and child node should be 1.
         """
         self.children_set_binary_tags(labels)
         for node in self.children:
@@ -203,6 +224,9 @@ class GaNode(GaNodeInfo, NodeMixin):
     
     def closest_node_in_tree( self, read ):
         """ Finds the closest node in the tree for the given read.
+        
+        Node is the closest according to metrics that is induced with Hamming
+        distance.
         """
         closest = self
         closest_bit_array = self.binary_tag ^ read.binary_read 
@@ -218,61 +242,3 @@ class GaNode(GaNodeInfo, NodeMixin):
 
 
 
-def assign_reads_to_tree( root, reads):
-    """
-    Assigns all the reads to the closest nodes in the tree,
-    respectively.
-    
-     Args:
-         root (GaNode): root of the tree to whose nodes reads should be assigned.
-         reads (lst): list of the reads that should be assigned to various nodes 
-                  in the tree.
-     
-    Returns:            
-        list that contains two components: 
-            1) list of the asignments  - list of pairs (node, read);
-            2) sum of the distances among reads and the closest nodes that
-            are assigned to those reads respectively.
-    
-    Note:
-        Function uses the func:`~GaNode.closest_node_in_tree` function 
-        from the :mod:`ga_node` module.
-    """
-    total_distance = 0
-    complete_assignment = {}
-    for read in reads:
-        (node, d) = root.closest_node_in_tree( read )
-        complete_assignment[read] = node
-        total_distance += d
-    return (complete_assignment, total_distance)    
-    
-    
-def init_ga_node_individual(ind_class, labels, size):
-    """ Initialization of the individual.
-    """
-    rootBitArray = BitArray(int = 0, length = len(labels) )
-    root = ind_class('--', rootBitArray)
-    root.tree_initialize(labels, size)
-    return root
-
-def evaluation_ga_node(reads, individual):
-    """ Evaluation of the individual.
-    """
-    objection_value = 0
-    for read in reads:
-        (node, d) = individual.closest_node_in_tree( read )
-        objection_value += d
-    return (objection_value,)    
-
-def crossover_ga_node(individual1, individual2):
-    """ Crossover between individual1 and individual2.
-    """
-    print( "In crossover" )
-    return (individual1, individual2)
-
-def mutation_ga_node(individual):
-    """ Mutatuion of the individual.
-    """
-    print( "In mutation" )
-    #randomIndex = random.choice(individual.children)
-    return (individual,)
