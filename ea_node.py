@@ -99,6 +99,41 @@ class EaNode(EaNodeInfo, NodeMixin):
             self.node_label = self.node_label[:-1] + '+'
         return
 
+    def children_set_binary_tags(self, labels):
+        """ Set binary tag of all children according to label.
+        
+        Binary tag represents which mutations are activated and which are not.
+        Hamming distance between binary tags of parent and child node should be 1.
+        """
+        for node in self.children:
+            node.binary_tag.append( self.binary_tag )
+            current_label = node.node_label.strip()
+            bit = -1
+            if(current_label.endswith('+')):
+                bit = 1
+                current_label = current_label[:-1]
+            elif(current_label.endswith('-')): 
+                bit = 0
+                current_label = current_label[:-1]
+            if( bit != 1 and bit != 0):
+                continue
+            i = labels.index(current_label)
+            if( i == -1):
+                continue
+            node.binary_tag[i] = bit
+        return
+
+    def tree_set_binary_tags(self, labels):
+        """ Set binary tag of all descendants according to node label.
+        
+        Binary tag represents which mutations are activated and which are not.
+        Hamming distance between binary tags of parent and child node should be 1.
+        """
+        self.children_set_binary_tags(labels)
+        for node in self.children:
+            node.tree_set_binary_tags(labels)
+        return
+    
     def tree_initialize(self, labels, size):
         """ Function for initialization od the tree.
         
@@ -148,77 +183,9 @@ class EaNode(EaNodeInfo, NodeMixin):
                            break
                if( i > size ):
                     probability_of_node_creation *= 0.7
-        self.tree_compress_vertical()
-        self.tree_compress_horizontal()
         self.tree_set_binary_tags(labels)
         return
       
-    def tree_compress_horizontal(self):
-        """ Horizontal compression od the tree.
-        
-        Whenever there are two childs of the node that have the same label, tree
-        should be compresed.
-        """
-        print( "Tree Compress horizontal" )
-        return
-        
-    def tree_compress_vertical(self):
-        """ Vertical compression od the tree.
-  
-        Whenever there are parent and the child that have oposite labels, tree
-        should be compresed.
-        """
-        print( "Tree Compress vertical" )
-        #for n in self.children:
-        #    for c in n.children:
-        #        if( n.node_label[:-1] == c.node_label[:-1]):
-        #            for x in c.children:
-        #                x.parent = self
-        #for n1 in self.children:
-        #    for n2 in self.children:
-        #        if n1.node_label == n2.node_label and n1!=n2:
-        #            n2.parent = None
-        #            for c in n2.children:
-        #                c.parent = n1  
-        #for n in self.children:
-        #     n.compressTree()
-        return
- 
-    def children_set_binary_tags(self, labels):
-        """ Set binary tag of all children according to label.
-        
-        Binary tag represents which mutations are activated and which are not.
-        Hamming distance between binary tags of parent and child node should be 1.
-        """
-        for node in self.children:
-            node.binary_tag.append( self.binary_tag )
-            current_label = node.node_label.strip()
-            bit = -1
-            if(current_label.endswith('+')):
-                bit = 1
-                current_label = current_label[:-1]
-            elif(current_label.endswith('-')): 
-                bit = 0
-                current_label = current_label[:-1]
-            if( bit != 1 and bit != 0):
-                continue
-            i = labels.index(current_label)
-            if( i == -1):
-                continue
-            node.binary_tag[i] = bit
-        return
-
-    def tree_set_binary_tags(self, labels):
-        """ Set binary tag of all descendants according to node label.
-        
-        Binary tag represents which mutations are activated and which are not.
-        Hamming distance between binary tags of parent and child node should be 1.
-        """
-        self.children_set_binary_tags(labels)
-        for node in self.children:
-            node.tree_set_binary_tags(labels)
-        return
-    
     def closest_node_in_tree( self, read ):
         """ Finds the closest node in the tree for the given read.
         
@@ -236,6 +203,8 @@ class EaNode(EaNodeInfo, NodeMixin):
                 closest_bit_array = current_bit_array
                 closest_distance = current_distance
         return (closest, closest_distance)
+
+ 
 
 
 
