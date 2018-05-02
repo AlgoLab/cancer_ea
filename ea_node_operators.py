@@ -1,5 +1,5 @@
-""" The :mod:`ga_node_operators` module contains ovolutionary operators
-for GaNode individuals.
+""" The :mod:`ea_node_operators` module contains ovolutionary operators
+for EaNode individuals.
 
 """
 
@@ -8,7 +8,7 @@ from anytree import NodeMixin, RenderTree, PostOrderIter
 from bitstring import BitArray
 
 from collection_helpers import count, index_of, last_index_of
-from ga_node import GaNode
+from ea_node import EaNode
 
 
 def assign_reads_to_tree( root, reads):
@@ -39,7 +39,7 @@ def assign_reads_to_tree( root, reads):
     return (complete_assignment, total_distance)    
     
     
-def init_ga_node_individual(ind_class, labels, size):
+def init_ea_node_individual(ind_class, labels, size):
     """ Initialization of the individual.
     Args:
         ind_class: class of the individual to be initialized.
@@ -54,7 +54,7 @@ def init_ga_node_individual(ind_class, labels, size):
     root.tree_initialize(labels, size)
     return root
 
-def evaluate_ga_node_individual(reads, individual):
+def evaluate_ea_node_individual(reads, individual):
     """ Evaluation of the individual.
 
     Args:
@@ -72,7 +72,7 @@ def evaluate_ga_node_individual(reads, individual):
         objection_value += d
     return (objection_value,)    
 
-def crossover_ga_node_individuals(individual1, individual2):
+def crossover_ea_node_individuals(individual1, individual2):
     """ Crossover between individual1 and individual2.
     
     Args:
@@ -86,7 +86,7 @@ def crossover_ga_node_individuals(individual1, individual2):
     print( "In crossover" )
     return (individual1, individual2)
 
-def mutate_ga_node_individual(individual):
+def mutate_ea_node_individual(individual):
     """ Mutatuion of the individual.
 
     Args:

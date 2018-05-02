@@ -15,7 +15,7 @@ class ReadElement(ReadInfo):
     """
     
     def __init__(self, read_label, binary_read):
-       """ Instance initialization.
+        """ Instance initialization.
         
          Args:
             read_label (str): Parameter `read_label`represents the label of the 

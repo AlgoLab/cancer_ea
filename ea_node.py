@@ -1,7 +1,7 @@
 """
-The :mod:`ga_node` module contains GaNodeInfo and GaNode classes.
+The :mod:`ea_node` module contains EaNodeInfo and EaNode classes.
 
-GaNode class is an node of the mutation tree to be build and evaluated.
+EaNode class is an node of the mutation tree to be build and evaluated.
 """
 
 import random
@@ -9,17 +9,14 @@ import random
 from anytree import NodeMixin, RenderTree, PostOrderIter
 from bitstring import BitArray
 
-from collection_helpers import count, index_of, last_index_of
-from read_element import ReadElement
-
-class GaNodeInfo(object):
-    """ Information about nodes of the GA Tree.
+class EaNodeInfo(object):
+    """ Information about nodes of the EA Tree.
     """
     typeDescription = "GaNodeInfo"
 
 
-class GaNode(GaNodeInfo, NodeMixin): 
-    """ Node of the GA tree.
+class EaNode(EaNodeInfo, NodeMixin): 
+    """ Node of the tree that is used in evolutionary algorithm.
     """
     
     def __init__(self, node_label, binary_tag, parent=None):
@@ -31,7 +28,7 @@ class GaNode(GaNodeInfo, NodeMixin):
             binary_tag (:BitArray): Parameter `binary_tag` represents the
                 binary number that is atached to node of the GaTree.
         """
-        super(GaNodeInfo, self).__init__()
+        super(EaNodeInfo, self).__init__()
         self.node_label = node_label
         self.binary_tag = binary_tag
         self.parent = parent
@@ -118,7 +115,7 @@ class GaNode(GaNodeInfo, NodeMixin):
                    # create new leaf node
                    label_to_insert = random.choice( labels ) + '+'
                    leaf_bit_array = BitArray()
-                   leaf = GaNode(label_to_insert, leaf_bit_array)
+                   leaf = EaNode(label_to_insert, leaf_bit_array)
                    # find the parent of the leaf node
                    position = random.randint(0, current_tree_size)
                    if( position == 0):

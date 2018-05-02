@@ -16,10 +16,11 @@ from deap import tools
 
 from command_line import get_execution_parameters
 from read_input import read_labels_reads
-from ga_node import GaNode
-from ga_node_operators import init_ga_node_individual  
-from ga_node_operators import assign_reads_to_tree, evaluate_ga_node_individual
-from ga_node_operators import mutate_ga_node_individual
+from ea_node import EaNode
+from ea_node_operators import init_ea_node_individual  
+from ea_node_operators import assign_reads_to_tree 
+from ea_node_operators import evaluate_ea_node_individual
+from ea_node_operators import mutate_ea_node_individual
 
 def main():
     """ This function is an entry  point of the application.
@@ -51,7 +52,7 @@ def main():
     # creating fitness function
     creator.create("FitnessMax", base.Fitness, weights=(1.0,))
     # creating strucute of the individual
-    creator.create("Individual", GaNode, fitness=creator.FitnessMax)
+    creator.create("Individual", EaNode, fitness=creator.FitnessMax)
     
     # creating toolbox for execution of the genetic algorithm
     toolbox = base.Toolbox()
@@ -60,19 +61,19 @@ def main():
     toolbox.register("attr_bool", random.randint, 0, 1)
     # registering individual creation to toolbbox 
     toolbox.register("individual", 
-                     init_ga_node_individual, 
+                     init_ea_node_individual, 
                      creator.Individual, 
                      labels=labels, 
                      size=3 * len(labels))
     # registering mutation operator to toolbbox 
-    toolbox.register("mutate", mutate_ga_node_individual)
+    toolbox.register("mutate", mutate_ea_node_individual)
     # registering population to toolbbox 
     toolbox.register("population", 
                      tools.initRepeat, 
                      list, 
                      toolbox.individual)
  
-    toolbox.register("evaluate", evaluate_ga_node_individual, reads)
+    toolbox.register("evaluate", evaluate_ea_node_individual, reads)
 
     
     # creating one individual via toolbox
@@ -83,10 +84,10 @@ def main():
     
     # testing if created individual is inherited from GaMode
     # and printing output
-    if(issubclass(type(test_ind), GaNode)):
-        print( "Class Individual is sublass of class GaNode")
+    if(issubclass(type(test_ind), EaNode)):
+        print( "Class Individual is sublass of class EaNode")
     else:
-        print( "Class Individual is NOT sublass of class GaNode")
+        print( "Class Individual is NOT sublass of class EaNode")
     
     # setting fitness of the individual
     test_ind.fitness.values = (12, 0)

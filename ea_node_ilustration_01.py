@@ -1,20 +1,20 @@
-""" The :mod:`ga_node_ilustration_01` module contains an example how to use 
-methods from GaNode class.
+""" The :mod:`ea_node_ilustration_01` module contains an example how to use 
+methods from EaNode class.
 
 """
 
 from bitstring import BitArray
 
-from ga_node import GaNode
+from ea_node import EaNode
 
 
 def main():
     """ This function is an entry  point of the application.
     """
     # creating GA tree
-    root = GaNode('--', BitArray(bin = '0110000001100000'))
-    my1 = GaNode('A+', BitArray(bin = '0111000001100000'), parent=root)
-    my2 = GaNode('B+', BitArray(bin='0110100001100000'), parent=root)
+    root = EaNode('--', BitArray(bin = '0110000001100000'))
+    my1 = EaNode('A+', BitArray(bin = '0111000001100000'), parent=root)
+    my2 = EaNode('B+', BitArray(bin='0110100001100000'), parent=root)
     # printing GA tree
     root.tree_print()
     # rearanginig nodes
@@ -23,7 +23,7 @@ def main():
     root.tree_print()
     
     # creating new root node
-    my3 = GaNode('C+', BitArray(bin='0110110001100000'))
+    my3 = EaNode('C+', BitArray(bin='0110110001100000'))
     # rearanginig nodes
     root.attach_child(my3)
     # printing GA tree

@@ -17,9 +17,11 @@ from deap import tools
 from command_line import get_execution_parameters
 from read_input import read_labels_reads
 
-from ga_node import GaNode
-from ga_node_operators import init_ga_node_individual, evaluate_ga_node_individual 
-from ga_node_operators import crossover_ga_node_individuals, mutate_ga_node_individual
+from ea_node import EaNode
+from ea_node_operators import init_ea_node_individual
+from ea_node_operators import evaluate_ea_node_individual 
+from ea_node_operators import crossover_ea_node_individuals
+from ea_node_operators import mutate_ea_node_individual
 
 def main():
     """ This function is an entry  point of the application.
@@ -37,7 +39,7 @@ def main():
     if(options.debug or options.verbose):
         print("Execution parameters: ", parameters);
     
-    # seeding random process
+    # setting random seed
     if( not options.randomized ):
         random.seed(parameters['RandomSeed'])
      
@@ -53,7 +55,7 @@ def main():
     creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
    
     # create strucute of the individual
-    creator.create("Individual", GaNode, fitness=creator.FitnessMin)
+    creator.create("Individual", EaNode, fitness=creator.FitnessMin)
     
     # create toolbox for execution of the genetic algorithm
     toolbox = base.Toolbox()
@@ -63,7 +65,7 @@ def main():
 
     # register individual creation to toolbbox 
     toolbox.register("individual", 
-                     init_ga_node_individual, 
+                     init_ea_node_individual, 
                      creator.Individual, 
                      labels=labels, 
                      size=2 * len(labels))
@@ -76,16 +78,16 @@ def main():
  
     # register evaluation function
     toolbox.register("evaluate", 
-                     evaluate_ga_node_individual, 
+                     evaluate_ea_node_individual, 
                      reads)
 
     # register the crossover operator
     toolbox.register("mate", 
-                     crossover_ga_node_individuals)
+                     crossover_ea_node_individuals)
     
     # register a mutation operator 
     toolbox.register("mutate", 
-                     mutate_ga_node_individual)
+                     mutate_ea_node_individual)
      
     # operator for selecting individuals for breeding the next
     # generation: each individual of the current generation
