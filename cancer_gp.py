@@ -103,8 +103,8 @@ def main():
                      tools.selTournament, 
                      tournsize=3)
 
-    # create an initial population, where each individual is a GaTree
-    population_size = 5
+    # create an initial population, where each individual is a tree
+    population_size = int(parameters['PopulationSize'])
     pop = toolbox.population(n=population_size)
     if( options.verbose):
         print("Population (size %d) - initial\n"%len(pop))

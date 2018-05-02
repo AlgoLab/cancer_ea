@@ -17,12 +17,12 @@ def get_execution_parameters(options, args):
     parameters = {'InputFile': 'XXX.in', 
                   'InputFormat': 'in',
                   'RandomSeed': -1,
-                  'PopulationaSize': 5}
+                  'PopulationSize': 5}
 
     if len(args) == 0:
-        raise ValueError("Usage:\n" + usage_explanation(parameters))
+        raise ValueError("Error!\nCommand line parameters:\n" + usage_explanation(parameters))
     if len(args) > 300:
-        raise ValueError("Usage:\n" + usage_explanation(parameters))
+        raise ValueError("Error!\nCommand line parameters:\n" + usage_explanation(parameters))
 
     if options.debug:
         print( 'option debug is activated')
@@ -33,7 +33,7 @@ def get_execution_parameters(options, args):
     else:
         print( 'option verbose is deactivated')           
     if options.debug or options.verbose:
-       print("Command-line parameters are:", end=' ')
+       print("Command-line parameters:", end=' ')
        for arg in args:
            print( arg, end = ' ')
        print()     
@@ -78,9 +78,9 @@ def usage_explanation(parameters):
     """
     ret = ""
     ret += "InputFile=<file_name>\t(mandatory, string) \n"
-    ret += "InputFormat=<format>\t(optional, string - default value for that is " + parameters['InputFormat'] + ")\n"
-    ret += "RandomSeed=<seed_value>\t(optional, integer - default value for that is " + parameters['RandomSeed'] + ")\n"
+    ret += "InputFormat=<format>\t(optional, string - default value: '" + parameters['InputFormat'] + "')\n"
+    ret += "RandomSeed=<seed_value>\t(optional, integer - default value: " + str(parameters['RandomSeed']) + ")\n"
     ret += "\t Note: if parameter RandomSeed is negative, random number sequence will start with current time\n"
-    ret += "PopulationaSize=<size>\t(optional, integer - default value for that is " + parameters['PopulationaSize'] + ")\n"
+    ret += "PopulationaSize=<size>\t(optional, integer - default value: '" + str(parameters['PopulationaSize']) + "')\n"
     return ret
     
