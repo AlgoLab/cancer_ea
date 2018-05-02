@@ -16,7 +16,7 @@ from deap import tools
 
 
 from command_line import get_execution_parameters
-from read_input import read_labels_reads
+from read_input import read_labels_scrs_format_in
 
 from ea_node import EaNode
 from ea_node_operators import init_ea_node_individual  
@@ -32,7 +32,6 @@ def main():
     parser.set_defaults(debug=False,xls=False)
     parser.add_option('--debug', action='store_true', dest='debug')
     parser.add_option('--verbose', action='store_true', dest='verbose')
-    parser.add_option('--randomized', action='store_true', dest='randomized')
     (options, args) = parser.parse_args()
     
     # obtaining execution paramters
@@ -41,11 +40,11 @@ def main():
         print("Execution parameters: ", parameters);
     
     # seeding random process
-    if( not options.randomized ):
+    if( int(parameters['RandomSeed'])>0 ):
         random.seed(parameters['RandomSeed'])
      
     # reading read elements from input file
-    (labels, reads) = read_labels_reads(options, parameters)
+    (labels, reads) = read_labels_scrs_format_in(options, parameters)
     if(options.debug or options.verbose):
         print("Mutation labels:", labels);
         print("Reads (from input):")

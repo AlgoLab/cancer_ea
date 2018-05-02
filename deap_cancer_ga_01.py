@@ -15,10 +15,10 @@ from deap import creator
 from deap import tools
 
 from command_line import get_execution_parameters
-from read_input import read_labels_reads
+from read_input import read_labels_scrs_format_in
 from ea_node import EaNode
 from ea_node_operators import init_ea_node_individual  
-from ea_node_operators import assign_reads_to_tree 
+from ea_node_operators import assign_reads_to_ea_tree 
 from ea_node_operators import evaluate_ea_node_individual
 from ea_node_operators import mutate_ea_node_individual
 
@@ -29,7 +29,7 @@ def main():
     parser = optparse.OptionParser()
     parser.set_defaults(debug=False,xls=False)
     parser.add_option('--debug', action='store_true', dest='debug')
-    parser.add_option('--randomized', action='store_true', dest='randomized')
+    parser.add_option('--verbose', action='store_true', dest='verbose')
     (options, args) = parser.parse_args()
     
     # obtaining execution paramters
@@ -38,11 +38,11 @@ def main():
         print("Execution parameters: ", parameters);
     
     # seeding random process
-    if( not options.randomized ):
+    if( int(parameters['RandomSeed'])>0 ):
         random.seed(parameters['RandomSeed'])
      
     # reading read elements from input file
-    (labels, reads) = read_labels_reads(options, parameters)
+    (labels, reads) = read_labels_scrs_format_in(options, parameters)
     if( options.debug):
         print("Mutatuion labels:", labels);
         print("Reads (from input):")
@@ -96,7 +96,7 @@ def main():
     toolbox.mutate(test_ind)
     
     # assign reads to nodes and calculate total distance
-    (assignment, diff) = assign_reads_to_tree(test_ind, reads)
+    (assignment, diff) = assign_reads_to_ea_tree(test_ind, reads)
     print(assignment)
     print( diff )    
     return

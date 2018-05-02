@@ -14,7 +14,7 @@ class ReadElement(ReadInfo):
     """ Represents one read.
     """
     
-    def __init__(self, read_label, binary_read):
+    def __init__(self, read_label, binary_read, unknown_read):
         """ Instance initialization.
         
          Args:
@@ -22,10 +22,13 @@ class ReadElement(ReadInfo):
                 read.
             binary_read (:BitArray): Parameter `binary_read` represents the
                 binary number that indicate which mutation occures.
+            unknown_read (:BitArray): Parameter `unknown_read` represents the
+                binary number that indicate position where read is unknown.
         """
         super(ReadInfo, self).__init__()
         self.read_label = read_label
         self.binary_read = binary_read
+        self.unknown_read = unknown_read
     
     def __repr__(self):
         """ Obtaining representation of the instance.
@@ -33,7 +36,7 @@ class ReadElement(ReadInfo):
         Returns:
             str: Representation of the instance.
         """
-        return "%s: %s" % (self.read_label, self.binary_read.bin)
+        return "%s: %s[%s]" % (self.read_label, self.binary_read.bin, self.unknown_read.bin)
  
     def __str__(self):
         """ Obtaining string representation of the instance.
@@ -41,7 +44,7 @@ class ReadElement(ReadInfo):
         Returns:
             str: String representation of the instance.
         """
-        return "%s: %s" % (self.read_label, self.binary_read.bin)
+        return "%s: %s[%s]" % (self.read_label, self.binary_read.bin, self.unknown_read.bin)
            
         
     

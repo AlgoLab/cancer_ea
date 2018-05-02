@@ -14,41 +14,73 @@ def get_execution_parameters(options, args):
     Returns:
         dictionary: Execution parameters.
       """
-    randomSeed_re = re.compile(r'[R|r]andom[S|s]eed=[0-9]+')
-    inputFile_re = re.compile(r'[I|i]nput[F|f]ile=.*\.in')
+    parameters = {'InputFile': 'XXX.in', 
+                  'InputFormat': 'in',
+                  'RandomSeed': -1,
+                  'PopulationaSize': 5}
+
+    if len(args) == 0:
+        raise ValueError("Usage:\n" + usage_explanation(parameters))
+    if len(args) > 300:
+        raise ValueError("Usage:\n" + usage_explanation(parameters))
 
     if options.debug:
         print( 'option debug is activated')
     else:
         print( 'option debug is deactivated')       
-    if options.randomized:
-        print ('option randomized is activated')
+    if options.verbose:
+        print ('option verbose is activated')
     else:
-        print( 'option randomized is deactivated')           
-    if options.debug:
+        print( 'option verbose is deactivated')           
+    if options.debug or options.verbose:
        print("Command-line parameters are:", end=' ')
        for arg in args:
            print( arg, end = ' ')
        print()     
-    if len(args) > 2:
-        raise ValueError("Too many command line arguments. Format: 'inputFile=XXX.in radnomSeed=999'.")
-    if len(args) <= 1:
-        raise ValueError("Too few command line arguments. Format: 'inputFile=XXX.in radnomSeed=999'.")  
     
-    parameters = {'InputFile': 'XXX.in', 'RandomSeed': 111}
-    if not randomSeed_re.match(args[0]) :
-        if not randomSeed_re.match(args[1]):
-            raise ValueError("There must be an argument: 'randomSeed=DDD', where 'DDD' is postitive integer.")
-        else:
-            parameters['RandomSeed'] = args[1].split('=')[1]
-    else:
-        parameters['RandomSeed'] = args[0].split('=')[1]
-    if not inputFile_re.match(args[0]):
-        if not inputFile_re.match(args[1]):
-            raise ValueError("There must be an argument: 'inputFile=XXX.in' where 'XXX' is file name.")
-        else:
-            parameters['InputFile'] = args[1].split('=')[1]
-    else:
-        parameters['InputFile'] = args[0].split('=')[1]
+    inputFile_re = re.compile(r'[I|i]nput[F|f]ile=.*\.in')
+    inputFormat_re = re.compile(r'[I|i]nput[F|f]ormat=.*')
+    randomSeed_re = re.compile(r'[R|r]andom[S|s]eed=[0-9]+')
+    populationSize_re = re.compile(r'[P|p]opulation[S|s]ize=[0-9]+')
+
+    inputFileIsSet = False
+    for arg in args:
+        if inputFile_re.match(arg):
+            parameters['InputFile'] = arg.split('=')[1]
+            parameters['InputFormat'] = parameters['InputFile'].split('.')[-1]
+            inputFileIsSet = True
+            break
+    if not inputFileIsSet:
+        raise ValueError("Usage:\n" + usage_explanation(parameters))
+
+    for arg in args:    
+        if inputFormat_re.match(arg) :
+            parameters['InputFormat'] = arg.split('=')[1]
+            break
+
+    for arg in args:    
+        if randomSeed_re.match(arg) :
+            parameters['RandomSeed'] = arg.split('=')[1]
+            break
+        
+    for arg in args:    
+        if populationSize_re.match(arg) :
+            parameters['PopulationSize'] = arg.split('=')[1]
+            break
+
     return parameters
  
+def usage_explanation(parameters):
+    """  Create ussage explanation text.
+ 
+    Args:
+        parameters : Parameter `papramters is a dictionary that` represents parameters of the execution.
+    """
+    ret = ""
+    ret += "InputFile=<file_name>\t(mandatory, string) \n"
+    ret += "InputFormat=<format>\t(optional, string - default value for that is " + parameters['InputFormat'] + ")\n"
+    ret += "RandomSeed=<seed_value>\t(optional, integer - default value for that is " + parameters['RandomSeed'] + ")\n"
+    ret += "\t Note: if parameter RandomSeed is negative, random number sequence will start with current time\n"
+    ret += "PopulationaSize=<size>\t(optional, integer - default value for that is " + parameters['PopulationaSize'] + ")\n"
+    return ret
+    

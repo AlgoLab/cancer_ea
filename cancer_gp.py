@@ -8,6 +8,7 @@ inputFile=example_01.in randomSeed=1113 --debug
 import optparse
 import random
 
+from datetime import datetime
 
 from deap import base
 from deap import creator
@@ -15,7 +16,7 @@ from deap import tools
 
 
 from command_line import get_execution_parameters
-from read_input import read_labels_reads
+from read_input import read_labels_scrs_format_in
 
 from ea_node import EaNode
 from ea_node_operators import init_ea_node_individual
@@ -31,7 +32,6 @@ def main():
     parser.set_defaults(debug=False,xls=False)
     parser.add_option('--debug', action='store_true', dest='debug')
     parser.add_option('--verbose', action='store_true', dest='verbose')
-    parser.add_option('--randomized', action='store_true', dest='randomized')
     (options, args) = parser.parse_args()
     
     # obtaining execution paramters
@@ -40,16 +40,22 @@ def main():
         print("Execution parameters: ", parameters);
     
     # setting random seed
-    if( not options.randomized ):
-        random.seed(parameters['RandomSeed'])
-     
+    if( int(parameters['RandomSeed']) > 0 ):
+        random.seed(int(parameters['RandomSeed']))
+    else:
+        random.seed(datetime.now())
+
     # reading read elements from input file
-    (labels, reads) = read_labels_reads(options, parameters)
-    if(options.debug or options.verbose):
-        print("Mutation labels:", labels);
-        print("Reads (from input):")
-        for x in reads:
-            print(x);
+    if( parameters['InputFormat'] == 'in' ):
+        (labels, reads) = read_labels_scrs_format_in(options, parameters)
+        if(options.debug or options.verbose):
+            print("Mutation labels:", labels);
+            print("Reads (from input):")
+            for x in reads:
+                print(x);
+    else:
+        print("Input format is not right.")
+        return
     
     # create fitness function
     creator.create("FitnessMin", base.Fitness, weights=(-1.0,))

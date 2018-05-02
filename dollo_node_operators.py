@@ -1,5 +1,5 @@
-""" The :mod:`ea_node_operators` module contains ovolutionary operators
-for EaNode individuals.
+""" The :mod:`dollo_node_operators` module contains ovolutionary operators
+for DolloNode individuals.
 
 """
 
@@ -7,15 +7,15 @@ from anytree import NodeMixin, RenderTree, PostOrderIter
 from bitstring import BitArray
 
 from collection_helpers import count, index_of, last_index_of
-from ea_node import EaNode
+from dollo_node import DolloNode
 
 
-def assign_reads_to_ea_tree( root, reads):
+def assign_reads_to_dollo_tree( root, reads):
     """ Assigns all the reads to the closest nodes in the tree,
     respectively.
     
     Args:
-         root (GaNode): root of the tree to whose nodes reads should be assigned.
+         root (DolloNode): root of the tree to whose nodes reads should be assigned.
          reads (list): list of the reads that should be assigned to various nodes 
                   in the tree.
      
@@ -38,7 +38,7 @@ def assign_reads_to_ea_tree( root, reads):
     return (complete_assignment, total_distance)    
     
     
-def init_ea_node_individual(ind_class, labels, size):
+def init_dollo_node_individual(ind_class, labels, size):
     """ Initialization of the individual.
     Args:
         ind_class: class of the individual to be initialized.
@@ -53,7 +53,7 @@ def init_ea_node_individual(ind_class, labels, size):
     root.tree_initialize(labels, size)
     return root
 
-def evaluate_ea_node_individual(reads, individual):
+def evaluate_dollo_node_individual(reads, individual):
     """ Evaluation of the individual.
 
     Args:
@@ -71,7 +71,7 @@ def evaluate_ea_node_individual(reads, individual):
         objection_value += d
     return (objection_value,)    
 
-def crossover_ea_node_individuals(individual1, individual2):
+def crossover_dollo_node_individuals(individual1, individual2):
     """ Crossover between individual1 and individual2.
     
     Args:
@@ -85,7 +85,7 @@ def crossover_ea_node_individuals(individual1, individual2):
     print( "In crossover" )
     return (individual1, individual2)
 
-def mutate_ea_node_individual(individual):
+def mutate_dollo_node_individual(individual):
     """ Mutatuion of the individual.
 
     Args:
