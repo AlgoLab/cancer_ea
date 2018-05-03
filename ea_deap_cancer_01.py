@@ -33,7 +33,11 @@ def main():
     (options, args) = parser.parse_args()
     
     # obtaining execution paramters
-    parameters = get_execution_parameters(options, args)
+    parameters = {'InputFile': 'XXX.in', 
+                  'InputFormat': 'in',
+                  'RandomSeed': -1,
+                  'PopulationSize': 5}
+    parameters = get_execution_parameters(options, args, parameters)
     if(options.debug):
         print("Execution parameters: ", parameters);
     

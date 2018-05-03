@@ -5,19 +5,17 @@
 import re
 
 
-def get_execution_parameters(options, args):
+def get_execution_parameters(options, args, parameters):
     """  Obtains execution parameters.
  
     Args:
+        parameters (:dictionary) : Parameter 'parameters' represent initial 
+            values of execution parameters
         options : Parameter `options` represents options of the execution.
         args (:list): Parameter `args` represents the argument list.
     Returns:
-        dictionary: Execution parameters.
+        dictionary: Execution parameters affter reading command line.
       """
-    parameters = {'InputFile': 'XXX.in', 
-                  'InputFormat': 'in',
-                  'RandomSeed': -1,
-                  'PopulationSize': 5}
 
     if len(args) == 0:
         raise ValueError("Error!\nCommand line parameters:\n" + usage_explanation(parameters))
