@@ -37,8 +37,13 @@ def main():
     # obtaining execution paramters
     parameters = {'InputFile': 'XXX.in', 
                   'InputFormat': 'in',
+                  'DolloK': 2,
+                  'Alpha': 0.35,
+                  'Beta': 0.005,
                   'RandomSeed': -1,
-                  'PopulationSize': 5}
+                  'PopulationSize': 5,
+                  'CrossoverProbability': 0.85,
+                  'MutationProbability': 0.05}
     parameters = get_execution_parameters(options, args, parameters)
     if(options.debug or options.verbose):
         print("Execution parameters: ", parameters);
@@ -53,8 +58,8 @@ def main():
     if( parameters['InputFormat'] == 'in' ):
         (labels, reads) = read_labels_scrs_format_in(options, parameters)
         if(options.debug or options.verbose):
-            print("Mutation labels:", labels);
-            print("Reads (from input):")
+            print("Mutation labels (from input file):\n", labels);
+            print("Reads[Unknowns] (from input file):")
             for x in reads:
                 print(x);
     else:
@@ -66,6 +71,8 @@ def main():
    
     # create strucute of the individual
     creator.create("Individual", DolloNode, fitness=creator.FitnessMin)
+    # parameter k in Dollo model
+    dollo_K = int(parameters['DolloK'])
     
     # create toolbox for execution of the genetic algorithm
     toolbox = base.Toolbox()
@@ -90,22 +97,30 @@ def main():
     toolbox.register("evaluate", 
                      evaluate_dollo_node_individual, 
                      reads)
+    # probability of false positives and false negatives
+    alpha = float(parameters['Alpha'])
+    beta = float(parameters['Beta'])
 
     # register the crossover operator
     toolbox.register("mate", 
                      crossover_dollo_node_individuals)
+    # probability with which two individuals are crossed
+    crossover_probability = float(parameters['CrossoverProbability'])
+       
     
     # register a mutation operator 
     toolbox.register("mutate", 
                      mutate_dollo_node_individual)
-     
+    # probability for mutating an individual
+    mutation_probability = float(parameters['MutationProbability'])
+ 
     # operator for selecting individuals for breeding the next
     # generation: each individual of the current generation
     # is replaced by the 'fittest' (best) of three individuals
     # drawn randomly from the current generation.
     toolbox.register("select", 
-                     tools.selTournament, 
-                     tournsize=3)
+                     tools.selTournamentFineGrained, 
+                     fgtournsize=3.5)
 
     # create an initial population, where each individual is a tree
     population_size = int(parameters['PopulationSize'])
@@ -114,15 +129,9 @@ def main():
         print("Population (size %d) - initial\n"%len(pop))
         print (pop)
  
-    # Probability with which two individuals are crossed
-    crossover_probability = 0.5
-       
-    # Probability for mutating an individual
-    mutation_probability = 0.2
-
     if( options.debug or options.verbose):
         print("Start of evolution")
- 
+    
     # Evaluate the entire population
     fitnesses = list(map(toolbox.evaluate, pop))
     if( options.debug):
@@ -190,9 +199,7 @@ def main():
         
         # The population is entirely replaced by the offspring
         pop[:] = offspring
-        
-        # Gather all the fitnesses in one list and print the stats
-        
+               
         # Check if any of finishing criteria is meet
         # Criteria based on number of generations
         if( generation > 10 ):

@@ -133,7 +133,92 @@ class EaNode(EaNodeInfo, NodeMixin):
         for node in self.children:
             node.tree_set_binary_tags(labels)
         return
-    
+
+    def children_compress_horizontal(self):
+        return
+ 
+    def tree_compress_horizontal(self):
+        """ Horizontal compression od the tree.
+        
+        Whenever there are two childs of the node that have the same label, tree
+        should be compresed.
+        """
+        print( "Tree Compress horizontal" )
+        return
+        
+    def tree_compress_vertical(self):
+        """ Vertical compression od the tree.
+  
+        Whenever there are parent and the child that have oposite labels, tree
+        should be compresed.
+        """
+        print( "Tree Compress vertical" )
+        #for n in self.children:
+        #    for c in n.children:
+        #        if( n.node_label[:-1] == c.node_label[:-1]):
+        #            for x in c.children:
+        #                x.parent = self
+        #for n1 in self.children:
+        #    for n2 in self.children:
+        #        if n1.node_label == n2.node_label and n1!=n2:
+        #            n2.parent = None
+        #            for c in n2.children:
+        #                c.parent = n1  
+        #for n in self.children:
+        #     n.compressTree()
+        return
+ 
+    def closest_node_in_tree_ignore_unknowns( self, read ):
+        """ Finds the closest node in the tree for the given read.
+        
+        Node is the closest according to metrics that is induced with Hamming
+        distance.
+        In this method, bitarry unknown_read within read element (that holds 
+        informations about unknown elements) is not consulted. 
+        """
+        closest = self
+        closest_bit_array = self.binary_tag ^ read.binary_read 
+        closest_distance = closest_bit_array.count(True)
+        for node in PostOrderIter(self):
+            current_bit_array = node.binary_tag ^ read.binary_read
+            current_distance = current_bit_array.count(True)
+            if( current_distance < closest_distance):
+                closest = node
+                closest_bit_array = current_bit_array
+                closest_distance = current_distance
+        return (closest, closest_distance)
+
+
+    def closest_node_in_tree( self, read ):
+        """ Finds the closest node in the tree for the given read.
+        
+        Node is the closest according to metrics that is induced with Hamming
+        distance.
+        This method consults informations about unknown reads (that are stored 
+        in bitarry unknown_read) within read element. 
+        """
+        len_r = read.binary_read.length
+        num_unc_r = read.unknown_read.count(True) 
+        weight = float(len_r-num_unc_r)/float(len_r)
+        closest = self
+        closest_bit_array = self.binary_tag ^ read.binary_read 
+        mask = read.unknown_read.copy()
+        mask.invert()
+        # print( "mask\t", mask )
+        closest_bit_array = closest_bit_array & mask
+        closest_distance = closest_bit_array.count(True)*weight
+        for node in PostOrderIter(self):
+            current_bit_array = node.binary_tag ^ read.binary_read
+            mask = read.unknown_read.copy()
+            mask.invert() 
+            current_bit_array &= mask
+            current_distance = current_bit_array.count(True)*weight
+            if( current_distance < closest_distance):
+                closest = node
+                closest_bit_array = current_bit_array
+                closest_distance = current_distance
+        return (closest, closest_distance)
+
     def tree_initialize(self, labels, size):
         """ Function for initialization od the tree.
         
@@ -185,26 +270,7 @@ class EaNode(EaNodeInfo, NodeMixin):
                     probability_of_node_creation *= 0.7
         self.tree_set_binary_tags(labels)
         return
-      
-    def closest_node_in_tree( self, read ):
-        """ Finds the closest node in the tree for the given read.
-        
-        Node is the closest according to metrics that is induced with Hamming
-        distance.
-        """
-        closest = self
-        closest_bit_array = self.binary_tag ^ read.binary_read 
-        closest_distance = closest_bit_array.count(True)
-        for node in PostOrderIter(self):
-            current_bit_array = node.binary_tag ^ read.binary_read
-            current_distance = current_bit_array.count(True)
-            if( current_distance < closest_distance):
-                closest = node
-                closest_bit_array = current_bit_array
-                closest_distance = current_distance
-        return (closest, closest_distance)
-
- 
+       
 
 
 
