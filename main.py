@@ -18,11 +18,11 @@ from deap import tools
 from command_line import get_execution_parameters
 from read_input import read_labels_scrs_format_in
 
-from ea_node import EaNode
-from ea_node_operators import init_ea_node_individual
-from ea_node_operators import evaluate_ea_node_individual 
-from ea_node_operators import crossover_ea_node_individuals
-from ea_node_operators import mutate_ea_node_individual
+from dollo_node import DolloNode
+from dollo_node_operators import init_dollo_node_individual
+from dollo_node_operators import evaluate_dollo_node_individual 
+from dollo_node_operators import crossover_dollo_node_individuals
+from dollo_node_operators import mutate_dollo_node_individual
 
 def main():
     """ This function is an entry  point of the application.
@@ -65,7 +65,7 @@ def main():
     creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
    
     # create strucute of the individual
-    creator.create("Individual", EaNode, fitness=creator.FitnessMin)
+    creator.create("Individual", DolloNode, fitness=creator.FitnessMin)
     
     # create toolbox for execution of the genetic algorithm
     toolbox = base.Toolbox()
@@ -75,7 +75,7 @@ def main():
 
     # register individual creation to toolbbox 
     toolbox.register("individual", 
-                     init_ea_node_individual, 
+                     init_dollo_node_individual, 
                      creator.Individual, 
                      labels=labels, 
                      size=2 * len(labels))
@@ -88,16 +88,16 @@ def main():
  
     # register evaluation function
     toolbox.register("evaluate", 
-                     evaluate_ea_node_individual, 
+                     evaluate_dollo_node_individual, 
                      reads)
 
     # register the crossover operator
     toolbox.register("mate", 
-                     crossover_ea_node_individuals)
+                     crossover_dollo_node_individuals)
     
     # register a mutation operator 
     toolbox.register("mutate", 
-                     mutate_ea_node_individual)
+                     mutate_dollo_node_individual)
      
     # operator for selecting individuals for breeding the next
     # generation: each individual of the current generation

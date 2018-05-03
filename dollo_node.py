@@ -11,7 +11,7 @@ from ea_node import EaNode
 from anytree import NodeMixin, RenderTree, PostOrderIter
 from bitstring import BitArray
 
-class DolloNodeInfo(EaNode):
+class DolloNode(EaNode):
     """ Information about nodes of the mutattion tree, according to Dollo model.
     """
 
@@ -25,7 +25,10 @@ class DolloNodeInfo(EaNode):
             binary_tag (:BitArray): Parameter `binary_tag` represents the
                 binary number that is atached to node of the GaTree.
         """
-        super( self, node_label, binary_tag).__init__()
+        super(EaNode, self).__init__()
+        self.node_label = node_label
+        self.binary_tag = binary_tag
+        self.parent = parent
 
     def tree_initialize(self, labels, size):
         """ Function for initialization od the tree.
