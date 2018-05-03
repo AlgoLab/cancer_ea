@@ -64,11 +64,12 @@ class EaNode(EaNodeInfo, NodeMixin):
         return ret
     
     def tree_print( self, endS = '\n'):
-        """ Function for printing GA tree.
+        """ Function for printing EA tree.
 
          Args:
-            endS (str, optional): Parameter `endS` serve to decide what shuold be
-            printed at the end of the method.
+            endS (str, optional): Parameter `endS` serve to decide what should be
+                printed at the end of the method. Default value of this 
+                parameter is new line.
         """
         for pre, _, node in RenderTree(self):
             treestr = u"%s%s " % (pre, node.node_label)
@@ -80,8 +81,8 @@ class EaNode(EaNodeInfo, NodeMixin):
         """ Function for adding child GA node.
 
          Args:
-            child (GaNode): Parameter `child` is a GaNode that shouls be 
-            attached as direct descendent of the current GaNode.
+            child (EaNode): Parameter `child` is a GaNode that shouls be 
+                attached as direct descendent of the current GaNode.
         """
         child.parent = self
         return
@@ -134,16 +135,103 @@ class EaNode(EaNodeInfo, NodeMixin):
             node.tree_set_binary_tags(labels)
         return
 
-    def children_compress_horizontal(self):
+    def tree_is_equal( self, another ):
+        """ Finds the first difference between self and another tree.
+
+        Args:
+            another (EaNode): Parameter `another` indicate root node of
+                another tree to be comaped for equility
+        
+        Returns:
+            Booelan: value that indicates if trees are equal.
+        """
+        if( another is None ):
+            return False
+        if( self.node_label != another.node_label):
+            return False
+        if( self.children is None and another.children is None ):
+            return True
+        if( self.children is None and not(another.children is None) ):
+            return False
+        if( not (self.children is None) and another.children is None ):
+            return False       
+        num_children = len(self.children)
+        a_num_children = len(another.children)
+        if( num_children != a_num_children):
+            return False
+        for i in range(0,num_children):
+            if( not self.children[i].tree_is_equal(another.children[i])):
+                return False
+        return True
+ 
+    def tree_rearange_by_label(self, ascending = True):
+        """ Rearange nodes of the tree so label of the sibbling nodes are 
+        sorted in given order.
+        
+        Args:
+            ascendinig (Boolean, optional): Parameter `ascending` indicade 
+                that nodes are aranged in ascending order, according to node 
+                label. Default value for this parameter is True.                 
+        """
+        if( self.children is None):
+            return
+        num_children = len(self.children)
+        ordered = []
+        for i in range(0,num_children):
+                if( ascending ):
+                    if(len(ordered) == 0):
+                        ordered.append( self.children[i] )
+                    else:
+                        j = 0
+                        while(j<len(ordered) and self.children[i].node_label>ordered[j].node_label):
+                            j+=1
+                        ordered.insert(j,self.children[i])
+                else:
+                    if(len(ordered) == 0):
+                        ordered.append(self.children[i] )
+                    else:
+                        j = 0
+                        while(j<len(ordered) and self.children[i].node_label<ordered[j].node_label):
+                            j+=1
+                        ordered.insert(j,self.children[i])
+        for x in ordered:
+            x.parent = None
+        for i in range(0,num_children):
+            self.attach_child(ordered[i])
+        for node in self.children:
+            node.tree_rearange_by_label(ascending)            
         return
+     
+   
+    def children_compress_horizontal(self):
+       """ Horizontal compression of the children (direct descendents).
+        
+       Whenever there are two childs of the node that have the same label, tree
+       should be compresed.
+       """
+       if( self.children is None):
+            return
+       num_children = len(self.children)
+       to_remove = []
+       for i in range(0,num_children):
+           for j in range(i+1, num_children):
+                if( not(i in to_remove) and self.children[i].node_label == self.children[j].node_label ):
+                    to_remove.append(j)
+                    for node in self.children[j].children:
+                        node.parent = self.children[i]
+       for i in to_remove:
+            self.children[i].parent = None
+       return
  
     def tree_compress_horizontal(self):
-        """ Horizontal compression od the tree.
+        """ Horizontal compression of the tree.
         
         Whenever there are two childs of the node that have the same label, tree
         should be compresed.
         """
-        print( "Tree Compress horizontal" )
+        self.children_compress_horizontal()
+        for node in self.children:
+            node.tree_compress_horizontal()
         return
         
     def tree_compress_vertical(self):
@@ -268,6 +356,7 @@ class EaNode(EaNodeInfo, NodeMixin):
                            break
                if( i > size ):
                     probability_of_node_creation *= 0.7
+        self.tree_rearange_by_label()
         self.tree_set_binary_tags(labels)
         return
        

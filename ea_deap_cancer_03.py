@@ -35,7 +35,18 @@ def main():
     (options, args) = parser.parse_args()
     
     # obtaining execution paramters
-    parameters = get_execution_parameters(options, args)
+    parameters = {'InputFile': 'XXX.in', 
+                  'InputFormat': 'in',
+                  'DolloK': 2,
+                  'Alpha': 0.35,
+                  'Beta': 0.005,
+                  'RandomSeed': -1,
+                  'PopulationSize': 5,
+                  'CrossoverProbability': 0.85,
+                  'MutationProbability': 0.05}
+
+    # obtaining execution paramters
+    parameters = get_execution_parameters(options, args, parameters)
     if(options.debug or options.verbose):
         print("Execution parameters: ", parameters);
     
