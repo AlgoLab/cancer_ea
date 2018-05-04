@@ -6,3 +6,82 @@
 '''
 
 # softwares
+_sasc_ = 'softwares/sasc/sasc'
+
+
+# parameters
+files = []
+alphas = [0.1]
+betas = [0.01]
+ks = [2]
+ds = [5]
+
+
+#
+# master rule
+#----------------------------------------------------------------------
+rule master :
+	input :
+		expand('{file}.sasc-a{alpha}-b{beta}-k{k}-d{d}.out',
+			file = files,
+			alpha = alphas,
+			beta = betas,
+			k = ks,
+			d = ds)
+
+
+#
+# install the softwares
+#----------------------------------------------------------------------
+
+# sasc
+sasc_files = 'mt19937ar sasc sastep tree utils vector'.split()
+rule download_sasc :
+	output : expand('softwares/sasc/{file}.c', file = sasc_files)
+	message : 'downloading sasc ...'
+	shell : '''
+
+   mkdir -p softwares
+   cd softwares
+   git clone https://github.com/sciccolella/sasc.git '''
+	
+rule install_sasc :
+	input : expand('softwares/sasc/{file}.c', file = sasc_files)
+	params :
+		std = 'gnu99',
+		debug = '-g'
+	output : _sasc_
+	message : 'installing sasc ...'
+	shell : 'gcc -o {output} {input} -std={params.std} {params.debug} -lm'
+
+
+#
+# run sasc
+#----------------------------------------------------------------------
+rule run_sasc :
+	input :
+		program = _sasc_,
+		matrix = '{file}.txt'
+
+	output : '{file}.sasc-a{alpha}-b{beta}-k{k}-d{del}.out'
+
+	log : '{file}.sasc-a{alpha}-b{beta}-k{k}-d{del}.log'
+
+	message : '''
+
+   running sasc ({input.program}) on
+   {input.matrix} with
+   alpha = {wildcards.alpha}, beta = {wildcards.beta},
+   k = {wildcards.k}, d = {wildcards.del} '''
+
+       	run :
+		with open(input.matrix) as M :
+			m = len(M.readline().split())
+			n = sum(1 for line in M)
+		shell('''
+
+   {input.program} -i {input.matrix} \
+      -n {n} -m {m} \
+      -a {wildcards.alpha} -b {wildcards.beta} \
+      -k {wildcards.k} -d {wildcards.del} \
+         > {output} 2> {log} ''')
