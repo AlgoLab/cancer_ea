@@ -12,7 +12,7 @@ from bitstring import BitArray
 class EaNodeInfo(object):
     """ Information about nodes of the EA Tree.
     """
-    typeDescription = "GaNodeInfo"
+    typeDescription = "EaNodeInfo"
 
 
 class EaNode(EaNodeInfo, NodeMixin): 

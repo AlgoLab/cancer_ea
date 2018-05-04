@@ -30,57 +30,133 @@ class DolloNode(EaNode):
         self.binary_tag = binary_tag
         self.parent = parent
 
-    def tree_initialize(self, labels, size):
+    def tree_initialize(self, labels, k):
         """ Function for initialization od the tree.
         
         Args:
             labels (list): Parameter `labels`represents the list of the labels
                 that are given to nodes with sufix '+' or '-'.
-            size (:int): Parameter `size` represents nuber of the nodes in the 
-                tree.
+            k (:int): Parameter `k` represents k parameter in Dollo model.
         """
+        plus_not_used = set(labels)
+        # print( "tree_initialize", plus_not_used)
+        minus_not_used = {"nothing":0}
+        for l in labels:
+            minus_not_used[l] = k
         current_tree_size = 1
-        probability_of_node_creation = 0.9
-        for i in range( 2 * size ):
-               if( random.random() < probability_of_node_creation):
-                   # create new leaf node
-                   label_to_insert = random.choice( labels ) + '+'
-                   leaf_bit_array = BitArray()
-                   leaf = EaNode(label_to_insert, leaf_bit_array)
-                   # find the parent of the leaf node
-                   position = random.randint(0, current_tree_size)
-                   if( position == 0):
-                       parent_of_leaf = self
+        max_size = int((1+k-random.random())*len(labels))  
+        i=1
+        while((i<= max_size) or len(plus_not_used )>0 ): 
+            i += 1
+            # determine which label should be inserted
+            label_to_insert = random.choice( labels ) 
+            # determine the position for parent of the leaf node
+            position = random.randint(0, current_tree_size)
+            if( position == 0):
+                parent_of_leaf = self
+            else:
+                j = 1
+                for node in PostOrderIter(self):
+                   if( j== position):
+                       parent_of_leaf = node
+                       break
                    else:
-                       j = 1
-                       for node in PostOrderIter(self):
-                           if( j== position):
-                               parent_of_leaf = node
-                               break
-                           else:
-                               j += 1    
-                   # attach leaf node
-                   parent_of_leaf.attach_child(leaf)
-                   # reverse node label, if necessary
-                   node = leaf.parent
-                   while( node.parent != None):
-                       if( leaf.node_label == node.node_label):
-                           leaf.flip_node_label()
-                           break
-                       if( leaf.node_label[:-1] == node.node_label[:-1]):
-                           break
-                       node = node.parent
-                   current_tree_size += 1 
-                   # delete leaf is label is duplicate within siblings
-                   for node in leaf.parent.children:
-                       if( node.node_label == leaf.node_label and node != leaf):
-                           leaf.parent = None;
-                           current_tree_size -= 1
-                           break
-               if( i > size ):
-                    probability_of_node_creation *= 0.7
+                       j += 1    
+            # check if newly added label is used so far
+            if( label_to_insert in plus_not_used ):
+                # if not, add plus node into tree
+                plus_not_used.discard(label_to_insert)
+                label_to_insert += "+"
+                # create new leaf node
+                leaf_bit_array = BitArray()
+                leaf = DolloNode(label_to_insert, leaf_bit_array)
+                # attach leaf node
+                parent_of_leaf.attach_child(leaf)
+                current_tree_size += 1
+                continue
+            # label is already used, so node can only be minus node
+            # check if minus node is avaliable for that label
+            placed_minus_node = False
+            iterations = 1
+            while(not placed_minus_node and iterations <= len(labels)):
+                if( minus_not_used[label_to_insert] <= 0 ):
+                    # next label should br tried
+                    ind = labels.index( label_to_insert )
+                    ind = (ind+1)%len(labels)
+                    label_to_insert = labels[ind]
+                    iterations +=1
+                    continue                
+                # check if minus node can be placed on this position
+                # it can be placed only if some of his ancesstors is relevant plus node
+                can_be_placed = False
+                anc = parent_of_leaf 
+                while(anc != self):
+                    if( anc.node_label == label_to_insert + '+'):
+                        can_be_placed = True
+                        break
+                    else:
+                        anc = anc.parent
+                if(not can_be_placed):
+                    # next label should br tried
+                    ind = labels.index( label_to_insert )
+                    ind = (ind+1)%len(labels)
+                    label_to_insert = labels[ind]
+                    iterations +=1
+                    continue
+                # check if minus node can be placed on this position
+                # it can be placed only if his parent is not is relevant plus node
+                can_be_placed = not (parent_of_leaf.node_label == label_to_insert + "+") 
+                if(not can_be_placed):
+                    # next label should br tried
+                    ind = labels.index( label_to_insert )
+                    ind = (ind+1)%len(labels)
+                    label_to_insert = labels[ind]
+                    iterations +=1
+                    continue
+                # check if minus node can be placed on this position
+                # it can be placed only if none his ancesstors is relevant minus node
+                can_be_placed = True
+                anc = parent_of_leaf 
+                while(anc != self):
+                    if( anc.node_label == label_to_insert + '-'):
+                        can_be_placed = False
+                        break
+                    else:
+                        anc = anc.parent
+                if(not can_be_placed):
+                    # next label should br tried
+                    ind = labels.index( label_to_insert )
+                    ind = (ind+1)%len(labels)
+                    label_to_insert = labels[ind]
+                    iterations +=1
+                    continue
+                # check if minus node can be placed on this position
+                # it can be placed only if label is not duplicate within children of parent
+                can_be_placed = True
+                for node in parent_of_leaf.children:
+                    if( node.node_label == label_to_insert):
+                        can_be_placed = False
+                        break
+                if( not can_be_placed):    
+                    # next label should br tried
+                    ind = labels.index( label_to_insert )
+                    ind = (ind+1)%len(labels)
+                    label_to_insert = labels[ind]
+                    iterations +=1
+                    continue
+                # adding minus node on specified position
+                minus_not_used[label_to_insert] -= 1
+                label_to_insert += "-"
+                # create new leaf node
+                leaf_bit_array = BitArray()
+                leaf = DolloNode(label_to_insert, leaf_bit_array)
+                # attach leaf node
+                parent_of_leaf.attach_child(leaf)
+                current_tree_size += 1
+                placed_minus_node = True 
         self.tree_compress_vertical()
         self.tree_compress_horizontal()
+        self.tree_rearange_by_label()
         self.tree_set_binary_tags(labels)
         return
       

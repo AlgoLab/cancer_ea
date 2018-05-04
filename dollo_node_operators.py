@@ -38,7 +38,7 @@ def assign_reads_to_dollo_tree( root, reads):
     return (complete_assignment, total_distance)    
     
     
-def init_dollo_node_individual(ind_class, labels, size):
+def init_dollo_node_individual(ind_class, labels, k):
     """ Initialization of the individual.
     Args:
         ind_class: class of the individual to be initialized.
@@ -46,11 +46,11 @@ def init_dollo_node_individual(ind_class, labels, size):
             be initialized.
         size(int): size of the tree that should be initialized.
     Returns: 
-        GaNode: individuak that is initialized.           
+        DolloNode: individuak that is initialized.           
     """
     rootBitArray = BitArray(int = 0, length = len(labels) )
     root = ind_class('--', rootBitArray)
-    root.tree_initialize(labels, size)
+    root.tree_initialize(labels, k)
     return root
 
 def evaluate_dollo_node_individual(reads, individual):
