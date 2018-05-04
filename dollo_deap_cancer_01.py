@@ -93,13 +93,14 @@ def main():
                      list, 
                      toolbox.individual)
  
-    # register evaluation function
-    toolbox.register("evaluate", 
-                     evaluate_dollo_node_individual, 
-                     reads)
     # probability of false positives and false negatives
     alpha = float(parameters['Alpha'])
     beta = float(parameters['Beta'])
+    # register evaluation function
+    toolbox.register("evaluate", 
+                     evaluate_dollo_node_individual, 
+                     reads,
+                     alpha)
 
     # register the crossover operator
     toolbox.register("mate", 
