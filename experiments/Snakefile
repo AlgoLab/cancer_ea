@@ -10,7 +10,7 @@ _sasc_ = 'softwares/sasc/sasc'
 
 
 # parameters
-files = []
+files = ['pat4']
 alphas = [0.1]
 betas = [0.01]
 ks = [2]
