@@ -240,20 +240,21 @@ class EaNode(EaNodeInfo, NodeMixin):
         Whenever there are parent and the child that have oposite labels, tree
         should be compresed.
         """
-        print( "Tree Compress vertical" )
-        #for n in self.children:
-        #    for c in n.children:
-        #        if( n.node_label[:-1] == c.node_label[:-1]):
-        #            for x in c.children:
-        #                x.parent = self
-        #for n1 in self.children:
-        #    for n2 in self.children:
-        #        if n1.node_label == n2.node_label and n1!=n2:
-        #            n2.parent = None
-        #            for c in n2.children:
-        #                c.parent = n1  
-        #for n in self.children:
-        #     n.compressTree()
+        for node in self.children:
+            if(node.is_leaf):
+                parent_node = node.parent
+                while(True):
+                    n_s = node.node_label[-1]
+                    p_s = parent_node.node_label[-1]
+                    p_m = p_s == "+" and n_s == "-"
+                    if( node.node_label[:-1] == parent_node.node_label[:-1] and p_m ):
+                        for x in node.children:
+                            x.parent = parent_node
+                        node.parent = None
+                    if( parent_node.is_root):
+                        break
+                    node = parent_node
+                    parent_node = parent_node.parent
         return
  
     def closest_node_in_tree_ignore_unknowns( self, read ):

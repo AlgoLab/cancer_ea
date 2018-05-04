@@ -72,7 +72,7 @@ def main():
     # create strucute of the individual
     creator.create("Individual", DolloNode, fitness=creator.FitnessMin)
     # parameter k in Dollo model
-    dollo_K = int(parameters['DolloK'])
+    dollo_k = int(parameters['DolloK'])
     
     # create toolbox for execution of the genetic algorithm
     toolbox = base.Toolbox()
