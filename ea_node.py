@@ -240,7 +240,7 @@ class EaNode(EaNodeInfo, NodeMixin):
         Whenever there are parent and the child that have oposite labels, tree
         should be compresed.
         """
-        for node in self.children:
+        for node in self.descendants:
             if(node.is_leaf):
                 parent_node = node.parent
                 while(True):
@@ -249,9 +249,9 @@ class EaNode(EaNodeInfo, NodeMixin):
                     p_m = p_s == "+" and n_s == "-"
                     if( node.node_label[:-1] == parent_node.node_label[:-1] and p_m ):
                         for x in node.children:
-                            x.parent = parent_node
+                            x.parent = parent_node.parent
                         node.parent = None
-                    if( parent_node.is_root):
+                    if( parent_node == self):
                         break
                     node = parent_node
                     parent_node = parent_node.parent
