@@ -20,6 +20,7 @@ from read_input import read_labels_scrs_format_in
 
 from dollo_node import DolloNode
 from dollo_node_operators import init_dollo_node_individual
+from dollo_node_operators import dolo_closest_node_distance
 from dollo_node_operators import evaluate_dollo_node_individual 
 from dollo_node_operators import crossover_dollo_node_individuals
 from dollo_node_operators import mutate_dollo_node_individual
@@ -38,12 +39,12 @@ def main():
     parameters = {'InputFile': 'XXX.in', 
                   'InputFormat': 'in',
                   'DolloK': 2,
-                  'Alpha': 0.35,
-                  'Beta': 0.005,
+                  'Alpha': 0.4,
+                  'Beta': 0.00001,
                   'RandomSeed': -1,
-                  'PopulationSize': 5,
+                  'PopulationSize': 26,
                   'CrossoverProbability': 0.85,
-                  'MutationProbability': 0.05}
+                  'MutationProbability': 0.3}
     parameters = get_execution_parameters(options, args, parameters)
     if(options.debug or options.verbose):
         print("Execution parameters: ", parameters);
@@ -85,7 +86,7 @@ def main():
                      init_dollo_node_individual, 
                      creator.Individual, 
                      labels=labels, 
-                     k=2)
+                     k=dollo_k)
       
     # register population to toolbbox 
     toolbox.register("population", 
@@ -111,7 +112,9 @@ def main():
     
     # register a mutation operator 
     toolbox.register("mutate", 
-                     mutate_dollo_node_individual)
+                     mutate_dollo_node_individual, 
+                     labels,
+                     dollo_k)
     # probability for mutating an individual
     mutation_probability = float(parameters['MutationProbability'])
  
@@ -219,6 +222,9 @@ def main():
         print (pop)  
     best_ind = tools.selBest(pop, 1)[0]
     print("Best individual is\n%s\n, with fitness %s" % (best_ind, best_ind.fitness.values))
+    if( options.verbose):        
+        print("Efficiency of cashing for funcion dolo_closest_node_distance")
+        print(dolo_closest_node_distance.cache_info())
     return
 
 # this means that if this script is executed, then 
