@@ -35,13 +35,7 @@ def main():
     
     root.tree_compress_horizontal()
     root.tree_print()
-    
-    root.tree_rearange_by_label()
-    root.tree_print()
-
-    root.tree_rearange_by_label(False)
-    root.tree_print()
-  
+      
     return
 
 

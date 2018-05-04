@@ -214,13 +214,16 @@ class EaNode(EaNodeInfo, NodeMixin):
        num_children = len(self.children)
        to_remove = []
        for i in range(0,num_children):
+           x =  self.children[i]
            for j in range(i+1, num_children):
-                if( not(i in to_remove) and self.children[i].node_label == self.children[j].node_label ):
-                    to_remove.append(j)
-                    for node in self.children[j].children:
-                        node.parent = self.children[i]
-       for i in to_remove:
-            self.children[i].parent = None
+               y =  self.children[j]
+               if( not(i in to_remove) and x.node_label == y.node_label ):
+                    to_remove.append(y)
+                    for node in y.children:
+                        node.parent = x
+       if( not to_remove is None):
+           for x in to_remove:
+               x.parent = None
        return
  
     def tree_compress_horizontal(self):
@@ -357,6 +360,8 @@ class EaNode(EaNodeInfo, NodeMixin):
                            break
                if( i > size ):
                     probability_of_node_creation *= 0.7
+        self.tree_compress_vertical()
+        self.tree_compress_horizontal()
         self.tree_rearange_by_label()
         self.tree_set_binary_tags(labels)
         return
