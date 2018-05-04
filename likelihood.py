@@ -32,21 +32,19 @@ beta=0.001
 def evaluate(individual,node):
 		likelihood=0
 		path_node=path(node)
-		for j in range(len(individual)):
-			if individual[j] == '0':
+		for elem in individual:
+			if elem == '0':
 				if path_node[j] == 0:
 					likelihood+=math.log10(1-beta)
 				elif path_node[j] == 1:
 					likelihood+=math.log10(beta)
 				elif path_node[j] == -1:
 					return print("error")
-			elif individual[j] == '1':
+			elif elem == '1':
 				if path_node[j] == 0:
 					likelihood+=math.log10(1-alfa)
 				elif path_node[j] == 1:
 					likelihood+=math.log10(alfa)
 				elif path_node[j] == -1:
 					return print("error")
-			elif individual[j]== '2':
-				likelihood+=0
         return likelihood
