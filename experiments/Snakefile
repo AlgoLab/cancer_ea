@@ -15,19 +15,20 @@ alphas = [0.1]
 betas = [0.01]
 ks = [2]
 ds = [5]
-
+rs = [1]
 
 #
 # master rule
 #----------------------------------------------------------------------
 rule master :
 	input :
-		expand('{file}.sasc-a{alpha}-b{beta}-k{k}-d{d}.out',
+		expand('{file}.sasc-a{alpha}-b{beta}-k{k}-d{d}-r{r}.out',
 			file = files,
 			alpha = alphas,
 			beta = betas,
 			k = ks,
-			d = ds)
+			d = ds,
+			r = rs)
 
 
 #
@@ -63,25 +64,25 @@ rule run_sasc :
 		program = _sasc_,
 		matrix = '{file}.txt'
 
-	output : '{file}.sasc-a{alpha}-b{beta}-k{k}-d{del}.out'
+	output : '{file}.sasc-a{alpha}-b{beta}-k{k}-d{del}-r{reps}.out'
 
-	log : '{file}.sasc-a{alpha}-b{beta}-k{k}-d{del}.log'
+	log : '{file}.sasc-a{alpha}-b{beta}-k{k}-d{del}-r{reps}.log'
 
 	message : '''
 
    running sasc ({input.program}) on
    {input.matrix} with
-   alpha = {wildcards.alpha}, beta = {wildcards.beta},
-   k = {wildcards.k}, d = {wildcards.del} '''
+   alpha = {wildcards.alpha}, beta = {wildcards.beta}, k = {wildcards.k},
+   d = {wildcards.del}, r = {wildcards.reps} '''
 
        	run :
 		with open(input.matrix) as M :
 			m = len(M.readline().split())
-			n = sum(1 for line in M)
+			n = sum(1 for line in M) + 1
 		shell('''
 
    {input.program} -i {input.matrix} \
       -n {n} -m {m} \
-      -a {wildcards.alpha} -b {wildcards.beta} \
-      -k {wildcards.k} -d {wildcards.del} \
+      -a {wildcards.alpha} -b {wildcards.beta} -k {wildcards.k} \
+      -d {wildcards.del} -r {wildcards.reps} \
          > {output} 2> {log} ''')
