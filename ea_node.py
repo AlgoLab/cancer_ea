@@ -7,6 +7,7 @@ EaNode class is an node of the mutation tree to be build and evaluated.
 import random
 
 from anytree import NodeMixin, RenderTree, PostOrderIter
+
 from bitstring import BitArray
 
 class EaNodeInfo(object):
@@ -135,6 +136,30 @@ class EaNode(EaNodeInfo, NodeMixin):
             node.tree_set_binary_tags(labels)
         return
 
+    def tree_get_labels_contains(self):
+        """ Obtain labels of all nodes that are within this tree.
+        
+        Returns:
+            set: Set of labels of nodes within this tree.
+        """
+        ret = {*[]}
+        for node in PostOrderIter(self):
+            ret.add(node.node_label)
+        return ret;
+
+    def tree_get_plus_labels_contains(self):
+        """ Obtain of all plus nodes that are within this tree.
+        
+       Returns:
+            set: Set of plus nodes within this tree.
+        """
+        labels_within = self.tree_get_labels_contains()
+        ret = {*[]}
+        for lab in labels_within:
+            if( lab[-1] == '+'):
+                ret.add(lab)
+        return ret;
+
     def tree_is_equal( self, another ):
         """ Finds the first difference between self and another tree.
 
@@ -203,11 +228,11 @@ class EaNode(EaNodeInfo, NodeMixin):
         return
      
    
-    def children_compress_horizontal(self):
-       """ Horizontal compression of the children (direct descendents).
+    def children_compact_horizontal(self):
+       """ Horizontal compaction of the children (direct descendents).
         
        Whenever there are two childs of the node that have the same label, tree
-       should be compresed.
+       should be compacted.
        """
        if( self.children is None):
             return
@@ -226,38 +251,42 @@ class EaNode(EaNodeInfo, NodeMixin):
                x.parent = None
        return
  
-    def tree_compress_horizontal(self):
-        """ Horizontal compression of the tree.
+    def tree_compact_horizontal(self):
+        """ Horizontal compaction of the tree.
         
         Whenever there are two childs of the node that have the same label, tree
-        should be compresed.
+        should be compacted.
         """
-        self.children_compress_horizontal()
+        self.children_compact_horizontal()
         for node in self.children:
-            node.tree_compress_horizontal()
+            node.tree_compact_horizontal()
         return
         
-    def tree_compress_vertical(self):
-        """ Vertical compression od the tree.
+    def tree_compact_vertical(self):
+        """ Vertical compaction od the tree.
   
         Whenever there are parent and the child that have oposite labels, tree
-        should be compresed.
+        should be compacted.
         """
-        for node in self.descendants:
-            if(node.is_leaf):
-                parent_node = node.parent
-                while(True):
-                    n_s = node.node_label[-1]
-                    p_s = parent_node.node_label[-1]
-                    p_m = p_s == "+" and n_s == "-"
-                    if( node.node_label[:-1] == parent_node.node_label[:-1] and p_m ):
-                        for x in node.children:
-                            x.parent = parent_node.parent
-                        node.parent = None
-                    if( parent_node == self):
-                        break
-                    node = parent_node
-                    parent_node = parent_node.parent
+        compact_executed = True
+        while(compact_executed): 
+            compact_executed = False
+            for node in self.descendants:
+                if(node.is_leaf):
+                    parent_node = node.parent
+                    while(True):
+                        n_s = node.node_label[-1]
+                        p_s = parent_node.node_label[-1]
+                        p_m = p_s == "+" and n_s == "-"
+                        if( node.node_label[:-1] == parent_node.node_label[:-1] and p_m ):
+                            for x in node.children:
+                                x.parent = parent_node.parent
+                            node.parent = None
+                            compact_executed = True
+                        if( parent_node == self):
+                            break
+                        node = parent_node
+                        parent_node = parent_node.parent
         return
  
     def closest_node_in_tree_ignore_unknowns( self, read ):
@@ -360,8 +389,8 @@ class EaNode(EaNodeInfo, NodeMixin):
                            break
                if( i > size ):
                     probability_of_node_creation *= 0.7
-        self.tree_compress_vertical()
-        self.tree_compress_horizontal()
+        self.tree_compact_vertical()
+        self.tree_compact_horizontal()
         self.tree_rearange_by_label()
         self.tree_set_binary_tags(labels)
         return

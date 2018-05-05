@@ -30,6 +30,36 @@ class DolloNode(EaNode):
         self.binary_tag = binary_tag
         self.parent = parent
 
+    def tree_get_partition(self, partition):
+        """ Function for obtaining partitions od the tree that is make by each
+            of the plus nodes.
+        
+        Args:
+            partition (dicitionary): Partition created so far.
+
+        Returns:
+            dicitionary: dictionary that have label of the plus node as key and
+                a list of its partitions as value.
+        """
+        ret = partition
+        if( self.node_label[-1]!='+' and self.node_label != "--"):
+            return ret
+        if( self.children is None):
+            ret[self.node_label] = []
+            return ret
+        plus_sub_labels = self.tree_get_plus_labels_contains() 
+        if( len(plus_sub_labels) == 0 
+           or (len(plus_sub_labels)==1 and self.node_label in plus_sub_labels) ):
+            ret[self.node_label] = []
+            return ret
+        l = []
+        for x in self.children:
+            l.append( x.tree_get_plus_labels_contains())
+        ret[self.node_label] = l
+        for x in self.children:
+            ret = x.tree_get_partition(ret)
+        return ret
+
     def tree_initialize(self, labels, k):
         """ Function for initialization od the tree.
         
@@ -154,8 +184,8 @@ class DolloNode(EaNode):
                 parent_of_leaf.attach_child(leaf)
                 current_tree_size += 1
                 placed_minus_node = True 
-        self.tree_compress_vertical()
-        self.tree_compress_horizontal()
+        self.tree_compact_vertical()
+        self.tree_compact_horizontal()
         self.tree_rearange_by_label()
         self.tree_set_binary_tags(labels)
         return

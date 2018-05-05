@@ -2,11 +2,14 @@
 for DolloNode individuals.
 
 """
+import copy
 import random
 
 from functools import lru_cache 
 
 from bitstring import BitArray
+
+from anytree import search
 
 from read_element import ReadElement
 
@@ -177,12 +180,165 @@ def evaluate_dollo_node_individual(reads, individual, alpha):
     """
     return (dollo_evaluate_direct_level2(reads, individual, alpha),)    
 
+def set_consits_of_plus_lebels(list_of_sets):
+    """ Ironing the list of sets and keeping only plus nodes.
+
+    Args:
+        list_of_sets (list): list of the set that is to be searched.
+     
+    Returns:            
+        set of the plus labels in list
+    """
+    ret = {*[]}
+    for s in list_of_sets:
+        for x in s:
+            if(x[-1]=='+'):
+                ret.add(x)
+    return ret
+
+def sets_are_equal(set1,set2):
+    """ Checks if sets are equal
+
+    Args:
+        set1 (set): first set for comparison.
+        set2 (set): second set for comparison.
+     
+    Returns:            
+        boolean that indicate equality of the sets
+    """
+    for x in set1:
+        if( not x in set2):
+            return False;
+    for x in set2:
+        if( not x in set1):
+            return False;
+    return True
 
 
-def crossover_dollo_node_individuals(individual1, individual2):
+def dollo_crossover_exchange_subtrees(labels,individual1,individual2):
+    """ Crossover between two individuals, by exchanging its subtrees
+
+    Args:
+        labels (list): list of the lables of the nodes that exists in the tree.
+        individual1 (DolloNode): first individual in crossover.
+        individual2 (DolloNode): second individual in crossover.
+     
+    Returns:            
+        pair where the first componet is indicator of succes and the second is
+        individual that is mutated e.g. output of the mutation process.
+    
+    Notes:
+        Subtrees that are exchanged should cover same plus nodes and subtrees 
+        should not be same.
+        Minus nodes will be set after exchanging.
+    """
+    if(individual1.tree_is_equal(individual2)):
+        return(False,individual1,individual2)
+    individual1_n = copy.deepcopy( individual1 )
+    individual2_n = copy.deepcopy( individual2 )
+    part1 = {}
+    part1 = individual1_n.tree_get_partition(part1)
+    part2 = {}
+    part2 = individual2_n.tree_get_partition(part2)
+    ret = False
+    for lab in labels:
+        lab += '+'
+        if(not lab in part1):
+            continue
+        covered1 = part1[lab]
+        set_covered1 = set_consits_of_plus_lebels(covered1)
+        if(len(set_covered1)==0):
+            continue
+        if(not lab in part2):
+            continue
+        covered2 = part2[lab]
+        set_covered2 = set_consits_of_plus_lebels(covered2)
+        if(len(set_covered2)==0):
+            continue
+        if(not sets_are_equal(set_covered1,set_covered2)):
+            continue
+        node1 = search.find(individual1_n,lambda node: node.node_label == lab)
+        node2 = search.find(individual2_n,lambda node: node.node_label == lab)
+        print("**********************************************")
+        print("* Begin in dollo_crossover_exchange_subtrees *")
+        print(node1)
+        print(part1)
+        print(set_covered1)
+        print(node2)
+        print(part2)
+        print(set_covered2)
+        print("*   End in dollo_crossover_exchange_subtrees *")
+        print("**********************************************")
+        if(node1.tree_is_equal(node2)):
+            continue
+        # Cross over subtrees
+        parent1 = node1.parent
+        parent2 = node2.parent
+        node1.parent = parent2
+        node2.parent = parent1
+        # Handling minus nodes in subtree roted with node1
+        # TO DO
+        # Compaction and regularization in subtree roted with node1
+        node1.tree_compact_vertical()
+        node1.tree_compact_horizontal()
+        node1.tree_rearange_by_label()
+        node1.tree_set_binary_tags(labels)
+        # Handling minus nodes in subtree roted with node2
+        # TO DO
+        # Compaction and regularization in subtree roted with node2
+        node2.tree_compact_vertical()
+        node2.tree_compact_horizontal()
+        node2.tree_rearange_by_label()
+        node2.tree_set_binary_tags(labels)
+        ret = True
+        break
+    return (ret,individual1_n,individual2_n)
+
+def dollo_crossover_exchange_edge(labels,individual1,individual2):
+    """ Crossover between two individuals, by exchanging one edge of each
+
+    Args:
+        labels (list): list of the lables of the nodes that exists in the tree.
+        individual1 (DolloNode): first individual in crossover.
+        individual2 (DolloNode): second individual in crossover.
+     
+    Returns:            
+        pair where the first componet is indicator of succes and the second is
+        individual that is mutated e.g. output of the mutation process.    
+     """
+    if(individual1.tree_is_equal(individual2)):
+        return(False,individual1,individual2)
+    individual1_n = copy.deepcopy(individual1)
+    individual2_n = copy.deepcopy(individual2)
+    random_label = random.choice(labels)
+    random01 = random.random()
+    label_is_plus = random01 < (len(labels)/float(1+len(individual1_n.descendants)) ) 
+    if(label_is_plus):
+        random_label += '+'
+        node1 = search.find(individual1_n,lambda node: node.node_label == random_label)
+        node2 = search.find(individual2_n,lambda node: node.node_label == random_label)
+        print("******************************************")
+        print("* Begin in dollo_crossover_exchange_edge *")
+        print(random_label)
+        print(node1.parent)
+        print(node2.parent)
+        print("*  End in dollo_crossover_exchange_edge  *")
+        print("******************************************")
+    else:
+        random_label += '-'
+        print("******************************************")
+        print("* Begin in dollo_crossover_exchange_edge *")
+        print(random_label)
+        print("*  End in dollo_crossover_exchange_edge  *")
+        print("******************************************")
+    return (True,individual1_n,individual2_n)
+
+
+def crossover_dollo_node_individuals(labels,individual1,individual2):
     """ Crossover between individual1 and individual2.
     
     Args:
+         labels (list): list of the lables of the nodes that exists in the tree.
          individual1 (DolloNode): first individual in crossover.
          individual2 (DolloNode): second individual in crossover.
      
@@ -190,28 +346,51 @@ def crossover_dollo_node_individuals(individual1, individual2):
         two-element tuple which contains offsprings e.g. output of the
         crossover process.
     """
-    return (individual1, individual2)
+    print("* Executing crossover step *")
+    (success,individual1_new,individual2_new) = dollo_crossover_exchange_subtrees(
+            labels,
+            individual1, 
+            individual2)
+    if(success):
+        return (individual1_new,individual2_new,)
+    (success,individual1_new,individual2_new) = dollo_crossover_exchange_edge(
+            labels,
+            individual1, 
+            individual2)
+    if(success):
+        return (individual1_new,individual2_new,)
+    individual1n = copy.deepcopy( individual1 )
+    individual2n = copy.deepcopy( individual2 )
+    return (individual1n,individual2n)
 
-def dollo_mutation_minus_node_add(labels, k, individual):
-    """ Mutation of the individual, by randomly adding one minus node
+def dollo_mutation_node_add(labels,k,individual):
+    """ Mutation of the individual, by randomly adding one node
 
     Args:
-         individual (DolloNode): individual that will be mutated.
-     
-    Returns:            
         labels (list): list of the lables of the nodes in the tree that should 
             be initialized.
         k(int): Value od the Dollo k parameter.
+         individual (DolloNode): individual that will be mutated.
+     
+    Returns:            
+        pair where the first componet is indicator of succes and the second is
         individual that is mutated e.g. output of the mutation process.
     """
-    random_parent = random.choice(individual.descendants)
+    individual_n = copy.deepcopy( individual )
+    random_parent = random.choice(individual_n.descendants)
     random_label = random.choice(labels)
-    # print( "In mutation" )
-    # print (random_parent, random_label)
-    return individual
+    random01 = random.random()
+    label_is_plus = random01 < (len(labels)/float(1+len(individual_n.descendants)) ) 
+    if(label_is_plus):
+        # adding plus label and removing same plus label
+        random_label += '+'
+    else:
+        # adding minus label and removing same plus label
+        random_label += '-'
+    return (False,individual_n)
 
-def dollo_mutation_minus_node_remove(labels, k, individual):
-    """ Mutation of the individual, by randomly removing one minus node
+def dollo_mutation_node_remove(labels, k, individual):
+    """ Mutation of the individual, by randomly removing one node
 
     Args:
         labels (list): list of the lables of the nodes in the tree that should 
@@ -220,11 +399,13 @@ def dollo_mutation_minus_node_remove(labels, k, individual):
         individual (DolloNode): individual that will be mutated.
      
     Returns:            
+        pair where the first componet is indicator of succes and the second is
         individual that is mutated e.g. output of the mutation process.
     """
-    return individual
+    individual_n = copy.deepcopy( individual )
+    return (False,individual_n)
 
-def dollo_mutation_node_up(labels, k, level, individual):
+def dollo_mutation_node_promote(labels, k, level, individual):
     """ Mutation of the individual, by randomly randomly selected node
         up to the tree for given level.
 
@@ -236,12 +417,14 @@ def dollo_mutation_node_up(labels, k, level, individual):
         individual (DolloNode): individual that will be mutated.
      
     Returns:            
+        pair where the first componet is indicator of succes and the second is
         individual that is mutated e.g. output of the mutation process.
     """
-    return individual
+    individual_n = copy.deepcopy( individual )
+    return (False,individual_n)
 
 
-def dollo_mutation_node_down(labels, k, level, individual):
+def dollo_mutation_node_demote(labels, k, level, individual):
     """ Mutation of the individual, by randomly randomly selected node
         down to the tree for given level.
 
@@ -253,9 +436,11 @@ def dollo_mutation_node_down(labels, k, level, individual):
         individual (DolloNode): individual that will be mutated.
      
     Returns:            
-        indidivual that is mutated e.g. output of the mutation process.
+        pair where the first componet is indicator of succes and the second is
+        individual that is mutated e.g. output of the mutation process.
     """
-    return individual
+    individual_n = copy.deepcopy( individual )
+    return (False,individual_n)
 
 
 def mutate_dollo_node_individual(labels, k, individual):
@@ -268,5 +453,9 @@ def mutate_dollo_node_individual(labels, k, individual):
         tuple where the first elelemt is mutataed e.g. output of the
         mutation process.
     """
-    individual = dollo_mutation_minus_node_add(labels, k, individual)
-    return (individual,)
+    (success,individual_new) = dollo_mutation_node_add(labels, k, individual)
+    if(success):
+        return (individual_new,)
+    else:
+        individual_n = copy.deepcopy( individual )
+        return (individual_n,)

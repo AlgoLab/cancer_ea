@@ -42,9 +42,10 @@ def main():
                   'Alpha': 0.4,
                   'Beta': 0.00001,
                   'RandomSeed': -1,
-                  'PopulationSize': 26,
+                  'PopulationSize': 7,
                   'CrossoverProbability': 0.85,
-                  'MutationProbability': 0.3}
+                  'MutationProbability': 0.3,
+                  'MaxNumberGenerations': 3}
     parameters = get_execution_parameters(options, args, parameters)
     if(options.debug or options.verbose):
         print("Execution parameters: ", parameters);
@@ -105,7 +106,8 @@ def main():
 
     # register the crossover operator
     toolbox.register("mate", 
-                     crossover_dollo_node_individuals)
+                     crossover_dollo_node_individuals,
+                     labels)
     # probability with which two individuals are crossed
     crossover_probability = float(parameters['CrossoverProbability'])
        
@@ -145,7 +147,9 @@ def main():
     # Assign fitness to individuals in population
     for ind, fit in zip(pop, fitnesses):
         ind.fitness.values = fit
-        
+    
+    # Variable for maximum number of generations    
+    max_number_generations = int(parameters['MaxNumberGenerations'])
     # Variable keeping track of the number of generations
     generation = 0
   
@@ -206,7 +210,7 @@ def main():
                
         # Check if any of finishing criteria is meet
         # Criteria based on number of generations
-        if( generation > 10 ):
+        if( generation > max_number_generations ):
             break
         # Criteria based on standard deviation of fitness in population
         fits = [ind.fitness.values[0] for ind in pop]

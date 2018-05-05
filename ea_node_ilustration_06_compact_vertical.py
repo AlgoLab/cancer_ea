@@ -38,7 +38,7 @@ def main():
 
     root.tree_print()
     
-    root.tree_compress_vertical()
+    root.tree_compact_vertical()
     root.tree_rearange_by_label()
     root.tree_print()
       
