@@ -78,7 +78,7 @@ rule run_sasc :
        	run :
 		with open(input.matrix) as M :
 			m = len(M.readline().split())
-			n = sum(1 for line in M)
+			n = sum(1 for line in M) + 1
 		shell('''
 
    {input.program} -i {input.matrix} \
