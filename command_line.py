@@ -45,6 +45,8 @@ def get_execution_parameters(options, args, parameters):
     populationSize_re = re.compile(r'[P|p]opulation[S|s]ize=[0-9]+')
     crossoverProbability_re = re.compile(r'[C|c]rossover[P|p]robability=[0-9].[0-9]+')
     mutationProbability_re = re.compile(r'[M|m]utation[P|p]robability=[0-9].[0-9]+')
+    fineGrainedTournamentSize_re = re.compile(r'[F|f]ine[G|g]rained[T|t]ournament[S|s]ize=[0-9].[0-9]+')
+    maxNumberGenerations_re = re.compile(r'[M|m]ax[N|n]umber[G|g]enerations=[0-9]+')
    
     inputFileIsSet = False
     for arg in args:
@@ -87,6 +89,14 @@ def get_execution_parameters(options, args, parameters):
         if mutationProbability_re.match(arg) :
             parameters['MutationProbability'] = arg.split('=')[1]
             break
+    for arg in args:    
+        if fineGrainedTournamentSize_re.match(arg) :
+            parameters['FineGrainedTournamentSize'] = arg.split('=')[1]
+            break
+    for arg in args:    
+        if maxNumberGenerations_re.match(arg) :
+            parameters['MaxNumberGenerations'] = arg.split('=')[1]
+            break
 
     return parameters
  
@@ -107,5 +117,7 @@ def usage_explanation(parameters):
     ret += "PopulationaSize=<size>\t(optional, integer - default value: '" + str(parameters['PopulationaSize']) + "')\n"
     ret += "CrossoverProbability=<probability>\t(optional, float - default value: '" + str(parameters['CrossoverProbability']) + "')\n"
     ret += "MutationProbability=<probability>\t(optional, float - default value: '" + str(parameters['MutationProbability']) + "')\n"
+    ret += "FineGrainedTournamentSize=<fgts_size>\t(optional, float - default value: '" + str(parameters['MutationProbability']) + "')\n"
+    ret += "MaxNumberGenerations=<max_num>\t(optional, integer - default value: '" + str(parameters['MaxNumberGenerations']) + "')\n"
     return ret
     

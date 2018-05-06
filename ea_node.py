@@ -101,6 +101,31 @@ class EaNode(EaNodeInfo, NodeMixin):
             self.node_label = self.node_label[:-1] + '+'
         return
 
+    def tree_node_at_position_postorder(self, position):
+        """ Function for obtaining node in the tree at given position, where 
+        nodes are visisted in postoreder maneer.
+        
+        Args:
+            position (:int): Position of the node.
+        
+        Returns:
+            node at given position. If position is too large, function will
+                return None.
+        """
+        ret = None
+        if( position == 0):
+            ret = self
+        else:
+            j = 1
+            for node in PostOrderIter(self):
+               if( j== position):
+                   ret = node
+                   break
+               else:
+                   j += 1
+        return ret
+
+
     def children_set_binary_tags(self, labels):
         """ Set binary tag of all children according to label.
         

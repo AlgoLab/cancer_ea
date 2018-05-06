@@ -42,9 +42,10 @@ def main():
                   'Alpha': 0.4,
                   'Beta': 0.00001,
                   'RandomSeed': -1,
-                  'PopulationSize': 7,
+                  'PopulationSize': 5,
                   'CrossoverProbability': 0.85,
                   'MutationProbability': 0.3,
+                  'FineGrainedTournamentSize': 2.1,
                   'MaxNumberGenerations': 3}
     parameters = get_execution_parameters(options, args, parameters)
     if(options.debug or options.verbose):
@@ -126,7 +127,7 @@ def main():
     # drawn randomly from the current generation.
     toolbox.register("select", 
                      tools.selTournamentFineGrained, 
-                     fgtournsize=3.5)
+                     fgtournsize=float(parameters['FineGrainedTournamentSize']))
 
     # create an initial population, where each individual is a tree
     population_size = int(parameters['PopulationSize'])

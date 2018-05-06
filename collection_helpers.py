@@ -34,3 +34,16 @@ def last_index_of(collection, element):
         if( collection[i]==element):
             return i;
     return -1
+
+def next_element_in_cyclic(element, collection):
+        """     Helper function that fids next element in collection. Next 
+                element for the last element is the first one in collection. 
+    
+        Returns: next element in collection. If element is not in collection, 
+        function will return None. 
+        """
+        ind = collection.index(element)
+        if(ind<0):
+            return None
+        ind = (ind+1)%len(collection)
+        return collection[ind]

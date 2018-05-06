@@ -11,10 +11,11 @@ from ea_node import EaNode
 from anytree import NodeMixin, RenderTree, PostOrderIter
 from bitstring import BitArray
 
+from collection_helpers import next_element_in_cyclic
+
 class DolloNode(EaNode):
     """ Information about nodes of the mutattion tree, according to Dollo model.
     """
-
  
     def __init__(self, node_label, binary_tag, parent=None):
         """ Instance initialization.
@@ -70,28 +71,19 @@ class DolloNode(EaNode):
         """
         plus_not_used = set(labels)
         # print( "tree_initialize", plus_not_used)
-        minus_not_used = {"nothing":0}
+        minus_not_used = {}
         for l in labels:
             minus_not_used[l] = k
         current_tree_size = 1
         max_size = int((1+k-random.random())*len(labels))  
         i=1
-        while((i<= max_size) or len(plus_not_used )>0 ): 
+        while((i<= max_size) or len(plus_not_used)>0 ): 
             i += 1
             # determine which label should be inserted
             label_to_insert = random.choice( labels ) 
             # determine the position for parent of the leaf node
             position = random.randint(0, current_tree_size)
-            if( position == 0):
-                parent_of_leaf = self
-            else:
-                j = 1
-                for node in PostOrderIter(self):
-                   if( j== position):
-                       parent_of_leaf = node
-                       break
-                   else:
-                       j += 1    
+            parent_of_leaf = self.tree_node_at_position_postorder(position)
             # check if newly added label is used so far
             if( label_to_insert in plus_not_used ):
                 # if not, add plus node into tree
@@ -111,26 +103,22 @@ class DolloNode(EaNode):
             while(not placed_minus_node and iterations <= len(labels)):
                 if( minus_not_used[label_to_insert] <= 0 ):
                     # next label should br tried
-                    ind = labels.index( label_to_insert )
-                    ind = (ind+1)%len(labels)
-                    label_to_insert = labels[ind]
+                    label_to_insert = next_element_in_cyclic(label_to_insert, labels)
                     iterations +=1
                     continue                
                 # check if minus node can be placed on this position
                 # it can be placed only if some of his ancesstors is relevant plus node
                 can_be_placed = False
                 anc = parent_of_leaf 
-                while(anc != self):
-                    if( anc.node_label == label_to_insert + '+'):
+                while(anc!= self):
+                    if(anc.node_label==label_to_insert+'+'):
                         can_be_placed = True
                         break
                     else:
                         anc = anc.parent
                 if(not can_be_placed):
                     # next label should br tried
-                    ind = labels.index( label_to_insert )
-                    ind = (ind+1)%len(labels)
-                    label_to_insert = labels[ind]
+                    label_to_insert = next_element_in_cyclic(label_to_insert, labels)
                     iterations +=1
                     continue
                 # check if minus node can be placed on this position
@@ -138,9 +126,7 @@ class DolloNode(EaNode):
                 can_be_placed = not (parent_of_leaf.node_label == label_to_insert + "+") 
                 if(not can_be_placed):
                     # next label should br tried
-                    ind = labels.index( label_to_insert )
-                    ind = (ind+1)%len(labels)
-                    label_to_insert = labels[ind]
+                    label_to_insert = next_element_in_cyclic(label_to_insert, labels)
                     iterations +=1
                     continue
                 # check if minus node can be placed on this position
@@ -155,23 +141,19 @@ class DolloNode(EaNode):
                         anc = anc.parent
                 if(not can_be_placed):
                     # next label should br tried
-                    ind = labels.index( label_to_insert )
-                    ind = (ind+1)%len(labels)
-                    label_to_insert = labels[ind]
+                    label_to_insert = next_element_in_cyclic(label_to_insert, labels)
                     iterations +=1
                     continue
                 # check if minus node can be placed on this position
                 # it can be placed only if label is not duplicate within children of parent
                 can_be_placed = True
                 for node in parent_of_leaf.children:
-                    if( node.node_label == label_to_insert):
+                    if(node.node_label == label_to_insert):
                         can_be_placed = False
                         break
-                if( not can_be_placed):    
+                if(not can_be_placed):    
                     # next label should br tried
-                    ind = labels.index( label_to_insert )
-                    ind = (ind+1)%len(labels)
-                    label_to_insert = labels[ind]
+                    label_to_insert = next_element_in_cyclic(label_to_insert, labels)
                     iterations +=1
                     continue
                 # adding minus node on specified position
@@ -179,7 +161,7 @@ class DolloNode(EaNode):
                 label_to_insert += "-"
                 # create new leaf node
                 leaf_bit_array = BitArray()
-                leaf = DolloNode(label_to_insert, leaf_bit_array)
+                leaf = DolloNode(label_to_insert,leaf_bit_array)
                 # attach leaf node
                 parent_of_leaf.attach_child(leaf)
                 current_tree_size += 1
