@@ -125,6 +125,27 @@ class EaNode(EaNodeInfo, NodeMixin):
                    j += 1
         return ret
 
+    def tree_node_ancesstor_find(self, label):
+        """ Function for obtaining node in the tree, among ancestor nodes,
+            that have adequate label.
+        
+        Args:
+            label (:str): Label of node that is searched.
+        
+        Returns:
+            ancesstor node with given label. If there is not such node among
+            ancestors, function will return None.
+        """
+        ret = None
+        anc = self 
+        while(anc!= None):
+            if(anc.node_label==label):
+                ret = anc
+                break
+            else:
+                anc = anc.parent
+        return ret
+
 
     def children_set_binary_tags(self, labels):
         """ Set binary tag of all children according to label.

@@ -313,14 +313,22 @@ def dollo_crossover_exchange_edge(labels,individual1,individual2):
     if(label_is_plus):
         crossover_executed =  False
         iteration = 1
-        while( not crossover_executed and iteration <= len(labels)):
+        while(not crossover_executed and iteration<=len(labels)):
             plus_label = random_label + '+'
             node1 = search.find(individual1_n,lambda node: node.node_label == plus_label)
             node2 = search.find(individual2_n,lambda node: node.node_label == plus_label)
-            if( node1.parent.node_label == node2.parent.node_label):
+            # if labels of parents are the same, then there is no need for crossover 
+            if(node1.parent.node_label==node2.parent.node_label):
                 iteration += 1
                 random_label = next_element_in_cyclic(random_label, labels)
-                continue
+                continue            
+            # if parent in one tree exists among descendants in another, then crossover is impossible 
+            problem_child_1 = search.find(node1,lambda node: node.node_label == node2.parent.node_label)
+            problem_child_2 = search.find(node2,lambda node: node.node_label == node1.parent.node_label)
+            if((not problem_child_1 is None)or(not problem_child_2 is None)):
+                iteration += 1
+                random_label = next_element_in_cyclic(random_label, labels)
+                continue            
             print("**************************************************")
             print("* dollo_crossover_exchange_edge: label selected  *")
             print(plus_label)
@@ -329,8 +337,15 @@ def dollo_crossover_exchange_edge(labels,individual1,individual2):
             print("* dollo_crossover_exchange_edge: label selected  *")
             print("**************************************************")            
             # redefine edges
-            new_parent_1 = search.find(individual1_n,lambda node: node.node_label == node2.parent.node_label)
-            new_parent_2 = search.find(individual2_n,lambda node: node.node_label == node1.parent.node_label)
+            if( not node2.parent is None ):
+                new_parent_1 = search.find(individual1_n,lambda node: node.node_label == node2.parent.node_label)
+            else:
+                new_parent_1 = individual1_n
+            if( not node1.parent is None ):
+                new_parent_2 = search.find(individual2_n,lambda node: node.node_label == node1.parent.node_label)
+            else:
+                new_parent_2 = individual2_n
+            # execute crossover
             node1.parent = new_parent_1
             node2.parent = new_parent_2
             print("**************************************************")
@@ -339,14 +354,14 @@ def dollo_crossover_exchange_edge(labels,individual1,individual2):
             print("2: ", individual2_n)
             print("* dollo_crossover_exchange_edge: after crossover  *")
             print("***************************************************")                        
-            # remove or change incorrect minus nodes within node1 and node2 
-            
+            # remove or change incorrect minus nodes within node1 and node2            
             crossover_executed = True
     else:
-        random_label += '-'
+        crossover_executed =  False
+        minus_label = random_label + '+'
         print("******************************************")
         print("* Begin in dollo_crossover_exchange_edge *")
-        print(random_label)
+        print(minus_label)
         print("*  End in dollo_crossover_exchange_edge  *")
         print("******************************************")
     return (crossover_executed,individual1_n,individual2_n)

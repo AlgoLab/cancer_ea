@@ -67,108 +67,114 @@ class DolloNode(EaNode):
         Args:
             labels (list): Parameter `labels`represents the list of the labels
                 that are given to nodes with sufix '+' or '-'.
-            k (:int): Parameter `k` represents k parameter in Dollo model.
+            k (:int): Parameter `k` represents k parameter in Dollo model.            
+        
+        Note
+            Firstly, (pseudo) randomly is decided if plus node or minus node 
+            is added.
+            Then, relevant node is added to the tree.
+
         """
         plus_not_used = set(labels)
-        # print( "tree_initialize", plus_not_used)
         minus_not_used = {}
         for l in labels:
             minus_not_used[l] = k
         current_tree_size = 1
-        max_size = int((1+k-random.random())*len(labels))  
+        max_size = len(labels) + int(random.random()*len(labels))  
         i=1
         while((i<= max_size) or len(plus_not_used)>0 ): 
             i += 1
-            # determine which label should be inserted
-            label_to_insert = random.choice( labels ) 
-            # determine the position for parent of the leaf node
+            # determine the position for parent of the node to be added
             position = random.randint(0, current_tree_size)
             parent_of_leaf = self.tree_node_at_position_postorder(position)
-            # check if newly added label is used so far
-            if( label_to_insert in plus_not_used ):
-                # if not, add plus node into tree
-                plus_not_used.discard(label_to_insert)
-                label_to_insert += "+"
-                # create new leaf node
-                leaf_bit_array = BitArray()
-                leaf = DolloNode(label_to_insert, leaf_bit_array)
-                # attach leaf node
-                parent_of_leaf.attach_child(leaf)
-                current_tree_size += 1
-                continue
-            # label is already used, so node can only be minus node
-            # check if minus node is avaliable for that label
-            placed_minus_node = False
-            iterations = 1
-            while(not placed_minus_node and iterations <= len(labels)):
-                if( minus_not_used[label_to_insert] <= 0 ):
-                    # next label should br tried
-                    label_to_insert = next_element_in_cyclic(label_to_insert, labels)
-                    iterations +=1
-                    continue                
-                # check if minus node can be placed on this position
-                # it can be placed only if some of his ancesstors is relevant plus node
-                can_be_placed = False
-                anc = parent_of_leaf 
-                while(anc!= self):
-                    if(anc.node_label==label_to_insert+'+'):
-                        can_be_placed = True
-                        break
-                    else:
-                        anc = anc.parent
-                if(not can_be_placed):
-                    # next label should br tried
-                    label_to_insert = next_element_in_cyclic(label_to_insert, labels)
-                    iterations +=1
-                    continue
-                # check if minus node can be placed on this position
-                # it can be placed only if his parent is not is relevant plus node
-                can_be_placed = not (parent_of_leaf.node_label == label_to_insert + "+") 
-                if(not can_be_placed):
-                    # next label should br tried
-                    label_to_insert = next_element_in_cyclic(label_to_insert, labels)
-                    iterations +=1
-                    continue
-                # check if minus node can be placed on this position
-                # it can be placed only if none his ancesstors is relevant minus node
-                can_be_placed = True
-                anc = parent_of_leaf 
-                while(anc != self):
-                    if( anc.node_label == label_to_insert + '-'):
-                        can_be_placed = False
-                        break
-                    else:
-                        anc = anc.parent
-                if(not can_be_placed):
-                    # next label should br tried
-                    label_to_insert = next_element_in_cyclic(label_to_insert, labels)
-                    iterations +=1
-                    continue
-                # check if minus node can be placed on this position
-                # it can be placed only if label is not duplicate within children of parent
-                can_be_placed = True
-                for node in parent_of_leaf.children:
-                    if(node.node_label == label_to_insert):
-                        can_be_placed = False
-                        break
-                if(not can_be_placed):    
-                    # next label should br tried
-                    label_to_insert = next_element_in_cyclic(label_to_insert, labels)
-                    iterations +=1
-                    continue
-                # adding minus node on specified position
-                minus_not_used[label_to_insert] -= 1
-                label_to_insert += "-"
-                # create new leaf node
-                leaf_bit_array = BitArray()
-                leaf = DolloNode(label_to_insert,leaf_bit_array)
-                # attach leaf node
-                parent_of_leaf.attach_child(leaf)
-                current_tree_size += 1
-                placed_minus_node = True 
+            # determine if node will be  plus or minus
+            if(random.randrange(max_size)<len(plus_not_used)):
+                # plus node should be added
+                # determine which label should be inserted (initially)
+                label_to_insert = random.choice( labels ) 
+                # prepare loop
+                placed_plus_node = False
+                iterations = 1
+                while(not placed_plus_node and iterations <= len(labels)):
+                    # check if plus node can be placed 
+                    # it can be placed only if it is not placed into tree till now
+                    if( not label_to_insert in plus_not_used ):
+                        # next label should br tried
+                        label_to_insert = next_element_in_cyclic(label_to_insert, labels)
+                        iterations +=1
+                        continue   
+                    # plus node can be added into tree, so we are adding it
+                    # create new leaf node
+                    leaf_bit_array = BitArray()
+                    leaf = DolloNode(label_to_insert+'+', leaf_bit_array)
+                    # attach leaf node
+                    parent_of_leaf.attach_child(leaf)
+                    current_tree_size += 1
+                    plus_not_used.discard(label_to_insert)
+                    placed_plus_node = True
+            else: 
+                # minus node should be added
+                # determine which label should be inserted (initially)
+                label_to_insert = random.choice( labels ) 
+                # prepare loop
+                placed_minus_node = False
+                iterations = 1
+                while(not placed_minus_node and iterations <= len(labels)):
+                    # check if minus node can be placed 
+                    # it can be placed only if it is palced less than k times till now
+                    if( minus_not_used[label_to_insert] <= 0 ):
+                        # next label should br tried
+                        label_to_insert = next_element_in_cyclic(label_to_insert, labels)
+                        iterations +=1
+                        continue                
+                    # check if minus node can be placed on this position
+                    # it can be placed only if some of his ancesstors is relevant plus node
+                    anc = parent_of_leaf.tree_node_ancesstor_find(label_to_insert+'+')
+                    if(anc is None):
+                        # next label should br tried
+                        label_to_insert = next_element_in_cyclic(label_to_insert, labels)
+                        iterations +=1
+                        continue
+                    # check if minus node can be placed on this position
+                    # it can be placed only if his parent is not is relevant plus node
+                    can_be_placed = not (parent_of_leaf.node_label == label_to_insert + "+") 
+                    if(not can_be_placed):
+                        # next label should br tried
+                        label_to_insert = next_element_in_cyclic(label_to_insert, labels)
+                        iterations +=1
+                        continue
+                    # check if minus node can be placed on this position
+                    # it can be placed only if none his ancesstors is relevant minus node
+                    anc = parent_of_leaf.tree_node_ancesstor_find(label_to_insert+'-') 
+                    if(not anc is None):
+                        # next label should br tried
+                        label_to_insert = next_element_in_cyclic(label_to_insert, labels)
+                        iterations +=1
+                        continue
+                    # check if minus node can be placed on this position
+                    # it can be placed only if label is not duplicate within siblings
+                    can_be_placed = True
+                    for node in parent_of_leaf.children:
+                        if(node.node_label == label_to_insert):
+                            can_be_placed = False
+                            break
+                    if(not can_be_placed):    
+                        # next label should br tried
+                        label_to_insert = next_element_in_cyclic(label_to_insert, labels)
+                        iterations +=1
+                        continue
+                    # minus node can be added into tree, so we are adding it
+                    # create new leaf node
+                    leaf_bit_array = BitArray()
+                    leaf = DolloNode(label_to_insert+'-',leaf_bit_array)
+                    # attach leaf node
+                    parent_of_leaf.attach_child(leaf)
+                    minus_not_used[label_to_insert] -= 1
+                    current_tree_size += 1
+                    placed_minus_node = True 
         self.tree_compact_vertical()
         self.tree_compact_horizontal()
         self.tree_rearange_by_label()
         self.tree_set_binary_tags(labels)
         return
-      
+            

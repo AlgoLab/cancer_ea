@@ -20,6 +20,7 @@ from read_input import read_labels_scrs_format_in
 
 from dollo_node import DolloNode
 from dollo_node_operators import init_dollo_node_individual
+from dollo_node_operators import dolo_closest_node_distance
 from dollo_node_operators import evaluate_dollo_node_individual 
 from dollo_node_operators import crossover_dollo_node_individuals
 from dollo_node_operators import mutate_dollo_node_individual
@@ -38,12 +39,14 @@ def main():
     parameters = {'InputFile': 'XXX.in', 
                   'InputFormat': 'in',
                   'DolloK': 2,
-                  'Alpha': 0.35,
-                  'Beta': 0.005,
+                  'Alpha': 0.4,
+                  'Beta': 0.00001,
                   'RandomSeed': -1,
                   'PopulationSize': 5,
                   'CrossoverProbability': 0.85,
-                  'MutationProbability': 0.05}
+                  'MutationProbability': 0.3,
+                  'FineGrainedTournamentSize': 2.1,
+                  'MaxNumberGenerations': 3}
     parameters = get_execution_parameters(options, args, parameters)
     if(options.debug or options.verbose):
         print("Execution parameters: ", parameters);
@@ -85,7 +88,7 @@ def main():
                      init_dollo_node_individual, 
                      creator.Individual, 
                      labels=labels, 
-                     k=2)
+                     k=dollo_k)
       
     # register population to toolbbox 
     toolbox.register("population", 
@@ -93,24 +96,28 @@ def main():
                      list, 
                      toolbox.individual)
  
-    # register evaluation function
-    toolbox.register("evaluate", 
-                     evaluate_dollo_node_individual, 
-                     reads)
     # probability of false positives and false negatives
     alpha = float(parameters['Alpha'])
     beta = float(parameters['Beta'])
+    # register evaluation function
+    toolbox.register("evaluate", 
+                     evaluate_dollo_node_individual, 
+                     reads,
+                     alpha)
 
     # register the crossover operator
     toolbox.register("mate", 
-                     crossover_dollo_node_individuals)
+                     crossover_dollo_node_individuals,
+                     labels)
     # probability with which two individuals are crossed
     crossover_probability = float(parameters['CrossoverProbability'])
        
     
     # register a mutation operator 
     toolbox.register("mutate", 
-                     mutate_dollo_node_individual)
+                     mutate_dollo_node_individual, 
+                     labels,
+                     dollo_k)
     # probability for mutating an individual
     mutation_probability = float(parameters['MutationProbability'])
  
@@ -120,7 +127,7 @@ def main():
     # drawn randomly from the current generation.
     toolbox.register("select", 
                      tools.selTournamentFineGrained, 
-                     fgtournsize=3.5)
+                     fgtournsize=float(parameters['FineGrainedTournamentSize']))
 
     # create an initial population, where each individual is a tree
     population_size = int(parameters['PopulationSize'])
@@ -141,7 +148,9 @@ def main():
     # Assign fitness to individuals in population
     for ind, fit in zip(pop, fitnesses):
         ind.fitness.values = fit
-        
+    
+    # Variable for maximum number of generations    
+    max_number_generations = int(parameters['MaxNumberGenerations'])
     # Variable keeping track of the number of generations
     generation = 0
   
@@ -202,7 +211,7 @@ def main():
                
         # Check if any of finishing criteria is meet
         # Criteria based on number of generations
-        if( generation > 10 ):
+        if( generation > max_number_generations ):
             break
         # Criteria based on standard deviation of fitness in population
         fits = [ind.fitness.values[0] for ind in pop]
@@ -218,6 +227,9 @@ def main():
         print (pop)  
     best_ind = tools.selBest(pop, 1)[0]
     print("Best individual is\n%s\n, with fitness %s" % (best_ind, best_ind.fitness.values))
+    if( options.verbose):        
+        print("Efficiency of cashing for funcion dolo_closest_node_distance")
+        print(dolo_closest_node_distance.cache_info())
     return
 
 # this means that if this script is executed, then 
