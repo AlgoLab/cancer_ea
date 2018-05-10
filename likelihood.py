@@ -27,7 +27,7 @@ def path(node):
 		return array
 # array : [0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0]
 
-alfa=0.15
+alfa=0.015
 beta=0.001
 def evaluate(individual,node):
 		likelihood=0
