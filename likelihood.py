@@ -1,50 +1,44 @@
-#node : Node('/root/ST13/ASNS/DNAJC17/MLL3')
-#individual : ['2', '1', '2', '2', '2', '2', '1', '0', '2', '2', '2', '0', '0', '0', '2', '1', '2', '2']
+
+from anytree import RenderTree
+from bitstring import BitArray
+
 import math
-from anytree import Node 
 
-mutations =['PDE4DIP', 'NTRK1', 'SESN2', 'ARHGAP5', 'DNAJC17', 
-			'USP32', 'ANAPC1', 'RETSAT', 'ST13', 'DLEC1', 'FRG1', 'DMXL1', 
-			'FAM115C', 'MLL3', 'ABCB5', 'ASNS', 'PABPC1', 'TOP1MT']
+def evaluate(tree,rows_matrix,alpha,beta):
+        leafs=[]
+        cont=0
+        for row in rows_matrix:
+                result={}
+                likelihood=0
+                for pre,_,node in RenderTree(tree):
+                        result[sub_evaluate(node.binary_tag.bin,row,alpha,beta)]=node
+                likelihood+=max(result.keys())
+                leafs.append((result[likelihood],"s"+str(cont),likelihood))
+                cont+=1
 
-def path(node):
-		array=[]
-		antenati=node.ancestors
-		#list of mutations in the node path
-		m=[]
-		m.append(node.name)
-		for i in antenati:
-			m.append(i.name)
-		for j in mutations:
-			if (j in m) and not("-"+j in m):
-				array.append(1)
-			elif "-"+j in m and j in m:
-				array.append(0)
-			elif "-"+j in m and not(j in m):
-				array.append(-1)
-			else :
-				array.append(0)
-		return array
-# array : [0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0]
+        likelihood_tree=0
+        for leaf in leafs:
+                likelihood_tree+=leaf[2]
+        return (leafs,likelihood_tree)
 
-alfa=0.015
-beta=0.001
-def evaluate(individual,node):
-		likelihood=0
-		path_node=path(node)
-		for elem in individual:
-			if elem == '0':
-				if path_node[j] == 0:
-					likelihood+=math.log10(1-beta)
-				elif path_node[j] == 1:
-					likelihood+=math.log10(beta)
-				elif path_node[j] == -1:
-					return print("error")
-			elif elem == '1':
-				if path_node[j] == 0:
-					likelihood+=math.log10(1-alfa)
-				elif path_node[j] == 1:
-					likelihood+=math.log10(alfa)
-				elif path_node[j] == -1:
-					return print("error")
+def sub_evaluate(node,row_matrix,alpha,beta):
+        likelihood=0
+        for j in range(len(row_matrix)):
+                if row_matrix[j] == '0':
+                        if node[j] == '0':
+                                likelihood+=math.log(1-beta)
+                        elif node[j] == '1':
+                                likelihood+=math.log(alpha)
+                        elif node[j] == '-1':
+                                return print("error")
+                elif row_matrix[j] == '1':
+                        if node[j] == '0':
+                                likelihood+=math.log(beta)
+                        elif node[j] == '1':
+                                likelihood+=math.log(1-alpha)
+                        elif node[j] == '-1':
+                                return print("error")
+                elif row_matrix[j]== '2':
+                        likelihood+=0
+
         return likelihood
