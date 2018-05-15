@@ -12,7 +12,12 @@ from bitstring import BitArray
 from anytree import search
 
 from collection_helpers import next_element_in_cyclic
+from collection_helpers import set_in_both_lists
+
+
 from read_element import ReadElement
+
+
 
 def assign_reads_to_dollo_tree(root, reads):
     """ Assigns all the reads to the closest nodes in the tree,
@@ -181,41 +186,6 @@ def evaluate_dollo_node_individual(reads, individual, alpha):
     """
     return (dollo_evaluate_direct_level2(reads, individual, alpha),)    
 
-def set_consits_of_plus_lebels(list_of_sets):
-    """ Ironing the list of sets and keeping only plus nodes.
-
-    Args:
-        list_of_sets (list): list of the set that is to be searched.
-     
-    Returns:            
-        set of the plus labels in list
-    """
-    ret = {*[]}
-    for s in list_of_sets:
-        for x in s:
-            if(x[-1]=='+'):
-                ret.add(x)
-    return ret
-
-def sets_are_equal(set1,set2):
-    """ Checks if sets are equal
-
-    Args:
-        set1 (set): first set for comparison.
-        set2 (set): second set for comparison.
-     
-    Returns:            
-        boolean that indicate equality of the sets
-    """
-    for x in set1:
-        if( not x in set2):
-            return False;
-    for x in set2:
-        if( not x in set1):
-            return False;
-    return True
-
-
 def dollo_crossover_exchange_subtrees(labels,individual1,individual2):
     """ Crossover between two individuals, by exchanging its subtrees
 
@@ -239,36 +209,45 @@ def dollo_crossover_exchange_subtrees(labels,individual1,individual2):
     part1 = individual1_n.tree_get_partition(part1)
     part2 = {}
     part2 = individual2_n.tree_get_partition(part2)
+    print("*************************************************")
+    print("* dollo_crossover_exchange_subtrees: partitions *")
+    print(individual1_n)
+    print(part1)
+    print(individual2_n)
+    print(part2)
+    print("* dollo_crossover_exchange_subtrees: partitions *")
+    print("*************************************************")
     ret = False
-    for lab in labels:
-        lab += '+'
-        if(not lab in part1):
+    random_label = random.choice(labels)
+    crossover_executed =  False
+    iteration = 1
+    while(not crossover_executed and iteration<=len(labels)):
+        lab_plus = random_label + '+'
+        if(not lab_plus in part1):
+            iteration += 1
+            random_label = next_element_in_cyclic(random_label, labels)
             continue
-        covered1 = part1[lab]
-        set_covered1 = set_consits_of_plus_lebels(covered1)
-        if(len(set_covered1)==0):
+        if(not lab_plus in part2):
+            iteration += 1
+            random_label = next_element_in_cyclic(random_label, labels)
             continue
-        if(not lab in part2):
+        common_set = set_in_both_lists(part1[lab_plus],part2[lab_plus])
+        if(len(common_set)==0):
+            iteration += 1
+            random_label = next_element_in_cyclic(random_label, labels)
             continue
-        covered2 = part2[lab]
-        set_covered2 = set_consits_of_plus_lebels(covered2)
-        if(len(set_covered2)==0):
-            continue
-        if(not sets_are_equal(set_covered1,set_covered2)):
-            continue
-        node1 = search.find(individual1_n,lambda node: node.node_label == lab)
-        node2 = search.find(individual2_n,lambda node: node.node_label == lab)
-        print("**********************************************")
-        print("* Begin in dollo_crossover_exchange_subtrees *")
-        print(node1)
-        print(part1)
-        print(set_covered1)
-        print(node2)
-        print(part2)
-        print(set_covered2)
-        print("*   End in dollo_crossover_exchange_subtrees *")
-        print("**********************************************")
+        else:
+            print("*************************************************")
+            print("* dollo_crossover_exchange_subtrees:            *")
+            print("label: ", lab_plus)
+            print("common set: ", common_set)
+            print("* dollo_crossover_exchange_subtrees:            *")
+            print("*************************************************")            
+        node1 = search.find(individual1_n,lambda node: node.node_label == lab_plus)
+        node2 = search.find(individual2_n,lambda node: node.node_label == lab_plus)
         if(node1.tree_is_equal(node2)):
+            iteration += 1
+            random_label = next_element_in_cyclic(random_label, labels)
             continue
         # Cross over subtrees
         parent1 = node1.parent
@@ -289,6 +268,10 @@ def dollo_crossover_exchange_subtrees(labels,individual1,individual2):
         node2.tree_set_binary_tags(labels)
         ret = True
         break
+    if(ret):
+        print("* dollo_crossover_exchange_subtrees: succesed *")
+    else:
+        print("* dollo_crossover_exchange_subtrees: failed   *")
     return (ret,individual1_n,individual2_n)
 
 def dollo_crossover_exchange_parent_indices(labels,individual1,individual2):
@@ -325,13 +308,13 @@ def dollo_crossover_exchange_parent_indices(labels,individual1,individual2):
             iteration += 1
             random_label = next_element_in_cyclic(random_label, labels)
             continue            
-        print("************************************************************")
-        print("* dollo_crossover_exchange_parent_indices: label selected  *")
-        print(plus_label)
-        print("1: ", individual1_n)
-        print("2: ", individual2_n)
-        print("* dollo_crossover_exchange_parent_indices: label selected  *")
-        print("************************************************************")            
+        #print("************************************************************")
+        #print("* dollo_crossover_exchange_parent_indices: label selected  *")
+        #print(plus_label)
+        #print("1: ", individual1_n)
+        #print("2: ", individual2_n)
+        #print("* dollo_crossover_exchange_parent_indices: label selected  *")
+        #print("************************************************************")            
         # redefine edges
         if( not node2.parent is None ):
             new_parent_1 = search.find(individual1_n,lambda node: node.node_label == node2.parent.node_label)
@@ -344,12 +327,12 @@ def dollo_crossover_exchange_parent_indices(labels,individual1,individual2):
         # execute crossover
         node1.parent = new_parent_1
         node2.parent = new_parent_2
-        print("************************************************************")
-        print("* dollo_crossover_exchange_parent_indices: after crossover *")
-        print("1: ", individual1_n)
-        print("2: ", individual2_n)
-        print("* dollo_crossover_exchange_parent_indices: after crossover  *")
-        print("*************************************************************")                        
+        #print("************************************************************")
+        #print("* dollo_crossover_exchange_parent_indices: after crossover *")
+        #print("1: ", individual1_n)
+        #print("2: ", individual2_n)
+        #print("* dollo_crossover_exchange_parent_indices: after crossover  *")
+        #print("*************************************************************")                        
         # remove or change incorrect minus nodes within node1 and node2            
         crossover_executed = True
     return (crossover_executed,individual1_n,individual2_n)

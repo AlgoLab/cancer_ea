@@ -42,7 +42,7 @@ def main():
                   'Alpha': 0.4,
                   'Beta': 0.00001,
                   'RandomSeed': -1,
-                  'PopulationSize': 5,
+                  'PopulationSize': 10,
                   'CrossoverProbability': 0.85,
                   'MutationProbability': 0.3,
                   'FineGrainedTournamentSize': 2.1,

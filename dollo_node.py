@@ -12,6 +12,7 @@ from anytree import NodeMixin, RenderTree, PostOrderIter
 from bitstring import BitArray
 
 from collection_helpers import next_element_in_cyclic
+from collection_helpers import remove_empty_set_occurences
 
 class DolloNode(EaNode):
     """ Information about nodes of the mutattion tree, according to Dollo model.
@@ -59,7 +60,8 @@ class DolloNode(EaNode):
         ret[self.node_label] = l
         for x in self.children:
             ret = x.tree_get_partition(ret)
-        return ret
+        ret2 = remove_empty_set_occurences(ret)
+        return ret2
 
     def tree_initialize(self, labels, k):
         """ Function for initialization od the tree.
