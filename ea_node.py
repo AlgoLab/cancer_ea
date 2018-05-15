@@ -347,6 +347,7 @@ class EaNode(EaNodeInfo, NodeMixin):
             the root.
 
         """
+        number_of_removed = 0
         for node in PostOrderIter(self):
             if( node.node_label[-1] == '-'):
                 node_OK = False
@@ -362,7 +363,8 @@ class EaNode(EaNodeInfo, NodeMixin):
                 if(not node_OK):
                     for child in node.children:
                         child.parent = node.parent
-        return 0;
+                    number_of_removed += 1
+        return number_of_removed;
     
     def closest_node_in_tree_ignore_unknowns( self, read ):
         """ Finds the closest node in the tree for the given read.
