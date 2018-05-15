@@ -335,6 +335,35 @@ class EaNode(EaNodeInfo, NodeMixin):
                         parent_node = parent_node.parent
         return
  
+    
+    def tree_remove_incorrect_minus_nodes(self):
+        """ Function for removing incorect minus nodes within contained subtree.
+        
+        Returns:
+            Number of removed nodes.
+         
+        Note
+            Minus node is incorrect if there is no relevant plus nodes up to 
+            the root.
+
+        """
+        for node in PostOrderIter(self):
+            if( node.node_label[-1] == '-'):
+                node_OK = False
+                anc_node = node.parent
+                while(True):
+                    if( node.node_label[:-1] == anc_node.node_label[:-1] 
+                    and anc_node.node_label[:-1] ):
+                        node_OK = True
+                        break
+                    if( anc_node.parent is None):
+                        break
+                    anc_node = anc_node.parent
+                if(not node_OK):
+                    for child in node.children:
+                        child.parent = node.parent
+        return 0;
+    
     def closest_node_in_tree_ignore_unknowns( self, read ):
         """ Finds the closest node in the tree for the given read.
         

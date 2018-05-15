@@ -164,7 +164,7 @@ def dollo_evaluate_direct_level3(reads, alpha, individual):
                         read2[k]=False
                         re2 = ReadElement("XXX2", read2, read.unknown_read)
                         (node, d) = dolo_closest_node_distance(individual,re2)
-                        objection_value += d * alpha * alpha
+                        objection_value += d * alpha * alpha * alpha
     return objection_value
 
 def evaluate_dollo_node_individual(reads, individual, alpha):
