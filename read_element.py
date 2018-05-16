@@ -36,7 +36,7 @@ class ReadElement(ReadInfo):
         Returns:
             str: Representation of the instance.
         """
-        return "%s: %s[%s]" % (self.read_label, self.binary_read.bin, self.unknown_read.bin)
+        return "%5s: %s [%s]" % (self.read_label, self.binary_read.bin, self.unknown_read.bin)
  
     def __str__(self):
         """ Obtaining string representation of the instance.
@@ -44,7 +44,7 @@ class ReadElement(ReadInfo):
         Returns:
             str: String representation of the instance.
         """
-        return "%s: %s[%s]" % (self.read_label, self.binary_read.bin, self.unknown_read.bin)
+        return "%5s: %s [%s]" % (self.read_label, self.binary_read.bin, self.unknown_read.bin)
            
         
     

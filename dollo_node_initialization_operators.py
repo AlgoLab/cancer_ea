@@ -18,7 +18,7 @@ def init_dollo_node_individual(ind_class, labels, k):
         DolloNode: individual that is initialized.           
     """
     rootBitArray = BitArray(int = 0, length = len(labels) )
-    root = ind_class('--', rootBitArray)
+    root = ind_class('ooo', rootBitArray)
     root.tree_initialize(labels, k)
     return root
 

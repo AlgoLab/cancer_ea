@@ -107,7 +107,7 @@ class EaNode(EaNodeInfo, NodeMixin):
         Returns:
             size of the tree rooted with self.
         """
-        return (len( self.descendents ) +1)
+        return (len( self.descendants ) +1)
 
     def tree_node_at_position_postorder(self, position):
         """ Function for obtaining node in the tree at given position, where 
@@ -328,7 +328,7 @@ class EaNode(EaNodeInfo, NodeMixin):
             for node in self.descendants:
                 if(node.is_leaf):
                     parent_node = node.parent
-                    while(True):
+                    while(True and not(parent_node is None)):
                         n_s = node.node_label[-1]
                         p_s = parent_node.node_label[-1]
                         p_m = p_s == "+" and n_s == "-"
@@ -337,7 +337,7 @@ class EaNode(EaNodeInfo, NodeMixin):
                                 x.parent = parent_node.parent
                             node.parent = None
                             compact_executed = True
-                        if( parent_node == self):
+                        if( parent_node == self or parent_node is None):
                             break
                         node = parent_node
                         parent_node = parent_node.parent
@@ -360,7 +360,7 @@ class EaNode(EaNodeInfo, NodeMixin):
             if( node.node_label[-1] == '-'):
                 node_OK = False
                 anc_node = node.parent
-                while(True):
+                while(True and not(anc_node is None)):
                     if( node.node_label[:-1] == anc_node.node_label[:-1] 
                     and anc_node.node_label[:-1] ):
                         node_OK = True
@@ -371,6 +371,7 @@ class EaNode(EaNodeInfo, NodeMixin):
                 if(not node_OK):
                     for child in node.children:
                         child.parent = node.parent
+                    node.parent = None
                     number_of_removed += 1
         return number_of_removed;
     

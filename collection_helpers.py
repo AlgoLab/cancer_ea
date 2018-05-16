@@ -68,16 +68,16 @@ def sets_are_equal(set1,set2):
     return True
 
 
-def set_in_both_lists(list1, list2):
-    """ Checks if two lists are containing the same set
+def largest_set_in_both_lists(list1, list2):
+    """ Obtaion the largest set contained in both lists
 
     Args:
-        list1 (list): first list for check.
-        list2 (list): second list for check.
+        list1 (list): first list with sets.
+        list2 (list): second list with sets.
      
     Returns:            
-        set that is common for both lists. Empty set if there is no common 
-        elements.
+        largest set that is contained in  both lists. If there is no common 
+        elements in those lists, return empty set.
     """
     intersect = set()
     for s1 in list1:
@@ -86,7 +86,69 @@ def set_in_both_lists(list1, list2):
                 if( len(s1)>len(intersect)):
                     intersect = s1
     return intersect
-    
+
+def intersection_list_dictionary(list1, dictionary2, key_to_exclude):
+    """ Obtain intersection of elements between list and dictionary where one
+         key is excluded.
+
+    Args:
+        list1 (list): list of sets.
+        dictionary2 (dictionary): key is a label, value is list of sets.
+        key_to_exclude(string): key to be excluded
+        
+    Returns:            
+        list of pairs: key in dictionary2. set of interecting elements.
+    """
+    intersect = []
+    for k2 in dictionary2:
+        if( not(key_to_exclude==k2) ):
+             inter1 = largest_set_in_both_lists(list1, dictionary2[k2])
+             if( not len(inter1)==0 ):
+                intersect.append((k2, inter1))
+    return intersect
+
+def index_of_largest_set_in_list(list1):
+    """ Obtain index of the element that contains largest set in list of pairs,
+        where second component od pair is set.
+
+    Args:
+        list1 (list): list of pairs (label,set).
+        
+    Returns:            
+        index f the element with largest set.
+    """
+    if( len(list1)==0):
+        return -1
+    ind =0 
+    (l,s)= list1[ind]
+    max_len = len(s)
+    for i, val in enumerate(list1):
+        (l,s) = val
+        if( len(s) > max_len):
+            ind = i
+            max_len = len(s)
+    return ind
+
+
+def intersection_dictionary(dictionary1, dictionary2):
+    """ Obtain intersection of elements within two dictionaries 
+
+    Args:
+        dictionary1 (dictionary): key is a label, value is list of sets.
+        dictionary2 (dictionary): key is a label, value is list of sets.
+     
+    Returns:            
+        list of triplets: key in dictionary1. key in dictionary2. set of
+        interecting lists.
+    """
+    intersect = []
+    for k1 in dictionary1:
+        for k2 in dictionary2:
+            if( not(k1 ==k2) ):
+                inter1 = largest_set_in_both_lists(dictionary1[k1], dictionary2[k2])
+                if( not len(inter1)==0 ):
+                    intersect.append((k1, k2, inter1))
+    return intersect
 
 def set_consits_of_plus_lebels(list_of_sets):
     """ Ironing the list of sets and keeping only plus nodes.

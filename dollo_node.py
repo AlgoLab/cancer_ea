@@ -8,8 +8,6 @@ import random
 
 from ea_node import EaNode
 
-from anytree import search
-
 from bitstring import BitArray
 
 from collection_helpers import next_element_in_cyclic
@@ -45,7 +43,7 @@ class DolloNode(EaNode):
                 a list of its partitions as value.
         """
         ret = partition
-        if( self.node_label[-1]!='+' and self.node_label != "--"):
+        if( self.node_label[-1]!='+' and self.node_label != "ooo"):
             return ret
         if( self.children is None):
             ret[self.node_label] = []
@@ -181,41 +179,5 @@ class DolloNode(EaNode):
         self.tree_set_binary_tags(labels)
         return
 
-def add_correct_minus_node(self, labels, dollo_k):
-    """ Adds correct minus node into tree rooted with self. 
-
-    Args:
-        labels (list): list of the lables of the nodes that exists in the tree.
-        dollo_k (int): parametar k in Dollo model
-
-    Note: 
-        If tree is too small, then minus node can not be added.    
-    """
-    if( self.depth <= 1):
-        return
-    position_num = random.randint(0, self.tree_size())
-    position_node = self.tree_node_at_position_postorder(position_num)            
-    random_label = random.choice(labels)
-    iteration = 1
-    while(iteration<=len(labels)):
-        # check if exists relevant plus node
-        if(position_node.tree_node_ancesstor_find(random_label+'+') in None):
-            iteration += 1
-            random_label = next_element_in_cyclic(random_label, labels)
-            continue       
-        # count if overall number of that minus label is already dollo_k
-        tree_root = self.root
-        if( len(search.findall(tree_root,lambda node: node.node_label == random_label+'-')) == dollo_k):
-            iteration += 1
-            random_label = next_element_in_cyclic(random_label, labels)
-            continue       
-        # create and attach leaf node
-        leaf_bit_array = BitArray()
-        leaf = DolloNode(random_label+'-',leaf_bit_array)
-        position_node.attach_child(leaf)
-        position_node.tree_compact_vertical()
-        position_node.tree_compact_horizontal()
-        position_node.tree_rearange_by_label()
-    return
 
 

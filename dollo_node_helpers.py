@@ -3,3 +3,52 @@ for DolloNode individuals.
 
 """
 
+import random
+
+from bitstring import BitArray
+
+from anytree import search
+
+from dollo_node import DolloNode
+
+from collection_helpers import next_element_in_cyclic
+
+def dollo_subtree_add_correct_minus_node(subtree, labels, dollo_k):
+    """ Adds correct minus node into tree rooted with self. 
+
+    Args:
+        labels (list): list of the lables of the nodes that exists in the tree.
+        dollo_k (int): parametar k in Dollo model
+
+    Note: 
+        If tree is too small, then minus node can not be added.    
+    """
+    if( subtree.depth <= 1):
+        return
+    position_num = random.randint(0, subtree.tree_size())
+    position_node = subtree.tree_node_at_position_postorder(position_num)            
+    random_label = random.choice(labels)
+    iteration = 1
+    while(iteration<=len(labels)):
+        # check if exists relevant plus node
+        position_parent = search.find( subtree,lambda node: node.node_label == random_label+'+')
+        if( position_parent is None):
+            iteration += 1
+            random_label = next_element_in_cyclic(random_label, labels)
+            continue       
+        # count if overall number of that minus label is already dollo_k
+        subtree_root = subtree.root
+        if( len(search.findall(subtree_root,lambda node: node.node_label == random_label+'-')) >= dollo_k):
+            iteration += 1
+            random_label = next_element_in_cyclic(random_label, labels)
+            continue       
+        # create and attach leaf node
+        leaf_bit_array = BitArray()
+        leaf = DolloNode(random_label+'-',leaf_bit_array)
+        position_node.attach_child(leaf)
+        position_node.tree_compact_vertical()
+        position_node.tree_compact_horizontal()
+        position_node.tree_rearange_by_label()
+        return
+    return
+

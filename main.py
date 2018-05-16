@@ -7,6 +7,7 @@ inputFile=example_01.in randomSeed=1113 --debug
 
 import optparse
 import random
+import time
 
 from datetime import datetime
 
@@ -19,12 +20,19 @@ from command_line import get_execution_parameters
 from read_input import read_labels_scrs_format_in
 
 from dollo_node import DolloNode
-from dollo_node_operators import init_dollo_node_individual
-from dollo_node_operators import dolo_closest_node_distance
-from dollo_node_operators import evaluate_dollo_node_individual 
-from dollo_node_operators import crossover_dollo_node_exchange_parent_indices
-from dollo_node_operators import crossover_dollo_node_combined
-from dollo_node_operators import mutate_dollo_node_individual
+
+from dollo_node_initialization_operators import init_dollo_node_individual
+
+from dollo_node_evaluation_operators import dolo_closest_node_distance
+from dollo_node_evaluation_operators import evaluate_dollo_node_direct 
+
+from dollo_node_crossover_operators import crossover_dollo_node_exchange_parent_indices
+from dollo_node_crossover_operators import crossover_dollo_node_exchange_subtrees
+from dollo_node_crossover_operators import crossover_dollo_node_combined
+
+from dollo_node_mutation_operators import mutation_dollo_node_add
+from dollo_node_mutation_operators import mutation_dollo_node_combine
+from dollo_node_mutation_operators import mutation_dollo_node_remove
 
 def main():
     """ This function is an entry  point of the application.
@@ -43,21 +51,25 @@ def main():
                   'Alpha': 0.4,
                   'Beta': 0.00001,
                   'RandomSeed': -1,
-                  'PopulationSize': 10,
-                  'CrossoverProbability': 0.85,
-                  'MutationProbability': 0.3,
-                  'FineGrainedTournamentSize': 2.1,
+                  'PopulationSize': 7,
+                  'CrossoverProbability': 0.9,
+                  'MutationProbability': 0.5,
+                  'FineGrainedTournamentSize': 3.5,
                   'MaxNumberGenerations': 3}
     parameters = get_execution_parameters(options, args, parameters)
     if(options.debug or options.verbose):
         print("Execution parameters: ", parameters);
     
     # setting random seed
+    random_seed_value = 0
     if( int(parameters['RandomSeed']) > 0 ):
-        random.seed(int(parameters['RandomSeed']))
+        random_seed_value = int(parameters['RandomSeed'])
     else:
-        random.seed(datetime.now())
-
+        random_seed_value = int(time.mktime(datetime.now().timetuple()))
+    if(options.debug or options.verbose):
+        print("Random seed: ",random_seed_value);
+    random.seed( random_seed_value )
+            
     # reading read elements from input file
     if( parameters['InputFormat'] == 'in' ):
         (labels, reads) = read_labels_scrs_format_in(options, parameters)
@@ -116,7 +128,7 @@ def main():
     
     # register a mutation operator 
     toolbox.register("mutate", 
-                     mutate_dollo_node_individual, 
+                     mutation_dollo_node_combine, 
                      labels,
                      dollo_k)
     # probability for mutating an individual

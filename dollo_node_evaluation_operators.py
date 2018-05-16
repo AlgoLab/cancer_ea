@@ -56,7 +56,6 @@ def dolo_closest_node_distance(individual, read):
     (c_n,d) = individual.closest_node_in_tree(read)
     return (c_n,d)
 
-@lru_cache(maxsize=8192, typed=True)
 def dollo_evaluate_direct_level0(reads, alpha, individual):
     """ Evaluation of the individual. Doesnt't count false positives.
 
@@ -74,7 +73,6 @@ def dollo_evaluate_direct_level0(reads, alpha, individual):
         objection_value += d
     return objection_value
 
-@lru_cache(maxsize=8192, typed=True)
 def dollo_evaluate_direct_level1(reads, alpha, individual):
     """ Evaluation of the individual. Takes into account false positives on
         one position.        
@@ -98,7 +96,6 @@ def dollo_evaluate_direct_level1(reads, alpha, individual):
                 objection_value += d * alpha
     return objection_value
 
-@lru_cache(maxsize=8192, typed=True)
 def dollo_evaluate_direct_level2(reads, alpha, individual):
     """ Evaluation of the individual. Takes into account false positives on
         two positions.        
@@ -124,7 +121,6 @@ def dollo_evaluate_direct_level2(reads, alpha, individual):
     return objection_value
 
 
-@lru_cache(maxsize=8192, typed=True)
 def dollo_evaluate_direct_level3(reads, alpha, individual):
     """ Evaluation of the individual. Takes into account false positives on
         three positions.        
