@@ -22,7 +22,8 @@ from dollo_node import DolloNode
 from dollo_node_operators import init_dollo_node_individual
 from dollo_node_operators import dolo_closest_node_distance
 from dollo_node_operators import evaluate_dollo_node_individual 
-from dollo_node_operators import crossover_dollo_node_individuals
+from dollo_node_operators import crossover_dollo_node_exchange_parent_indices
+from dollo_node_operators import crossover_dollo_node_combined
 from dollo_node_operators import mutate_dollo_node_individual
 
 def main():
@@ -101,14 +102,14 @@ def main():
     beta = float(parameters['Beta'])
     # register evaluation function
     toolbox.register("evaluate", 
-                     evaluate_dollo_node_individual, 
+                     evaluate_dollo_node_direct, 
                      reads,
                      alpha)
 
     # register the crossover operator
     toolbox.register("mate", 
-                     crossover_dollo_node_individuals,
-                     labels)
+                     crossover_dollo_node_exchange_parent_indices,
+                     labels, dollo_k)
     # probability with which two individuals are crossed
     crossover_probability = float(parameters['CrossoverProbability'])
        

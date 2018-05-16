@@ -101,6 +101,14 @@ class EaNode(EaNodeInfo, NodeMixin):
             self.node_label = self.node_label[:-1] + '+'
         return
 
+    def tree_size(self):
+        """ Function for obtaining size of the tree.
+        
+        Returns:
+            size of the tree rooted with self.
+        """
+        return (len( self.descendents ) +1)
+
     def tree_node_at_position_postorder(self, position):
         """ Function for obtaining node in the tree at given position, where 
         nodes are visisted in postoreder maneer.
