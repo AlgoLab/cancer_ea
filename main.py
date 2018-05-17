@@ -23,7 +23,7 @@ from dollo_node import DolloNode
 
 from dollo_node_initialization_operators import init_dollo_node_individual
 
-from dollo_node_evaluation_operators import dolo_closest_node_distance
+from dollo_node_evaluation_operators import dollo_closest_node_distance
 from dollo_node_evaluation_operators import evaluate_dollo_node_direct 
 
 from dollo_node_crossover_operators import crossover_dollo_node_exchange_parent_indices
@@ -228,6 +228,8 @@ def main():
             break
         # Criteria based on standard deviation of fitness in population
         fits = [ind.fitness.values[0] for ind in pop]
+        length = len(pop)
+        mean = sum(fits) / length
         sum2 = sum(x*x for x in fits)
         std = abs(sum2 / length - mean**2)**0.5 
         if( std <= 0):
