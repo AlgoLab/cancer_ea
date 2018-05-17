@@ -223,6 +223,8 @@ class EaNode(EaNodeInfo, NodeMixin):
         
         Returns:
             Booelan: value that indicates if trees are equal.
+        Note:
+            This method requires that both trees have soretd siblings.
         """
         if( another is None ):
             return False

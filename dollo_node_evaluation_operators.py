@@ -3,7 +3,7 @@ for evaluation of DolloNode individuals.
 
 """
 
-from functools import lru_cache 
+#from functools import lru_cache 
 
 from bitstring import BitArray
 
@@ -38,8 +38,8 @@ def assign_reads_to_dollo_tree(root, reads):
         total_distance += d
     return (complete_assignment, total_distance)    
     
-@lru_cache(maxsize=8192, typed=True)
-def dolo_closest_node_distance(individual, read):
+# @lru_cache(maxsize=8192, typed=True)
+def dollo_closest_node_distance(individual, read):
     """ Finds the closest node within the tree for the given read, as well
         as distance betwwen that node and read.
     
@@ -69,7 +69,7 @@ def dollo_evaluate_direct_level0(reads, alpha, individual):
     """
     objection_value = 0
     for read in reads:
-        (node, d) = dolo_closest_node_distance(individual,read)
+        (node, d) = dollo_closest_node_distance(individual,read)
         objection_value += d
     return objection_value
 
@@ -92,7 +92,7 @@ def dollo_evaluate_direct_level1(reads, alpha, individual):
                 read2 = BitArray(read.binary_read)
                 read2[i]=False
                 re2 = ReadElement("XXX2", read2, read.unknown_read)
-                (node, d) = dolo_closest_node_distance(individual,re2)
+                (node, d) = dollo_closest_node_distance(individual,re2)
                 objection_value += d * alpha
     return objection_value
 
@@ -116,7 +116,7 @@ def dollo_evaluate_direct_level2(reads, alpha, individual):
                     read2[i]=False
                     read2[j]=False
                     re2 = ReadElement("XXX2", read2, read.unknown_read)
-                    (node, d) = dolo_closest_node_distance(individual,re2)
+                    (node, d) = dollo_closest_node_distance(individual,re2)
                     objection_value += d * alpha * alpha
     return objection_value
 
@@ -143,7 +143,7 @@ def dollo_evaluate_direct_level3(reads, alpha, individual):
                         read2[j]=False
                         read2[k]=False
                         re2 = ReadElement("XXX2", read2, read.unknown_read)
-                        (node, d) = dolo_closest_node_distance(individual,re2)
+                        (node, d) = dollo_closest_node_distance(individual,re2)
                         objection_value += d * alpha * alpha * alpha
     return objection_value
 

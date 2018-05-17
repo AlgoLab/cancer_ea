@@ -94,9 +94,8 @@ class DolloNode(EaNode):
                 # determine which label should be inserted (initially)
                 label_to_insert = random.choice( labels ) 
                 # prepare loop
-                placed_plus_node = False
                 iterations = 1
-                while(not placed_plus_node and iterations <= len(labels)):
+                while(iterations <= len(labels)):
                     # check if plus node can be placed 
                     # it can be placed only if it is not placed into tree till now
                     if( not label_to_insert in plus_not_used ):
@@ -112,15 +111,14 @@ class DolloNode(EaNode):
                     parent_of_leaf.attach_child(leaf)
                     current_tree_size += 1
                     plus_not_used.discard(label_to_insert)
-                    placed_plus_node = True
+                    break
             else: 
                 # minus node should be added
                 # determine which label should be inserted (initially)
                 label_to_insert = random.choice( labels ) 
                 # prepare loop
-                placed_minus_node = False
                 iterations = 1
-                while(not placed_minus_node and iterations <= len(labels)):
+                while(iterations <= len(labels)):
                     # check if minus node can be placed 
                     # it can be placed only if it is palced less than k times till now
                     if( minus_not_used[label_to_insert] <= 0 ):
@@ -172,7 +170,7 @@ class DolloNode(EaNode):
                     parent_of_leaf.attach_child(leaf)
                     minus_not_used[label_to_insert] -= 1
                     current_tree_size += 1
-                    placed_minus_node = True 
+                    break 
         self.tree_compact_vertical()
         self.tree_compact_horizontal()
         self.tree_rearange_by_label()
