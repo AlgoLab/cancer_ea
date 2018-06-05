@@ -10,17 +10,42 @@ _sasc_ = 'softwares/sasc/sasc'
 
 
 # parameters
-files = ['pat4']
-alphas = [0.1]
-betas = [0.01]
+files = ['/home/lxc_prj_ppp/miniconda3/envs/environment/cancer_gp/data/simulated/exp1/sim1_scs.txt']
+kappas = [1,2,3]
+alphas = [0.05, 0.1, 0.15]
+betas = [0.001, 0.0001, 0.00001]
+
+popsizes = [7]
+maxgens = [3]
+
+crossprobs = [0.9]
+mutprobs = [0.5]
+
+# for sasc
 ks = [2]
 ds = [5]
 rs = [1]
+
 
 #
 # master rule
 #----------------------------------------------------------------------
 rule master :
+	input :
+		expand('{file}.in_results_cgp/cgp-k{kappa}-a{alpha}-b{beta}-pop{popsize}-maxgen{maxgen}-cross{crossprob}-mut{mutprob}-tour{toursize}-rand{seed}.out',
+			file = files,
+			kappa = kappas,
+			alpha = alphas,
+			beta = betas,
+			popsize = popsizes,
+			maxgen = maxgens,
+			crossprob = crossprobs,
+			mutprob = mutprobs,
+			toursize = 3.5,
+			seed = -1)
+
+# for sasc
+rule sasc :
 	input :
 		expand('{file}.sasc-a{alpha}-b{beta}-k{k}-d{d}-r{r}.out',
 			file = files,
@@ -86,3 +111,24 @@ rule run_sasc :
       -a {wildcards.alpha} -b {wildcards.beta} -k {wildcards.k} \
       -d {wildcards.del} -r {wildcards.reps} \
          > {output} 2> {log} ''')
+
+#
+# run cancer gp
+#----------------------------------------------------------------------
+rule run_cgp :
+	input :
+		prgm = '/home/lxc_prj_ppp/miniconda3/envs/environment/cancer_gp/main.py',
+                matrix = '{file}.in'
+
+	output : '{file}.in_results_cgp/cgp-k{kappa}-a{alpha}-b{beta}-pop{popsize}-maxgen{maxgen}-cross{crossprob}-mut{mutprob}-tour{toursize}-rand{seed}.out'
+
+	log : '{file}.in_results_cgp/cgp-k{kappa}-a{alpha}-b{beta}-pop{popsize}-maxgen{maxgen}-cross{crossprob}-mut{mutprob}-tour{toursize}-rand{seed}.log'
+
+	shell : '''
+
+   python {input.prgm} inputfile={input.matrix} \
+      dollok={wildcards.kappa} alpha={wildcards.alpha} beta={wildcards.beta} \
+      populationsize={wildcards.popsize} maxnumbergenerations={wildcards.maxgen} \
+      crossoverprobability={wildcards.crossprob} mutationprobability={wildcards.mutprob} \
+      finegrainedtournamentsize={wildcards.toursize} randomseed={wildcards.seed} \
+         > {output} 2> {log} '''
