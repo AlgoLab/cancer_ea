@@ -31,14 +31,15 @@ def dollo_subtree_add_correct_minus_node(subtree, labels, dollo_k):
     iteration = 1
     while(iteration<=len(labels)):
         # check if exists relevant plus node
-        position_parent = search.find( subtree,lambda node: node.node_label == random_label+'+')
+        position_parent = subtree.tree_node_find(random_label+'+')
         if( position_parent is None):
             iteration += 1
             random_label = next_element_in_cyclic(random_label, labels)
             continue       
         # count if overall number of that minus label is already dollo_k
         subtree_root = subtree.root
-        if( len(search.findall(subtree_root,lambda node: node.node_label == random_label+'-')) >= dollo_k):
+        nodes = subtree_root.tree_node_find_all(random_label+'-')
+        if( len(nodes) >= dollo_k):
             iteration += 1
             random_label = next_element_in_cyclic(random_label, labels)
             continue       

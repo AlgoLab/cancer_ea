@@ -154,16 +154,16 @@ def dollo_node_exchange_parent_indices(individual1, individual2, labels, dollo_k
     iteration = 1
     while(iteration<=len(labels)):
         plus_label = random_label + '+'
-        node1 = search.find(individual1_n,lambda node: node.node_label == plus_label)
-        node2 = search.find(individual2_n,lambda node: node.node_label == plus_label)
+        node1 = individual1_n.tree_node_find(plus_label)
+        node2 = individual2_n.tree_node_find(plus_label)
         # if labels of parents are the same, then there is no need for crossover 
         if(node1.parent.node_label==node2.parent.node_label):
             iteration += 1
             random_label = next_element_in_cyclic(random_label, labels)
             continue            
         # if parent in one tree exists among descendants in another, then crossover is impossible 
-        problem_child_1 = search.find(node1,lambda node: node.node_label == node2.parent.node_label)
-        problem_child_2 = search.find(node2,lambda node: node.node_label == node1.parent.node_label)
+        problem_child_1 = node1.tree_node_find(node2.parent.node_label)
+        problem_child_2 = node2.tree_node_find(node1.parent.node_label)
         if((not problem_child_1 is None)or(not problem_child_2 is None)):
             iteration += 1
             random_label = next_element_in_cyclic(random_label, labels)
@@ -177,11 +177,11 @@ def dollo_node_exchange_parent_indices(individual1, individual2, labels, dollo_k
         #print("************************************************************")            
         # redefine edges
         if( not node2.parent is None ):
-            new_parent_1 = search.find(individual1_n,lambda node: node.node_label == node2.parent.node_label)
+            new_parent_1 = individual1_n.tree_node_find(node2.parent.node_label)
         else:
             new_parent_1 = individual1_n
         if( not node1.parent is None ):
-            new_parent_2 = search.find(individual2_n,lambda node: node.node_label == node1.parent.node_label)
+            new_parent_2 = individual2_n.tree_node_find( node1.parent.node_label)
         else:
             new_parent_2 = individual2_n
         # do the switch

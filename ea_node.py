@@ -154,6 +154,38 @@ class EaNode(EaNodeInfo, NodeMixin):
                 anc = anc.parent
         return ret
 
+    def tree_node_find(self, label):
+        """ Function for obtaining node in the tree that have adequate label.
+        
+        Args:
+            label (:str): Label of node that is searched.
+        
+        Returns:
+            node with given label. If there is not such node in tree
+            rooted with self, function will return None.
+        """
+        ret = None
+        for node in PostOrderIter(self):
+            if( node.node_label == label):
+                return node
+        return ret
+
+    def tree_node_find_all(self, label):
+        """ Function for obtaining set of nodes in the tree that have adequate label.
+        
+        Args:
+            label (:str): Label of node that is searched.
+        
+        Returns:
+            set of nodes with given label. If there is not such node in tree
+            rooted with self, function will return empty set.
+        """
+        ret = set()
+        for node in PostOrderIter(self):
+            if( node.node_label == label):
+                ret.add(node)
+        return ret
+
 
     def children_set_binary_tags(self, labels):
         """ Set binary tag of all children according to label.

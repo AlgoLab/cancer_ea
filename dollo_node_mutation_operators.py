@@ -39,7 +39,7 @@ def mutation_dollo_node_add(labels,k,individual):
         random_parent = random.choice(individual_n.descendants)
         random_label = random.choice(labels)
         # remove old plus node
-        old_plus_node = search.find(individual_n,lambda node: node.node_label == random_label+'+')
+        old_plus_node = individual_n.tree_node_find(random_label+'+')
         parent_old_plus_node = old_plus_node.parent
         for child in old_plus_node.children:
             child.parent = parent_old_plus_node
