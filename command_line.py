@@ -43,6 +43,7 @@ def get_execution_parameters(options, args, parameters):
     beta_re = re.compile(r'[B|b]eta=[0-9].[0-9]+')    
     randomSeed_re = re.compile(r'[R|r]andom[S|s]eed=[0-9]+')
     populationSize_re = re.compile(r'[P|p]opulation[S|s]ize=[0-9]+')
+    eliteSize_re = re.compile(r'[E|e]lite[S|s]ize=[0-9]+')
     crossoverProbability_re = re.compile(r'[C|c]rossover[P|p]robability=[0-9].[0-9]+')
     mutationProbability_re = re.compile(r'[M|m]utation[P|p]robability=[0-9].[0-9]+')
     fineGrainedTournamentSize_re = re.compile(r'[F|f]ine[G|g]rained[T|t]ournament[S|s]ize=[0-9].[0-9]+')
@@ -82,6 +83,10 @@ def get_execution_parameters(options, args, parameters):
             parameters['PopulationSize'] = arg.split('=')[1]
             break
     for arg in args:    
+        if eliteSize_re.match(arg) :
+            parameters['EliteSize'] = arg.split('=')[1]
+            break
+    for arg in args:    
         if crossoverProbability_re.match(arg) :
             parameters['CrossoverProbability'] = arg.split('=')[1]
             break
@@ -114,7 +119,8 @@ def usage_explanation(parameters):
     ret += "Beta=<beta_value>\t(optional, float - default value: '" + str(parameters['Beta']) + "')\n"
     ret += "RandomSeed=<seed_value>\t(optional, integer - default value: " + str(parameters['RandomSeed']) + ")\n"
     ret += "\t Note: if parameter RandomSeed is negative, random number sequence will start with current time\n"
-    ret += "PopulationaSize=<size>\t(optional, integer - default value: '" + str(parameters['PopulationaSize']) + "')\n"
+    ret += "PopulationSize=<size>\t(optional, integer - default value: '" + str(parameters['PopulationaSize']) + "')\n"
+    ret += "EliteSize=<size>\t(optional, integer - default value: '" + str(parameters['EliteSize']) + "')\n"
     ret += "CrossoverProbability=<probability>\t(optional, float - default value: '" + str(parameters['CrossoverProbability']) + "')\n"
     ret += "MutationProbability=<probability>\t(optional, float - default value: '" + str(parameters['MutationProbability']) + "')\n"
     ret += "FineGrainedTournamentSize=<fgts_size>\t(optional, float - default value: '" + str(parameters['MutationProbability']) + "')\n"

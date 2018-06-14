@@ -31,18 +31,20 @@ def dollo_node_exchange_subtrees(individual1, individual2, labels, dollo_k):
         should not be same.
         Minus nodes will be set after exchanging.
     """
-    individual1_n = copy.deepcopy( individual1 )
-    individual2_n = copy.deepcopy( individual2 )
+    #if(not individual1.is_correct(labels, dollo_k)):
+    #    raise ValueError("Error! \n inidividual1: \n", individual1) 
     part1 = {}
-    part1 = individual1_n.tree_get_partition(part1)
+    part1 = individual1.tree_get_partition(part1)
+    #if(not individual2.is_correct(labels, dollo_k)):
+    #    raise ValueError("Error! \n inidividual2: \n", individual2) 
     part2 = {}
-    part2 = individual2_n.tree_get_partition(part2)
+    part2 = individual2.tree_get_partition(part2)
     #print("*************************************************")
     #print("* dollo_node_exchange_subtrees:                 *")
     #print(" partitions:")
-    #print(individual1_n)
+    #print(individual1)
     #print(part1)
-    #print(individual2_n)
+    #print(individual2)
     #print(part2)
     #print("* dollo_node_exchange_subtrees:                 *")
     #print("*************************************************")
@@ -75,8 +77,8 @@ def dollo_node_exchange_subtrees(individual1, individual2, labels, dollo_k):
         if(ind_max < 0):
             continue
         (node2_label, intersection_set) = intersection[ind_max]            
-        node1 = search.find(individual1_n,lambda node: node.node_label == node1_label)
-        node2 = search.find(individual2_n,lambda node: node.node_label == node2_label)
+        node1 = individual1.tree_node_find(node1_label)
+        node2 = individual2.tree_node_find(node2_label)
         #print("*************************************************")
         #print("* dollo_node_exchange_subtrees:                 *")
         #print(" node1")
@@ -87,10 +89,10 @@ def dollo_node_exchange_subtrees(individual1, individual2, labels, dollo_k):
         #print("*************************************************")
         # find roots of subrees
         label_in_subtree = next(iter(intersection_set))
-        subnode1 = search.find(individual1_n,lambda node: node.node_label == label_in_subtree)
+        subnode1 = individual1.tree_node_find(label_in_subtree)
         while( not (subnode1.parent == node1) ):
             subnode1 = subnode1.parent
-        subnode2 = search.find(individual2_n,lambda node: node.node_label == label_in_subtree)
+        subnode2 = individual2.tree_node_find(label_in_subtree)
         while( not (subnode2.parent == node2) ):
             subnode2 = subnode2.parent
         #print("*************************************************")
@@ -113,24 +115,25 @@ def dollo_node_exchange_subtrees(individual1, individual2, labels, dollo_k):
         num_removed = subnode1.tree_remove_incorrect_minus_nodes()
         for i in range(0,num_removed):
             dollo_subtree_add_correct_minus_node(subnode1,labels,dollo_k)
-        subnode1.tree_compact_vertical()
-        subnode1.tree_compact_horizontal()
-        subnode1.tree_rearange_by_label()
-        subnode1.tree_set_binary_tags(labels)
-        # Compaction and regularization in subtree roted with node2
+         # Compaction and regularization in subtree roted with node2
         num_removed = subnode2.tree_remove_incorrect_minus_nodes()
         for i in range(0,num_removed):
             dollo_subtree_add_correct_minus_node(subnode2,labels,dollo_k)
-        subnode2.tree_compact_vertical()
-        subnode2.tree_compact_horizontal()
-        subnode2.tree_rearange_by_label()
-        subnode2.tree_set_binary_tags(labels)
+        individual1.tree_compact_vertical()
+        individual1.tree_compact_horizontal()
+        individual1.tree_rearange_by_label()
+        individual1.tree_set_binary_tags(labels)
+        individual2.tree_compact_vertical()
+        individual2.tree_compact_horizontal()
+        individual2.tree_rearange_by_label()
+        individual2.tree_set_binary_tags(labels)
         ret = True
         break
-    offsprings_are_different = not (individual1.tree_is_equal(individual1_n) 
-        and individual2.tree_is_equal(individual2_n) ) 
-    ret = ret and offsprings_are_different
-    return (ret,individual1_n,individual2_n)
+    #if(not individual1.is_correct(labels, dollo_k)):
+    #    raise ValueError("Error! \n inidividual1: \n", individual1) 
+    #if(not individual2.is_correct(labels, dollo_k)):
+    #    raise ValueError("Error! \n inidividual2: \n", individual2) 
+    return (ret,individual1,individual2)
 
 
 def dollo_node_exchange_parent_indices(individual1, individual2, labels, dollo_k):
@@ -147,23 +150,43 @@ def dollo_node_exchange_parent_indices(individual1, individual2, labels, dollo_k
         triple where the first componet is indicator of succes and the second 
         and third are resulted individuals after exchanging.    
      """
-    individual1_n = copy.deepcopy(individual1)
-    individual2_n = copy.deepcopy(individual2)
+    #if(not individual1.is_correct(labels, dollo_k)):
+    #    raise ValueError("Error! \n inidividual1: \n", individual1) 
+    #if(not individual2.is_correct(labels, dollo_k)):
+    #    raise ValueError("Error! \n inidividual2: \n", individual2) 
     random_label = random.choice(labels)
     ret = False
     iteration = 1
     while(iteration<=len(labels)):
         plus_label = random_label + '+'
-        node1 = individual1_n.tree_node_find(plus_label)
-        node2 = individual2_n.tree_node_find(plus_label)
-        # if labels of parents are the same, then there is no need for crossover 
-        if(node1.parent.node_label==node2.parent.node_label):
+        node1 = individual1.tree_node_find(plus_label)
+        if(node1 is None):
+            raise ValueError("Error: This shouldn't happend!\n",
+                             "plusabel: ", plus_label, "\n",
+                             "tree: \n", individual1, "\n",
+                             "labels: ", labels)
+        node2 = individual2.tree_node_find(plus_label)
+        if(node2 is None):
+            raise ValueError("Error: This shouldn't happend!\n",
+                             "plusabel: ", plus_label, "\n",
+                             "tree: \n", individual2, "\n",
+                             "labels: ", labels)
+        # obtain the most inner plus parrent of node1 
+        n1_pn = node1.parent
+        while( not (n1_pn is None) and n1_pn.node_label[-1] != '+' ):
+            n1_pn = n1_pn.parent
+        # obtain the most inner plus parrent of node2 
+        n2_pn = node2.parent
+        while( not (n2_pn is None) and n2_pn.node_label[-1] != '+' ):
+            n2_pn = n2_pn.parent
+        # if labels of plus parents are the same, then there is no need for crossover 
+        if( n1_pn is None or n2_pn is None or n1_pn.node_label==n2_pn.node_label):
             iteration += 1
             random_label = next_element_in_cyclic(random_label, labels)
             continue            
         # if parent in one tree exists among descendants in another, then crossover is impossible 
-        problem_child_1 = node1.tree_node_find(node2.parent.node_label)
-        problem_child_2 = node2.tree_node_find(node1.parent.node_label)
+        problem_child_1 = node1.tree_node_find(n2_pn.node_label)
+        problem_child_2 = node2.tree_node_find(n1_pn.node_label)
         if((not problem_child_1 is None)or(not problem_child_2 is None)):
             iteration += 1
             random_label = next_element_in_cyclic(random_label, labels)
@@ -171,46 +194,49 @@ def dollo_node_exchange_parent_indices(individual1, individual2, labels, dollo_k
         #print("************************************************************")
         #print("* dollo_node_exchange_parent_indices: label selected       *")
         #print(plus_label)
-        #print("1: ", individual1_n)
-        #print("2: ", individual2_n)
+        #print("1: ", individual1)
+        #print("2: ", individual2)
         #print("* dollo_node_exchange_parent_indices: label selected       *")
         #print("************************************************************")            
         # redefine edges
         if( not node2.parent is None ):
-            new_parent_1 = individual1_n.tree_node_find(node2.parent.node_label)
+            new_parent_1 = individual1.tree_node_find(n2_pn.node_label)
         else:
-            new_parent_1 = individual1_n
+            new_parent_1 = individual1
         if( not node1.parent is None ):
-            new_parent_2 = individual2_n.tree_node_find( node1.parent.node_label)
+            new_parent_2 = individual2.tree_node_find( n1_pn.node_label)
         else:
-            new_parent_2 = individual2_n
+            new_parent_2 = individual2
         # do the switch
         node1.parent = new_parent_1
         node2.parent = new_parent_2
         num_removed = node1.tree_remove_incorrect_minus_nodes()
         for i in range(0,num_removed):
             dollo_subtree_add_correct_minus_node(node1,labels, dollo_k)
-        node1.tree_compact_vertical()
-        node1.tree_compact_horizontal()
-        node1.tree_rearange_by_label()
         num_removed = node2.tree_remove_incorrect_minus_nodes()
         for i in range(0,num_removed):
             dollo_subtree_add_correct_minus_node(node2, labels, dollo_k)
-        node2.tree_compact_vertical()
-        node2.tree_compact_horizontal()
-        node2.tree_rearange_by_label()
+        individual1.tree_compact_vertical()
+        individual1.tree_compact_horizontal()
+        individual1.tree_set_binary_tags(labels)
+        individual1.tree_rearange_by_label()
+        individual2.tree_compact_vertical()
+        individual2.tree_compact_horizontal()
+        individual2.tree_rearange_by_label()
+        individual2.tree_set_binary_tags(labels)
         #print("************************************************************")
         #print("* dollo_node_exchange_parent_indices: after switch         *")
-        #print("1: ", individual1_n)
-        #print("2: ", individual2_n)
+        #print("1: ", individual1)
+        #print("2: ", individual2)
         #print("* dollo_node_exchange_parent_indices: after switch         *")
         #print("************************************************************")                               
         ret = True
         break
-    offsprings_are_different = not (individual1.tree_is_equal(individual1_n) 
-        and individual2.tree_is_equal(individual2_n) ) 
-    ret = ret and offsprings_are_different
-    return (ret,individual1_n,individual2_n)
+    #if(not individual1.is_correct(labels, dollo_k)):
+    #    raise ValueError("Error! \n inidividual1: \n", individual1) 
+    #if(not individual2.is_correct(labels, dollo_k)):
+    #    raise ValueError("Error! \n inidividual2: \n", individual2) 
+    return (ret,individual1,individual2)
 
           
 def crossover_dollo_node_exchange_subtrees(labels,dollo_k,individual1,individual2):
@@ -227,17 +253,21 @@ def crossover_dollo_node_exchange_subtrees(labels,dollo_k,individual1,individual
         two-element tuple which contains offsprings e.g. output of the
         crossover process.
     """
+    #if(not individual1.is_correct(labels, dollo_k)):
+    #    raise ValueError("Error! \n inidividual1: \n", individual1) 
+    #if(not individual2.is_correct(labels, dollo_k)):
+    #    raise ValueError("Error! \n inidividual2: \n", individual2) 
     if(individual1.tree_is_equal(individual2)):
-        individual1_new = copy.deepcopy( individual1 )
-        individual2_new = copy.deepcopy( individual2 )
-        return(individual1_new,individual2_new)
-    (success,individual1_new,individual2_new) = dollo_node_exchange_subtrees(
+        return(individual1,individual2)
+    (success,individual1,individual2) = dollo_node_exchange_subtrees(
             individual1, individual2, labels, dollo_k)
     if(success):
-        return (individual1_new,individual2_new,)
-    individual1_new = copy.deepcopy( individual1 )
-    individual2_new = copy.deepcopy( individual2 )
-    return (individual1_new,individual2_new)
+        return (individual1,individual2,)
+    #if(not individual1.is_correct(labels, dollo_k)):
+    #    raise ValueError("Error! \n inidividual1: \n", individual1) 
+    #if(not individual2.is_correct(labels, dollo_k)):
+    #    raise ValueError("Error! \n inidividual2: \n", individual2) 
+    return (individual1,individual2)
 
 
 def crossover_dollo_node_exchange_parent_indices(labels,dollo_k,individual1,individual2):
@@ -253,18 +283,21 @@ def crossover_dollo_node_exchange_parent_indices(labels,dollo_k,individual1,indi
         two-element tuple which contains offsprings e.g. output of the
         crossover process.
     """
+    #if(not individual1.is_correct(labels, dollo_k)):
+    #    raise ValueError("Error! \n inidividual1: \n", individual1) 
+    #if(not individual2.is_correct(labels, dollo_k)):
+    #    raise ValueError("Error! \n inidividual2: \n", individual2) 
     if(individual1.tree_is_equal(individual2)):
-        individual1_new = copy.deepcopy( individual1 )
-        individual2_new = copy.deepcopy( individual2 )
-        return(individual1_new,individual2_new)
-    (success,individual1_new,individual2_new) = dollo_node_exchange_parent_indices(
+         return(individual1,individual2)
+    (success,individual1,individual2) = dollo_node_exchange_parent_indices(
             individual1, individual2, labels, dollo_k)
     if(success):
-        return (individual1_new,individual2_new,)
-    individual1_new = copy.deepcopy( individual1 )
-    individual2_new = copy.deepcopy( individual2 )
-    return (individual1_new,individual2_new)
-
+        return (individual1,individual2,)
+    #if(not individual1.is_correct(labels, dollo_k)):
+    #    raise ValueError("Error! \n inidividual1: \n", individual1) 
+    #if(not individual2.is_correct(labels, dollo_k)):
+    #    raise ValueError("Error! \n inidividual2: \n", individual2) 
+    return (individual1,individual2)
 
 
 def crossover_dollo_node_combined(labels,dollo_k,individual1,individual2):
@@ -280,19 +313,23 @@ def crossover_dollo_node_combined(labels,dollo_k,individual1,individual2):
         two-element tuple which contains offsprings e.g. output of the
         crossover process.
     """
+    #if(not individual1.is_correct(labels, dollo_k)):
+    #    raise ValueError("Error! \n inidividual1: \n", individual1) 
+    #if(not individual2.is_correct(labels, dollo_k)):
+    #    raise ValueError("Error! \n inidividual2: \n", individual2) 
     if(individual1.tree_is_equal(individual2)):
-        individual1_new = copy.deepcopy( individual1 )
-        individual2_new = copy.deepcopy( individual2 )
-        return(individual1_new,individual2_new)
-    (success,individual1_new,individual2_new) = dollo_node_exchange_subtrees(
+        return(individual1,individual2)
+    (success,individual1,individual2) = dollo_node_exchange_subtrees(
             individual1, individual2, labels, dollo_k)
     if(success):
-        return (individual1_new,individual2_new,)
-    (success,individual1_new,individual2_new) = dollo_node_exchange_parent_indices(
+        return (individual1,individual2,)
+    (success,individual1,individual2) = dollo_node_exchange_parent_indices(
             individual1, individual2, labels, dollo_k)
     if(success):
-        return (individual1_new,individual2_new,)
-    individual1_new = copy.deepcopy( individual1 )
-    individual2_new = copy.deepcopy( individual2 )
-    return (individual1_new,individual2_new)
+        return (individual1,individual2,)
+    #if(not individual1.is_correct(labels, dollo_k)):
+    #    raise ValueError("Error! \n inidividual1: \n", individual1) 
+    #if(not individual2.is_correct(labels, dollo_k)):
+    #    raise ValueError("Error! \n inidividual2: \n", individual2) 
+    return (individual1,individual2)
 

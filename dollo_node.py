@@ -31,6 +31,28 @@ class DolloNode(EaNode):
         self.binary_tag = binary_tag
         self.parent = parent
 
+    def is_correct(self, labels, dollo_k):
+        """ Function for checking if it is the correct dollo tree (e.g. there
+        are all plus labels and not more than k minus labels).
+        
+        Args:
+            labels (list): list of labels.
+            dollo_k : Dollo k value 
+
+        Returns:
+            indicator if tree is correct dollo tree.
+        """
+        for l in labels:
+            p_l = l + '+'
+            x = self.tree_node_find(p_l)
+            if(x is None):
+                return False
+            m_l = l + '-'
+            x = self.tree_node_find_all( m_l )
+            if(len(x) > dollo_k):
+                return False
+        return True
+
     def tree_get_partition(self, partition):
         """ Function for obtaining partitions od the tree that is make by each
             of the plus nodes.
@@ -62,13 +84,13 @@ class DolloNode(EaNode):
         ret2 = remove_empty_set_occurences(ret)
         return ret2
 
-    def tree_initialize(self, labels, k):
+    def tree_initialize(self, labels, dollo_k):
         """ Function for initialization od the tree.
         
         Args:
             labels (list): Parameter `labels`represents the list of the labels
                 that are given to nodes with sufix '+' or '-'.
-            k (:int): Parameter `k` represents k parameter in Dollo model.            
+            dollo_k (:int): Parameter `dollo_k` represents k parameter in Dollo model.            
         
         Note
             Firstly, (pseudo) randomly is decided if plus node or minus node 
@@ -79,7 +101,7 @@ class DolloNode(EaNode):
         plus_not_used = set(labels)
         minus_not_used = {}
         for l in labels:
-            minus_not_used[l] = k
+            minus_not_used[l] = dollo_k
         current_tree_size = 1
         max_size = len(labels) + int(random.random()*len(labels))  
         i=1
@@ -175,6 +197,8 @@ class DolloNode(EaNode):
         self.tree_compact_horizontal()
         self.tree_rearange_by_label()
         self.tree_set_binary_tags(labels)
+        #if(not self.is_correct(labels, dollo_k)):
+        #    raise ValueError("Error! \n inidividual: \n", self) 
         return
 
 

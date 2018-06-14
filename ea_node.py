@@ -194,6 +194,7 @@ class EaNode(EaNodeInfo, NodeMixin):
         Hamming distance between binary tags of parent and child node should be 1.
         """
         for node in self.children:
+            node.binary_tag.clear()
             node.binary_tag.append( self.binary_tag )
             current_label = node.node_label.strip()
             bit = -1
