@@ -1,7 +1,7 @@
 """  The :mod:`cancer_gp` module represents an entry  point of the application.
 
 Example for command-line parameters:
-inputFile=example_01.in randomSeed=1113 --debug
+inputFile=example_01.in RandomSeed=1113 PopulationSize=150 EliteSize=50 --debug
 
 """
 
