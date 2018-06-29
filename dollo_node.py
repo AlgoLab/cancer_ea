@@ -40,18 +40,19 @@ class DolloNode(EaNode):
             dollo_k : Dollo k value 
 
         Returns:
-            indicator if tree is correct dollo tree.
+            pair where first component is indicator if tree is correct dollo tree,
+            and second compnent is label that causes problem.
         """
         for l in labels:
             p_l = l + '+'
             x = self.tree_node_find(p_l)
             if(x is None):
-                return False
+                return (False, p_l)
             m_l = l + '-'
             x = self.tree_node_find_all( m_l )
             if(len(x) > dollo_k):
-                return False
-        return True
+                return (False, m_l)
+        return (True, None)
 
     def tree_get_partition(self, partition):
         """ Function for obtaining partitions od the tree that is make by each
@@ -197,8 +198,11 @@ class DolloNode(EaNode):
         self.tree_compact_horizontal()
         self.tree_rearange_by_label()
         self.tree_set_binary_tags(labels)
-        #if(not self.is_correct(labels, dollo_k)):
-        #    raise ValueError("Error! \n inidividual: \n", self) 
+        is_ok = self.is_correct(labels, dollo_k) 
+        if(not is_ok[0]):
+            raise ValueError("Error!" + "\n" 
+                             + "reason: " + is_ok[1] + "\n" 
+                             + "inidividual: " + "\n", self) 
         return
 
 

@@ -26,8 +26,11 @@ def mutation_dollo_node_add(labels,dollo_k,individual):
         pair where the first componet is indicator of succes and the second is
         individual that is mutated e.g. output of the mutation process.
     """
-    if(not individual.is_correct(labels, dollo_k)):
-        raise ValueError("Error! \n inidividual: \n", individual) 
+    #is_ok = individual.is_correct(labels, dollo_k) 
+    #if(not is_ok[0]):
+    #    raise ValueError("Error!" + "\n" 
+    #                     + "reason: " + is_ok[1] + "\n" 
+    #                     + "inidividual: " + "\n", individual) 
     #print("************************************************************")
     #print("* mutation_dollo_node_add                                  *")
     #print(" at begin: ",individual)
@@ -38,9 +41,14 @@ def mutation_dollo_node_add(labels,dollo_k,individual):
     if(label_is_plus):
         # adding plus label and removing same plus label
         random_parent = random.choice(individual.descendants)
+        #print("random_parent: ", random_parent, "\n")
         random_label = random.choice(labels)
-        while( random_label + '+' == random_parent.node_label ):
+        #print("random_label: ", random_label, "\n")
+        while( random_label + '+' == random_parent.node_label):
             random_label = random.choice(labels)
+        # this parent node will dissapear, so its parent is provided for attach
+        if( random_label + '-' == random_parent.node_label ):
+            random_parent = random_parent.parent
         #print("random_parent: ", random_parent, "\n")
         #print("random_label: ", random_label, "\n")
         # remove old plus node
@@ -49,7 +57,9 @@ def mutation_dollo_node_add(labels,dollo_k,individual):
         for child in old_plus_node.children:
             child.parent = parent_old_plus_node
         old_plus_node.parent = None
+        #print( "after removing old plus node", individual)
         num_removed = parent_old_plus_node.tree_remove_incorrect_minus_nodes()
+        #print( "after removing minus nodes", individual)
         # create new leaf node
         new_bit_array = BitArray()
         new_node = DolloNode(random_label+'+',new_bit_array)
@@ -70,8 +80,11 @@ def mutation_dollo_node_add(labels,dollo_k,individual):
     #print("at end: ",individual)
     #print("* mutation_dollo_node_add:                                 *")
     #print("************************************************************")                               
-    if(not individual.is_correct(labels, dollo_k)):
-        raise ValueError("Error! \n inidividual: \n", individual) 
+    #is_ok = individual.is_correct(labels, dollo_k) 
+    #if(not is_ok[0]):
+    #    raise ValueError("Error!" + "\n" 
+    #                     + "reason: " + is_ok[1] + "\n" 
+    #                     + "inidividual: " + "\n", individual) 
     return (True,individual)
 
 def mutation_dollo_node_remove(labels, dollo_k, individual):
@@ -87,8 +100,11 @@ def mutation_dollo_node_remove(labels, dollo_k, individual):
         pair where the first componet is indicator of succes and the second is
         individual that is mutated e.g. output of the mutation process.
     """
-    if(not individual.is_correct(labels, dollo_k)):
-        raise ValueError("Error! \n inidividual: \n", individual) 
+    #is_ok = individual.is_correct(labels, dollo_k) 
+    #if(not is_ok[0]):
+    #    raise ValueError("Error!" + "\n" 
+    #                     + "reason: " + is_ok[1] + "\n" 
+    #                     + "inidividual: " + "\n", individual) 
     #print("************************************************************")
     #print("* mutation_dollo_node_remove                               *")
     #print("at start: ",individual)
@@ -126,8 +142,11 @@ def mutation_dollo_node_remove(labels, dollo_k, individual):
     #print("at end: ",individual_n)
     #print("* mutation_dollo_node_remove                               *")
     #print("************************************************************")                               
-    if(not individual.is_correct(labels, dollo_k)):
-        raise ValueError("Error! \n inidividual: \n", individual) 
+    #is_ok = individual.is_correct(labels, dollo_k) 
+    #if(not is_ok[0]):
+    #    raise ValueError("Error!" + "\n" 
+    #                     + "reason: " + is_ok[1] + "\n" 
+    #                     + "inidividual: " + "\n", individual) 
     return (True,individual)
 
 def mutation_dollo_node_promote(labels, dollo_k, level, individual):
@@ -145,8 +164,11 @@ def mutation_dollo_node_promote(labels, dollo_k, level, individual):
         pair where the first componet is indicator of succes and the second is
         individual that is mutated e.g. output of the mutation process.
     """
-    if(not individual.is_correct(labels, dollo_k)):
-        raise ValueError("Error! \n inidividual: \n", individual) 
+    #is_ok = individual.is_correct(labels, dollo_k) 
+    #if(not is_ok[0]):
+    #    raise ValueError("Error!" + "\n" 
+    #                     + "reason: " + is_ok[1] + "\n" 
+    #                     + "inidividual: " + "\n", individual) 
     return (False,individual)
 
 
@@ -165,8 +187,11 @@ def mutation_dollo_node_demote(labels, dollo_k, level, individual):
         pair where the first componet is indicator of succes and the second is
         individual that is mutated e.g. output of the mutation process.
     """
-    if(not individual.is_correct(labels, dollo_k)):
-        raise ValueError("Error! \n inidividual: \n", individual) 
+    #is_ok = individual.is_correct(labels, dollo_k) 
+    #if(not is_ok[0]):
+    #    raise ValueError("Error!" + "\n" 
+    #                     + "reason: " + is_ok[1] + "\n" 
+    #                     + "inidividual: " + "\n", individual) 
     return (False,individual)
 
 
@@ -183,8 +208,11 @@ def mutation_dollo_node_combine(labels, dollo_k, individual):
         tuple where the first elelemt is mutataed e.g. output of the
         mutation process.
     """
-    if(not individual.is_correct(labels, dollo_k)):
-        raise ValueError("Error! \n inidividual: \n", individual) 
+    #is_ok = individual.is_correct(labels, dollo_k) 
+    #if(not is_ok[0]):
+    #    raise ValueError("Error!" + "\n" 
+    #                     + "reason: " + is_ok[1] + "\n" 
+    #                     + "inidividual: " + "\n", individual) 
     random01 = random.random()
     if(random01 <= 0.5): 
         (success,individual) = mutation_dollo_node_add(labels, dollo_k, individual)
@@ -200,8 +228,11 @@ def mutation_dollo_node_combine(labels, dollo_k, individual):
         else:
             (success,individual) = mutation_dollo_node_add(labels, dollo_k, individual)
             return (individual,)
-    if(not individual.is_correct(labels, dollo_k)):
-        raise ValueError("Error! \n inidividual: \n", individual) 
+    is_ok = individual.is_correct(labels, dollo_k) 
+    #if(not is_ok[0]):
+    #    raise ValueError("Error!" + "\n" 
+    #                     + "reason: " + is_ok[1] + "\n" 
+    #                     + "inidividual: " + "\n", individual) 
     return (individual)
 
 
@@ -218,14 +249,23 @@ def mutation_dollo_node_local_search(labels, dollo_k, individual):
         tuple where the first elelemt is mutataed e.g. output of the
         mutation process.
     """
-    if(not individual.is_correct(labels, dollo_k)):
-        raise ValueError("Error! \n inidividual: \n", individual) 
+    #is_ok = individual.is_correct(labels, dollo_k) 
+    #if(not is_ok[0]):
+    #    raise ValueError("Error!" + "\n" 
+    #                     + "reason: " + is_ok[1] + "\n" 
+    #                     + "inidividual: " + "\n", individual) 
     (success,individual) = mutation_dollo_node_add(labels, dollo_k, individual)
     if(success):
-        if(not individual.is_correct(labels, dollo_k)):
-            raise ValueError("Error! \n inidividual: \n", individual) 
+        #is_ok = individual.is_correct(labels, dollo_k) 
+        #if(not is_ok[0]):
+        #    raise ValueError("Error!" + "\n" 
+        #                     + "reason: " + is_ok[1] + "\n" 
+        #                     + "inidividual: " + "\n", individual) 
         return (individual,)
     else:
-        if(not individual.is_correct(labels, dollo_k)):
-            raise ValueError("Error! \n inidividual: \n", individual) 
+        #is_ok = individual.is_correct(labels, dollo_k) 
+        #if(not is_ok[0]):
+        #    raise ValueError("Error!" + "\n" 
+        #                     + "reason: " + is_ok[1] + "\n" 
+        #                     + "inidividual: " + "\n", individual) 
         return (individual,)

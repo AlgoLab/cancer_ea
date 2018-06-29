@@ -36,13 +36,18 @@ def dollo_subtree_add_correct_minus_node(subtree, labels, dollo_k):
             iteration += 1
             random_label = next_element_in_cyclic(random_label, labels)
             continue       
+        # check if direct parent of new minus node that should be addes is relevant plus node
+        if( position_node.node_label == random_label+'+'):
+            iteration += 1
+            random_label = next_element_in_cyclic(random_label, labels)
+            continue
         # count if overall number of that minus label is already dollo_k
         subtree_root = subtree.root
         nodes = subtree_root.tree_node_find_all(random_label+'-')
         if( len(nodes) >= dollo_k):
             iteration += 1
             random_label = next_element_in_cyclic(random_label, labels)
-            continue       
+            continue               
         # create and attach leaf node
         leaf_bit_array = BitArray()
         leaf = DolloNode(random_label+'-',leaf_bit_array)

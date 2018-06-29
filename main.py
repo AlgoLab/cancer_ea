@@ -21,6 +21,7 @@ from read_input import read_labels_scrs_format_in
 
 from dollo_node import DolloNode
 
+
 from dollo_node_initialization_operators import init_dollo_node_individual
 
 from dollo_node_evaluation_operators import dollo_closest_node_distance
@@ -59,18 +60,18 @@ def main():
     (options, args) = parser.parse_args()
     
     # obtaining execution paramters
-    parameters = {'InputFile': 'XXX.in', 
+    parameters = {'InputFile': 'xxx.in', 
                   'InputFormat': 'in',
-                  'DolloK': 2,
+                  'DolloK': 1,
                   'Alpha': 0.4,
                   'Beta': 0.00001,
                   'RandomSeed': 1528981076,
-                  'PopulationSize': 5,
+                  'PopulationSize': 7,
                   'EliteSize': 2,
-                  'CrossoverProbability': 0.7,
-                  'MutationProbability': 0.15,
+                  'CrossoverProbability': 0.32,
+                  'MutationProbability': 0.96,
                   'FineGrainedTournamentSize': 3.5,
-                  'MaxNumberGenerations': 3}
+                  'MaxNumberGenerations': 10}
     parameters = get_execution_parameters(options, args, parameters)
     print("Execution parameters: ", parameters);
     print("------------------------")
@@ -83,8 +84,11 @@ def main():
         random_seed_value = int(time.mktime(datetime.now().timetuple()))
     random.seed( random_seed_value )
     print("Random seed: ",random_seed_value);
+    time_of_start = time.time()
+    print("Execution starts at time: ", time_of_start )
     print("------------------------")
-            
+    
+        
     # reading read elements from input file
     if( parameters['InputFormat'] == 'in' ):
         (labels, reads) = read_labels_scrs_format_in(options, parameters)
@@ -96,10 +100,13 @@ def main():
     else:
         print("Error: Input format is not right.")
         return
+    if( options.verbose):
+        current_time = time.time()
+        print("Parameters read after: ", current_time - time_of_start)
+        time_of_start = current_time
 
     if( options.debug or options.verbose):
         print("Start of evolution")
-    
     # create fitness function
     creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
    
@@ -197,12 +204,22 @@ def main():
     toolbox.register("select", 
                      tools.selTournamentFineGrained, 
                      fgtournsize=fgt_size)
+
+    if( options.verbose):
+        current_time = time.time()
+        print("Registering operators for deap after: ", current_time - time_of_start)
+        time_of_start = current_time
     
     # Evaluate the entire population
     fitnesses = list(map(toolbox.evaluate, pop))
     if( options.debug):
         print("Fitnesses of individuals in population - initial")
         print (fitnesses)
+
+    if( options.verbose):
+        current_time = time.time()
+        print("Initial evaluating the entire population after: ", current_time - time_of_start)
+        time_of_start = current_time
     
     # Assign fitness to individuals in population
     for ind, fit in zip(pop, fitnesses):
@@ -220,7 +237,8 @@ def main():
     while True:
         if( options.debug or options.verbose):
             print("-- Generation %i --" % generation)
-
+            print("Generation at: ",  time.time())
+   
         if( options.debug or options.verbose):
             fits = [ind.fitness.values[0] for ind in pop]
             length = len(pop)
@@ -266,6 +284,10 @@ def main():
         offspring = list(map(toolbox.clone, offspring))
         if(options.verbose):
             print("offspring (after selection) \n =", offspring)
+        if( options.verbose):
+            current_time = time.time()
+            print("Selecting offsprings after: ", current_time - time_of_start)
+            time_of_start = current_time
   
         # Apply crossover on the offsprings
         for i in range(0,len(offspring)):
@@ -285,6 +307,10 @@ def main():
                 del child2.fitness.values
         if(options.verbose):
             print("offspring (after crossover) \n =", offspring)
+        if( options.verbose):
+            current_time = time.time()
+            print("Crossover after: ", current_time - time_of_start)
+            time_of_start = current_time
 
         # Apply mutation on the offspring
         for mutant in offspring:
@@ -296,6 +322,10 @@ def main():
                 del mutant.fitness.values
         if(options.verbose):
             print("offspring (after mutation) \n =", offspring)
+        if( options.verbose):
+            current_time = time.time()
+            print("Mutation after: ", current_time - time_of_start)
+            time_of_start = current_time
    
         # Evaluate the new individuals that has no fitness until now
         invalid_ind = [ind for ind in offspring if not ind.fitness.valid]
@@ -333,6 +363,10 @@ def main():
                 pop[i] = pool[i-elite_size]
         if(options.verbose):
             print("population (all items are copied) \n =", pop)
+        if( options.verbose):
+            current_time = time.time()
+            print("Evaluation of changed individuals after: ", current_time - time_of_start)
+            time_of_start = current_time
 
 
         # Check if any of finishing criteria is meet
@@ -357,7 +391,7 @@ def main():
     print("Best individual is\n%s\n, with fitness %s" % (best_ind, best_ind.fitness.values))
     if( options.verbose):        
         print("Efficiency of cashing for funcion dolo_closest_node_distance")
-        print(dolo_closest_node_distance.cache_info())
+        print(dollo_closest_node_distance.cache_info())
     return
 
 # this means that if this script is executed, then 

@@ -3,7 +3,7 @@ for evaluation of DolloNode individuals.
 
 """
 
-#from functools import lru_cache 
+from functools import lru_cache 
 
 from bitstring import BitArray
 
@@ -38,7 +38,7 @@ def assign_reads_to_dollo_tree(root, reads):
         total_distance += d
     return (complete_assignment, total_distance)    
     
-# @lru_cache(maxsize=8192, typed=True)
+@lru_cache(maxsize=8192, typed=True)
 def dollo_closest_node_distance(individual, read):
     """ Finds the closest node within the tree for the given read, as well
         as distance betwwen that node and read.

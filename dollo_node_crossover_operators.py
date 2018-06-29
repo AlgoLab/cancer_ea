@@ -31,12 +31,18 @@ def dollo_node_exchange_subtrees(individual1, individual2, labels, dollo_k):
         should not be same.
         Minus nodes will be set after exchanging.
     """
-    #if(not individual1.is_correct(labels, dollo_k)):
-    #    raise ValueError("Error! \n inidividual1: \n", individual1) 
+    #is_ok = individual1.is_correct(labels, dollo_k) 
+    #if(not is_ok[0]):
+    #        raise ValueError("Error!" + "\n" 
+    #                         + "reason: " + is_ok[1] + "\n" 
+    #                         + "inidividual: " + "\n", individual1) 
+    #is_ok = individual2.is_correct(labels, dollo_k) 
+    #if(not is_ok[0]):
+    #        raise ValueError("Error!" + "\n" 
+    #                         + "reason: " + is_ok[1] + "\n" 
+    #                         + "inidividual: " + "\n", individual2) 
     part1 = {}
     part1 = individual1.tree_get_partition(part1)
-    #if(not individual2.is_correct(labels, dollo_k)):
-    #    raise ValueError("Error! \n inidividual2: \n", individual2) 
     part2 = {}
     part2 = individual2.tree_get_partition(part2)
     #print("*************************************************")
@@ -129,10 +135,16 @@ def dollo_node_exchange_subtrees(individual1, individual2, labels, dollo_k):
         individual2.tree_set_binary_tags(labels)
         ret = True
         break
-    #if(not individual1.is_correct(labels, dollo_k)):
-    #    raise ValueError("Error! \n inidividual1: \n", individual1) 
-    #if(not individual2.is_correct(labels, dollo_k)):
-    #    raise ValueError("Error! \n inidividual2: \n", individual2) 
+    #is_ok = individual1.is_correct(labels, dollo_k) 
+    #if(not is_ok[0]):
+    #    raise ValueError("Error!" + "\n" 
+    #                     + "reason: " + is_ok[1] + "\n" 
+    #                     + "inidividual: " + "\n", individual1) 
+    #is_ok = individual2.is_correct(labels, dollo_k) 
+    #if(not is_ok[0]):
+    #    raise ValueError("Error!" + "\n" 
+    #                     + "reason: " + is_ok[1] + "\n" 
+    #                     + "inidividual: " + "\n", individual2) 
     return (ret,individual1,individual2)
 
 
@@ -150,10 +162,16 @@ def dollo_node_exchange_parent_indices(individual1, individual2, labels, dollo_k
         triple where the first componet is indicator of succes and the second 
         and third are resulted individuals after exchanging.    
      """
-    #if(not individual1.is_correct(labels, dollo_k)):
-    #    raise ValueError("Error! \n inidividual1: \n", individual1) 
-    #if(not individual2.is_correct(labels, dollo_k)):
-    #    raise ValueError("Error! \n inidividual2: \n", individual2) 
+    #is_ok = individual1.is_correct(labels, dollo_k) 
+    #if(not is_ok[0]):
+    #    raise ValueError("Error!" + "\n" 
+    #                     + "reason: " + is_ok[1] + "\n" 
+    #                     + "inidividual: " + "\n", individual1) 
+    #is_ok = individual2.is_correct(labels, dollo_k) 
+    #if(not is_ok[0]):
+    #    raise ValueError("Error!" + "\n" 
+    #                     + "reason: " + is_ok[1] + "\n" 
+    #                     + "inidividual: " + "\n", individual2) 
     random_label = random.choice(labels)
     ret = False
     iteration = 1
@@ -232,10 +250,16 @@ def dollo_node_exchange_parent_indices(individual1, individual2, labels, dollo_k
         #print("************************************************************")                               
         ret = True
         break
-    #if(not individual1.is_correct(labels, dollo_k)):
-    #    raise ValueError("Error! \n inidividual1: \n", individual1) 
-    #if(not individual2.is_correct(labels, dollo_k)):
-    #    raise ValueError("Error! \n inidividual2: \n", individual2) 
+    #is_ok = individual1.is_correct(labels, dollo_k) 
+    #if(not is_ok[0]):
+    #    raise ValueError("Error!" + "\n" 
+    #                     + "reason: " + is_ok[1] + "\n" 
+    #                     + "inidividual: " + "\n", individual1) 
+    #is_ok = individual2.is_correct(labels, dollo_k) 
+    #if(not is_ok[0]):
+    #    raise ValueError("Error!" + "\n" 
+    #                     + "reason: " + is_ok[1] + "\n" 
+    #                     + "inidividual: " + "\n", individual2) 
     return (ret,individual1,individual2)
 
           
@@ -253,20 +277,32 @@ def crossover_dollo_node_exchange_subtrees(labels,dollo_k,individual1,individual
         two-element tuple which contains offsprings e.g. output of the
         crossover process.
     """
-    #if(not individual1.is_correct(labels, dollo_k)):
-    #    raise ValueError("Error! \n inidividual1: \n", individual1) 
-    #if(not individual2.is_correct(labels, dollo_k)):
-    #    raise ValueError("Error! \n inidividual2: \n", individual2) 
+    #is_ok = individual1.is_correct(labels, dollo_k) 
+    #if(not is_ok[0]):
+    #    raise ValueError("Error!" + "\n" 
+    #                     + "reason: " + is_ok[1] + "\n" 
+    #                     + "inidividual: " + "\n", individual1) 
+    #is_ok = individual2.is_correct(labels, dollo_k) 
+    #if(not is_ok[0]):
+    #    raise ValueError("Error!" + "\n" 
+    #                     + "reason: " + is_ok[1] + "\n" 
+    #                     + "inidividual: " + "\n", individual2) 
     if(individual1.tree_is_equal(individual2)):
         return(individual1,individual2)
     (success,individual1,individual2) = dollo_node_exchange_subtrees(
             individual1, individual2, labels, dollo_k)
     if(success):
         return (individual1,individual2,)
-    #if(not individual1.is_correct(labels, dollo_k)):
-    #    raise ValueError("Error! \n inidividual1: \n", individual1) 
-    #if(not individual2.is_correct(labels, dollo_k)):
-    #    raise ValueError("Error! \n inidividual2: \n", individual2) 
+    #is_ok = individual1.is_correct(labels, dollo_k) 
+    #if(not is_ok[0]):
+    #    raise ValueError("Error!" + "\n" 
+    #                     + "reason: " + is_ok[1] + "\n" 
+    #                     + "inidividual: " + "\n", individual1) 
+    #is_ok = individual2.is_correct(labels, dollo_k) 
+    #if(not is_ok[0]):
+    #    raise ValueError("Error!" + "\n" 
+    #                     + "reason: " + is_ok[1] + "\n" 
+    #                     + "inidividual: " + "\n", individual2) 
     return (individual1,individual2)
 
 
@@ -283,20 +319,32 @@ def crossover_dollo_node_exchange_parent_indices(labels,dollo_k,individual1,indi
         two-element tuple which contains offsprings e.g. output of the
         crossover process.
     """
-    #if(not individual1.is_correct(labels, dollo_k)):
-    #    raise ValueError("Error! \n inidividual1: \n", individual1) 
-    #if(not individual2.is_correct(labels, dollo_k)):
-    #    raise ValueError("Error! \n inidividual2: \n", individual2) 
+    #is_ok = individual1.is_correct(labels, dollo_k) 
+    #if(not is_ok[0]):
+    #    raise ValueError("Error!" + "\n" 
+    #                     + "reason: " + is_ok[1] + "\n" 
+    #                     + "inidividual: " + "\n", individual1) 
+    #is_ok = individual2.is_correct(labels, dollo_k) 
+    #if(not is_ok[0]):
+    #    raise ValueError("Error!" + "\n" 
+    #                     + "reason: " + is_ok[1] + "\n" 
+    #                     + "inidividual: " + "\n", individual2) 
     if(individual1.tree_is_equal(individual2)):
          return(individual1,individual2)
     (success,individual1,individual2) = dollo_node_exchange_parent_indices(
             individual1, individual2, labels, dollo_k)
     if(success):
         return (individual1,individual2,)
-    #if(not individual1.is_correct(labels, dollo_k)):
-    #    raise ValueError("Error! \n inidividual1: \n", individual1) 
-    #if(not individual2.is_correct(labels, dollo_k)):
-    #    raise ValueError("Error! \n inidividual2: \n", individual2) 
+    #is_ok = individual1.is_correct(labels, dollo_k) 
+    #if(not is_ok[0]):
+    #    raise ValueError("Error!" + "\n" 
+    #                     + "reason: " + is_ok[1] + "\n" 
+    #                     + "inidividual: " + "\n", individual1) 
+    #is_ok = individual2.is_correct(labels, dollo_k) 
+    #if(not is_ok[0]):
+    #    raise ValueError("Error!" + "\n" 
+    #                     + "reason: " + is_ok[1] + "\n" 
+    #                     + "inidividual: " + "\n", individual2) 
     return (individual1,individual2)
 
 
@@ -313,10 +361,16 @@ def crossover_dollo_node_combined(labels,dollo_k,individual1,individual2):
         two-element tuple which contains offsprings e.g. output of the
         crossover process.
     """
-    #if(not individual1.is_correct(labels, dollo_k)):
-    #    raise ValueError("Error! \n inidividual1: \n", individual1) 
-    #if(not individual2.is_correct(labels, dollo_k)):
-    #    raise ValueError("Error! \n inidividual2: \n", individual2) 
+    #is_ok = individual1.is_correct(labels, dollo_k) 
+    #if(not is_ok[0]):
+    #    raise ValueError("Error!" + "\n" 
+    #                     + "reason: " + is_ok[1] + "\n" 
+    #                     + "inidividual: " + "\n", individual1) 
+    #is_ok = individual2.is_correct(labels, dollo_k) 
+    #if(not is_ok[0]):
+    #    raise ValueError("Error!" + "\n" 
+    #                     + "reason: " + is_ok[1] + "\n" 
+    #                     + "inidividual: " + "\n", individual2) 
     if(individual1.tree_is_equal(individual2)):
         return(individual1,individual2)
     (success,individual1,individual2) = dollo_node_exchange_subtrees(
@@ -327,9 +381,15 @@ def crossover_dollo_node_combined(labels,dollo_k,individual1,individual2):
             individual1, individual2, labels, dollo_k)
     if(success):
         return (individual1,individual2,)
-    #if(not individual1.is_correct(labels, dollo_k)):
-    #    raise ValueError("Error! \n inidividual1: \n", individual1) 
-    #if(not individual2.is_correct(labels, dollo_k)):
-    #    raise ValueError("Error! \n inidividual2: \n", individual2) 
+    #is_ok = individual1.is_correct(labels, dollo_k) 
+    #if(not is_ok[0]):
+    #    raise ValueError("Error!" + "\n" 
+    #                     + "reason: " + is_ok[1] + "\n" 
+    #                     + "inidividual: " + "\n", individual1) 
+    #is_ok = individual2.is_correct(labels, dollo_k) 
+    #if(not is_ok[0]):
+    #    raise ValueError("Error!" + "\n" 
+    #                     + "reason: " + is_ok[1] + "\n" 
+    #                     + "inidividual: " + "\n", individual2) 
     return (individual1,individual2)
 
