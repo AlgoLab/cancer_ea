@@ -66,12 +66,12 @@ def main():
                   'Alpha': 0.4,
                   'Beta': 0.00001,
                   'RandomSeed': 1528981076,
-                  'PopulationSize': 7,
-                  'EliteSize': 2,
-                  'CrossoverProbability': 0.32,
-                  'MutationProbability': 0.96,
+                  'PopulationSize': 9,
+                  'EliteSize': 3,
+                  'CrossoverProbability': 0.96,
+                  'MutationProbability': 0.64,
                   'FineGrainedTournamentSize': 3.5,
-                  'MaxNumberGenerations': 10}
+                  'MaxNumberGenerations': 50}
     parameters = get_execution_parameters(options, args, parameters)
     print("Execution parameters: ", parameters);
     print("------------------------")
@@ -389,7 +389,7 @@ def main():
         print (pop)  
     best_ind = tools.selBest(pop, 1)[0]
     print("Best individual is\n%s\n, with fitness %s" % (best_ind, best_ind.fitness.values))
-    if( options.verbose):        
+    if( options.debug):        
         print("Efficiency of cashing for funcion dolo_closest_node_distance")
         print(dollo_closest_node_distance.cache_info())
     return

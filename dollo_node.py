@@ -45,8 +45,8 @@ class DolloNode(EaNode):
         """
         for l in labels:
             p_l = l + '+'
-            x = self.tree_node_find(p_l)
-            if(x is None):
+            x = self.tree_node_find_all(p_l)
+            if(len(x) != 1):
                 return (False, p_l)
             m_l = l + '-'
             x = self.tree_node_find_all( m_l )

@@ -56,7 +56,7 @@ def dollo_closest_node_distance(individual, read):
     (c_n,d) = individual.closest_node_in_tree(read)
     return (c_n,d)
 
-def dollo_evaluate_direct_level0(reads, alpha, individual):
+def dollo_evaluate_direct_only_level0(reads, alpha, individual):
     """ Evaluation of the individual. Doesnt't count false positives.
 
     Args:
@@ -73,6 +73,92 @@ def dollo_evaluate_direct_level0(reads, alpha, individual):
         objection_value += d
     return objection_value
 
+def dollo_evaluate_direct_only_level1(reads, alpha, individual):
+    """ Evaluation of the individual. Takes into account false positives on
+        one position.        
+
+    Args:
+         reads (list): list of the reads that should be assigned to various nodes 
+                  in the tree.
+         individual (DoloNode): individual that should be evaluated.
+         alpha: probability of false positive
+    Returns:            
+         objection value of the individual to be evaluated.    
+    """
+    objection_value = 0
+    for read in reads:
+        for i in range(0,read.binary_read.length):
+            if( read.binary_read[i]):
+                read2 = BitArray(read.binary_read)
+                read2[i]=False
+                re2 = ReadElement("XXX2", read2, read.unknown_read)
+                (node, d) = dollo_closest_node_distance(individual,re2)
+                objection_value += d
+    return objection_value
+
+def dollo_evaluate_direct_only_level2(reads, alpha, individual):
+    """ Evaluation of the individual. Takes into account false positives on
+        two positions.        
+    Args:
+         reads (list): list of the reads that should be assigned to various nodes 
+                  in the tree.
+         individual (DoloNode): individual that should be evaluated.
+         alpha: probability of false positive
+    Returns:            
+         objection value of the individual to be evaluated.    
+    """
+    objection_value = 0
+    for read in reads:
+        for i in range(0,read.binary_read.length):
+            for j in range(i+1, read.binary_read.length):
+                if( read.binary_read[i] and read.binary_read[j]):
+                    read2 = BitArray(read.binary_read)
+                    read2[i]=False
+                    read2[j]=False
+                    re2 = ReadElement("XXX2", read2, read.unknown_read)
+                    (node, d) = dollo_closest_node_distance(individual,re2)
+                    objection_value += d 
+    return objection_value
+
+def dollo_evaluate_direct_only_level3(reads, alpha, individual):
+    """ Evaluation of the individual. Takes into account false positives on
+        three positions.        
+    Args:
+         reads (list): list of the reads that should be assigned to various nodes 
+                  in the tree.
+         individual (DoloNode): individual that should be evaluated.
+         alpha: probability of false positive
+    Returns:            
+         objection value of the individual to be evaluated.    
+    """
+    objection_value = 0
+    for read in reads:
+        for i in range(0,read.binary_read.length):
+            for j in range(i+1, read.binary_read.length):
+                for k in range(j+1, read.binary_read.length):
+                    if( read.binary_read[i] and read.binary_read[j] and read.binary_read[k]):
+                        read2 = BitArray(read.binary_read)
+                        read2[i]=False
+                        read2[j]=False
+                        read2[k]=False
+                        re2 = ReadElement("XXX2", read2, read.unknown_read)
+                        (node, d) = dollo_closest_node_distance(individual,re2)
+                        objection_value += d * alpha * alpha * alpha
+    return objection_value
+
+def dollo_evaluate_direct_level0(reads, alpha, individual):
+    """ Evaluation of the individual. Doesnt't count false positives.
+
+    Args:
+         reads (list): list of the reads that should be assigned to various nodes 
+                  in the tree.
+         individual (DoloNode): individual that should be evaluated.
+         alpha: probability of false positive
+    Returns:            
+         objection value of the individual to be evaluated.    
+    """
+    return dollo_evaluate_direct_only_level0(reads, alpha, individual)
+
 def dollo_evaluate_direct_level1(reads, alpha, individual):
     """ Evaluation of the individual. Takes into account false positives on
         one position.        
@@ -85,15 +171,8 @@ def dollo_evaluate_direct_level1(reads, alpha, individual):
     Returns:            
          objection value of the individual to be evaluated.    
     """
-    objection_value = dollo_evaluate_direct_level0(reads, alpha, individual)
-    for read in reads:
-        for i in range(0,read.binary_read.length):
-            if( read.binary_read[i]):
-                read2 = BitArray(read.binary_read)
-                read2[i]=False
-                re2 = ReadElement("XXX2", read2, read.unknown_read)
-                (node, d) = dollo_closest_node_distance(individual,re2)
-                objection_value += d * alpha
+    objection_value = dollo_evaluate_direct_only_level0(reads, alpha, individual) * (1-alpha)
+    objection_value += dollo_evaluate_direct_only_level1(reads, alpha, individual) * alpha
     return objection_value
 
 def dollo_evaluate_direct_level2(reads, alpha, individual):
@@ -107,19 +186,10 @@ def dollo_evaluate_direct_level2(reads, alpha, individual):
     Returns:            
          objection value of the individual to be evaluated.    
     """
-    objection_value = dollo_evaluate_direct_level1(reads, alpha, individual)
-    for read in reads:
-        for i in range(0,read.binary_read.length):
-            for j in range(i+1, read.binary_read.length):
-                if( read.binary_read[i] and read.binary_read[j]):
-                    read2 = BitArray(read.binary_read)
-                    read2[i]=False
-                    read2[j]=False
-                    re2 = ReadElement("XXX2", read2, read.unknown_read)
-                    (node, d) = dollo_closest_node_distance(individual,re2)
-                    objection_value += d * alpha * alpha
+    objection_value = dollo_evaluate_direct_only_level0(reads, alpha, individual) * (1-alpha-alpha*alpha)
+    objection_value += dollo_evaluate_direct_only_level1(reads, alpha, individual) * alpha
+    objection_value += dollo_evaluate_direct_only_level2(reads, alpha, individual) * alpha * alpha
     return objection_value
-
 
 def dollo_evaluate_direct_level3(reads, alpha, individual):
     """ Evaluation of the individual. Takes into account false positives on
@@ -132,19 +202,10 @@ def dollo_evaluate_direct_level3(reads, alpha, individual):
     Returns:            
          objection value of the individual to be evaluated.    
     """
-    objection_value = dollo_evaluate_direct_level2(reads, alpha, individual)
-    for read in reads:
-        for i in range(0,read.binary_read.length):
-            for j in range(i+1, read.binary_read.length):
-                for k in range(j+1, read.binary_read.length):
-                    if( read.binary_read[i] and read.binary_read[j] and read.binary_read[k]):
-                        read2 = BitArray(read.binary_read)
-                        read2[i]=False
-                        read2[j]=False
-                        read2[k]=False
-                        re2 = ReadElement("XXX2", read2, read.unknown_read)
-                        (node, d) = dollo_closest_node_distance(individual,re2)
-                        objection_value += d * alpha * alpha * alpha
+    objection_value = dollo_evaluate_direct_only_level0(reads, alpha, individual) * (1-alpha-alpha*alpha-alpha*alpha*alpha)
+    objection_value += dollo_evaluate_direct_only_level1(reads, alpha, individual) * alpha
+    objection_value += dollo_evaluate_direct_only_level2(reads, alpha, individual) * alpha * alpha
+    objection_value += dollo_evaluate_direct_only_level3(reads, alpha, individual) * alpha * alpha * alpha
     return objection_value
 
 def evaluate_dollo_node_direct(reads, individual, alpha):
