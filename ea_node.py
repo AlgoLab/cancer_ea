@@ -10,6 +10,8 @@ from anytree import NodeMixin, RenderTree, PostOrderIter
 
 from bitstring import BitArray
 
+from functools import lru_cache 
+
 class EaNodeInfo(object):
     """ Information about nodes of the EA Tree.
     """
@@ -33,6 +35,7 @@ class EaNode(EaNodeInfo, NodeMixin):
         self.node_label = node_label
         self.binary_tag = binary_tag
         self.parent = parent
+        self.closest_node_in_tree = lru_cache(maxsize=128)(self.closest_node_in_tree)
 
     def __repr__(self):
         """ Obtaining representation of the instance.

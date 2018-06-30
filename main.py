@@ -19,6 +19,7 @@ from deap import tools
 from command_line import get_execution_parameters
 from read_input import read_labels_scrs_format_in
 
+from ea_node import EaNode
 from dollo_node import DolloNode
 
 
@@ -66,12 +67,12 @@ def main():
                   'Alpha': 0.4,
                   'Beta': 0.00001,
                   'RandomSeed': 1528981076,
-                  'PopulationSize': 9,
-                  'EliteSize': 3,
+                  'PopulationSize': 90,
+                  'EliteSize': 30,
                   'CrossoverProbability': 0.96,
                   'MutationProbability': 0.64,
                   'FineGrainedTournamentSize': 3.5,
-                  'MaxNumberGenerations': 50}
+                  'MaxNumberGenerations': 300}
     parameters = get_execution_parameters(options, args, parameters)
     print("Execution parameters: ", parameters);
     print("------------------------")
@@ -84,8 +85,9 @@ def main():
         random_seed_value = int(time.mktime(datetime.now().timetuple()))
     random.seed( random_seed_value )
     print("Random seed: ",random_seed_value);
-    time_of_start = time.time()
-    print("Execution starts at time: ", time_of_start )
+    time_of_start = time.clock()
+    time_of_start_generation = time.clock()
+    print("Execution starts at time: ", time_of_start/1000.0)
     print("------------------------")
     
         
@@ -101,8 +103,9 @@ def main():
         print("Error: Input format is not right.")
         return
     if( options.verbose):
-        current_time = time.time()
-        print("Parameters read after: ", current_time - time_of_start)
+        current_time = time.clock()
+        print("Parameters read after: ", 
+              (current_time - time_of_start)/1000.0, " sec.")
         time_of_start = current_time
 
     if( options.debug or options.verbose):
@@ -206,8 +209,9 @@ def main():
                      fgtournsize=fgt_size)
 
     if( options.verbose):
-        current_time = time.time()
-        print("Registering operators for deap after: ", current_time - time_of_start)
+        current_time = time.clock()
+        print("Registering operators for deap after: ", 
+              (current_time - time_of_start)/1000.0, " sec.")
         time_of_start = current_time
     
     # Evaluate the entire population
@@ -215,11 +219,6 @@ def main():
     if( options.debug):
         print("Fitnesses of individuals in population - initial")
         print (fitnesses)
-
-    if( options.verbose):
-        current_time = time.time()
-        print("Initial evaluating the entire population after: ", current_time - time_of_start)
-        time_of_start = current_time
     
     # Assign fitness to individuals in population
     for ind, fit in zip(pop, fitnesses):
@@ -237,7 +236,10 @@ def main():
     while True:
         if( options.debug or options.verbose):
             print("-- Generation %i --" % generation)
-            print("Generation at: ",  time.time())
+            current_time_generation = time.clock()
+            print("New generation after: ",  
+                  (current_time_generation - time_of_start_generation)/1000.0, " sec.")
+            time_of_start_generation = current_time_generation
    
         if( options.debug or options.verbose):
             fits = [ind.fitness.values[0] for ind in pop]
@@ -285,8 +287,9 @@ def main():
         if(options.verbose):
             print("offspring (after selection) \n =", offspring)
         if( options.verbose):
-            current_time = time.time()
-            print("Selecting offsprings after: ", current_time - time_of_start)
+            current_time = time.clock()
+            print("Selecting offsprings after: ", 
+                  (current_time - time_of_start)/1000.0, " sec.")
             time_of_start = current_time
   
         # Apply crossover on the offsprings
@@ -308,8 +311,9 @@ def main():
         if(options.verbose):
             print("offspring (after crossover) \n =", offspring)
         if( options.verbose):
-            current_time = time.time()
-            print("Crossover after: ", current_time - time_of_start)
+            current_time = time.clock()
+            print("Crossover after: ", 
+                  (current_time - time_of_start)/1000.0, " sec.")
             time_of_start = current_time
 
         # Apply mutation on the offspring
@@ -323,8 +327,9 @@ def main():
         if(options.verbose):
             print("offspring (after mutation) \n =", offspring)
         if( options.verbose):
-            current_time = time.time()
-            print("Mutation after: ", current_time - time_of_start)
+            current_time = time.clock()
+            print("Mutation after: ", 
+                  (current_time - time_of_start)/1000.0, " sec.")
             time_of_start = current_time
    
         # Evaluate the new individuals that has no fitness until now
@@ -364,8 +369,9 @@ def main():
         if(options.verbose):
             print("population (all items are copied) \n =", pop)
         if( options.verbose):
-            current_time = time.time()
-            print("Evaluation of changed individuals after: ", current_time - time_of_start)
+            current_time = time.clock()
+            print("Evaluation of changed individuals after: ", 
+                  (current_time - time_of_start)/1000.0, " sec.")
             time_of_start = current_time
 
 
@@ -389,9 +395,11 @@ def main():
         print (pop)  
     best_ind = tools.selBest(pop, 1)[0]
     print("Best individual is\n%s\n, with fitness %s" % (best_ind, best_ind.fitness.values))
-    if( options.debug):        
+    if( options.verbose):        
         print("Efficiency of cashing for funcion dolo_closest_node_distance")
         print(dollo_closest_node_distance.cache_info())
+        #print("Efficiency of cashing for funcion dolo_closest_node_distance")
+        #print(EaNode.closest_node_in_tree.cache_info())
     return
 
 # this means that if this script is executed, then 
