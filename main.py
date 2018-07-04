@@ -29,6 +29,7 @@ from dollo_node_evaluation_operators import dollo_closest_node_distance
 from dollo_node_evaluation_operators import evaluate_dollo_node_direct 
 
 from dollo_node_evaluation_likelihood import evaluate_dollo_node_likelihood
+from dollo_node_evaluation_likelihood import sub_evaluate
 
 from dollo_node_crossover_operators import crossover_dollo_node_exchange_parent_indices
 from dollo_node_crossover_operators import crossover_dollo_node_exchange_subtrees
@@ -72,12 +73,12 @@ def main():
                   'Alpha': 0.4,
                   'Beta': 0.00001,
                   'RandomSeed': 1528981076,
-                  'PopulationSize': 9,
-                  'EliteSize': 3,
+                  'PopulationSize': 90,
+                  'EliteSize': 30,
                   'CrossoverProbability': 0.96,
                   'MutationProbability': 0.64,
                   'FineGrainedTournamentSize': 3.5,
-                  'MaxNumberGenerations': 300}
+                  'MaxNumberGenerations': 7}
     parameters = get_execution_parameters(options, args, parameters)
     print("Execution parameters: ", parameters);
     print("------------------------")
@@ -410,7 +411,9 @@ def main():
     if( options.verbose):        
         print("Efficiency of cashing for funcion dolo_closest_node_distance")
         print(dollo_closest_node_distance.cache_info())
-        #print("Efficiency of cashing for funcion dolo_closest_node_distance")
+        print("Efficiency of cashing for funcion dolo_closest_node_distance")
+        print(sub_evaluate.cache_info())
+       #print("Efficiency of cashing for funcion dolo_closest_node_distance")
         #print(EaNode.closest_node_in_tree.cache_info())
     return
 

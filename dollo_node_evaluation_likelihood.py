@@ -10,6 +10,8 @@ from anytree import RenderTree
 from read_element import ReadElement
 import math
 
+from functools import lru_cache
+
 
 def evaluate_dollo_node_likelihood(reads,alpha,beta,individual):
 
@@ -21,9 +23,10 @@ def evaluate_dollo_node_likelihood(reads,alpha,beta,individual):
             result[value]=node.binary_tag.bin
         max_single=max(result.keys())
         likelihood+=max_single
-    return (likelihood,)
+    return (-likelihood,)
 
 
+@lru_cache(maxsize=8192, typed=True)
 def sub_evaluate(node,read,alpha,beta):
    
     likelihood=0

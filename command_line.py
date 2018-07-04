@@ -129,5 +129,6 @@ def usage_explanation(parameters):
     ret += "MutationProbability=<probability>\t(optional, float - default value: '" + str(parameters['MutationProbability']) + "')\n"
     ret += "FineGrainedTournamentSize=<fgts_size>\t(optional, float - default value: '" + str(parameters['MutationProbability']) + "')\n"
     ret += "MaxNumberGenerations=<max_num>\t(optional, integer - default value: '" + str(parameters['MaxNumberGenerations']) + "')\n"
+    ret += "\nOptions: --debug --verbose --evaluateDirect --evaluateLikelihood"
     return ret
     
