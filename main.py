@@ -74,7 +74,7 @@ def main():
                   'Beta': 0.00001,
                   'RandomSeed': 1528981076,
                   'PopulationSize': 90,
-                  'EliteSize': 30,
+                  'EliteSize': 0,
                   'CrossoverProbability': 0.96,
                   'MutationProbability': 0.64,
                   'FineGrainedTournamentSize': 3.5,
