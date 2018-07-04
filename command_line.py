@@ -30,6 +30,10 @@ def get_execution_parameters(options, args, parameters):
         print ('option verbose is activated')
     else:
         print( 'option verbose is deactivated')           
+    if options.evaluateDirect:
+        print ('option evaluateDirect is activated')
+    if options.evaluateLikelihood:
+        print ('option evaluteLikelihood is activated')
     if options.debug or options.verbose:
        print("Command-line parameters:", end=' ')
        for arg in args:
@@ -119,7 +123,7 @@ def usage_explanation(parameters):
     ret += "Beta=<beta_value>\t(optional, float - default value: '" + str(parameters['Beta']) + "')\n"
     ret += "RandomSeed=<seed_value>\t(optional, integer - default value: " + str(parameters['RandomSeed']) + ")\n"
     ret += "\t Note: if parameter RandomSeed is negative, random number sequence will start with current time\n"
-    ret += "PopulationSize=<size>\t(optional, integer - default value: '" + str(parameters['PopulationaSize']) + "')\n"
+    ret += "PopulationSize=<size>\t(optional, integer - default value: '" + str(parameters['PopulationSize']) + "')\n"
     ret += "EliteSize=<size>\t(optional, integer - default value: '" + str(parameters['EliteSize']) + "')\n"
     ret += "CrossoverProbability=<probability>\t(optional, float - default value: '" + str(parameters['CrossoverProbability']) + "')\n"
     ret += "MutationProbability=<probability>\t(optional, float - default value: '" + str(parameters['MutationProbability']) + "')\n"

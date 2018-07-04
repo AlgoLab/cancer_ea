@@ -10,12 +10,10 @@ from anytree import RenderTree
 from read_element import ReadElement
 import math
 
-matrix_inferita1={}
 
-def evaluate_dollo_node_direct1(reads,alpha,beta,individual):
+def evaluate_dollo_node_likelihood(reads,alpha,beta,individual):
 
     likelihood=0
-    matrix_E=[]
     for read in reads:
         result={}
         for pre,_,node in RenderTree(individual):
@@ -23,9 +21,7 @@ def evaluate_dollo_node_direct1(reads,alpha,beta,individual):
             result[value]=node.binary_tag.bin
         max_single=max(result.keys())
         likelihood+=max_single
-        matrix_E.append(result[max_single])
-    matrix_inferita1[likelihood]=matrix_E
-    return (likelihood,matrix_E)
+    return (likelihood,)
 
 
 def sub_evaluate(node,read,alpha,beta):
@@ -50,6 +46,3 @@ def sub_evaluate(node,read,alpha,beta):
             likelihood+=0
     return likelihood
     
-def final_matrix(likelihood):
-    if likelihood in matrix_inferita.keys():
-        return matrix_inferita[likelihood]

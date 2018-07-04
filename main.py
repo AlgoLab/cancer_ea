@@ -28,6 +28,8 @@ from dollo_node_initialization_operators import init_dollo_node_individual
 from dollo_node_evaluation_operators import dollo_closest_node_distance
 from dollo_node_evaluation_operators import evaluate_dollo_node_direct 
 
+from dollo_node_evaluation_likelihood import evaluate_dollo_node_likelihood
+
 from dollo_node_crossover_operators import crossover_dollo_node_exchange_parent_indices
 from dollo_node_crossover_operators import crossover_dollo_node_exchange_subtrees
 from dollo_node_crossover_operators import crossover_dollo_node_combined
@@ -58,6 +60,9 @@ def main():
     parser.set_defaults(debug=False,xls=False)
     parser.add_option('--debug', action='store_true', dest='debug')
     parser.add_option('--verbose', action='store_true', dest='verbose')
+    parser.add_option('--evaluateDirect', action='store_true', dest='evaluateDirect')
+    parser.add_option('--evaluateLikelihood', action='store_true', dest='evaluateLikelihood')
+    
     (options, args) = parser.parse_args()
     
     # obtaining execution paramters
@@ -67,8 +72,8 @@ def main():
                   'Alpha': 0.4,
                   'Beta': 0.00001,
                   'RandomSeed': 1528981076,
-                  'PopulationSize': 90,
-                  'EliteSize': 30,
+                  'PopulationSize': 9,
+                  'EliteSize': 3,
                   'CrossoverProbability': 0.96,
                   'MutationProbability': 0.64,
                   'FineGrainedTournamentSize': 3.5,
@@ -157,10 +162,17 @@ def main():
         return
     # register evaluation function
     toolbox.register("evaluate", 
+                     evaluate_dollo_node_likelihood, 
+                     reads,
+                     alpha,
+                     beta)
+    if( options.evaluateDirect ):
+        toolbox.register("evaluate", 
                      evaluate_dollo_node_direct, 
                      reads,
-                     alpha)
-
+                     alpha,
+                     beta)
+        
     # register the crossover operator
     toolbox.register("mate", 
                      crossover_dollo_node_exchange_parent_indices,

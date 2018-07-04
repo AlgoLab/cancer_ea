@@ -56,7 +56,7 @@ def dollo_closest_node_distance(individual, read):
     (c_n,d) = individual.closest_node_in_tree(read)
     return (c_n,d)
 
-def dollo_evaluate_direct_only_level0(reads, alpha, individual):
+def dollo_evaluate_direct_only_level0(reads, alpha, beta, individual):
     """ Evaluation of the individual. Doesnt't count false positives.
 
     Args:
@@ -73,7 +73,7 @@ def dollo_evaluate_direct_only_level0(reads, alpha, individual):
         objection_value += d
     return objection_value
 
-def dollo_evaluate_direct_only_level1(reads, alpha, individual):
+def dollo_evaluate_direct_only_level1(reads, alpha, beta, individual):
     """ Evaluation of the individual. Takes into account false positives on
         one position.        
 
@@ -96,7 +96,7 @@ def dollo_evaluate_direct_only_level1(reads, alpha, individual):
                 objection_value += d
     return objection_value
 
-def dollo_evaluate_direct_only_level2(reads, alpha, individual):
+def dollo_evaluate_direct_only_level2(reads, alpha, beta, individual):
     """ Evaluation of the individual. Takes into account false positives on
         two positions.        
     Args:
@@ -120,7 +120,7 @@ def dollo_evaluate_direct_only_level2(reads, alpha, individual):
                     objection_value += d 
     return objection_value
 
-def dollo_evaluate_direct_only_level3(reads, alpha, individual):
+def dollo_evaluate_direct_only_level3(reads, alpha, beta, individual):
     """ Evaluation of the individual. Takes into account false positives on
         three positions.        
     Args:
@@ -159,7 +159,7 @@ def dollo_evaluate_direct_level0(reads, alpha, individual):
     """
     return dollo_evaluate_direct_only_level0(reads, alpha, individual)
 
-def dollo_evaluate_direct_level1(reads, alpha, individual):
+def dollo_evaluate_direct_level1(reads, alpha, beta, individual):
     """ Evaluation of the individual. Takes into account false positives on
         one position.        
 
@@ -171,11 +171,11 @@ def dollo_evaluate_direct_level1(reads, alpha, individual):
     Returns:            
          objection value of the individual to be evaluated.    
     """
-    objection_value = dollo_evaluate_direct_only_level0(reads, alpha, individual) * (1-alpha)
-    objection_value += dollo_evaluate_direct_only_level1(reads, alpha, individual) * alpha
+    objection_value = dollo_evaluate_direct_only_level0(reads, alpha, beta, individual) * (1-alpha)
+    objection_value += dollo_evaluate_direct_only_level1(reads, alpha, beta, individual) * alpha
     return objection_value
 
-def dollo_evaluate_direct_level2(reads, alpha, individual):
+def dollo_evaluate_direct_level2(reads, alpha, beta, individual):
     """ Evaluation of the individual. Takes into account false positives on
         two positions.        
     Args:
@@ -186,12 +186,12 @@ def dollo_evaluate_direct_level2(reads, alpha, individual):
     Returns:            
          objection value of the individual to be evaluated.    
     """
-    objection_value = dollo_evaluate_direct_only_level0(reads, alpha, individual) * (1-alpha-alpha*alpha)
-    objection_value += dollo_evaluate_direct_only_level1(reads, alpha, individual) * alpha
-    objection_value += dollo_evaluate_direct_only_level2(reads, alpha, individual) * alpha * alpha
+    objection_value = dollo_evaluate_direct_only_level0(reads, alpha, beta, individual) * (1-alpha-alpha*alpha)
+    objection_value += dollo_evaluate_direct_only_level1(reads, alpha, beta, individual) * alpha
+    objection_value += dollo_evaluate_direct_only_level2(reads, alpha, beta, individual) * alpha * alpha
     return objection_value
 
-def dollo_evaluate_direct_level3(reads, alpha, individual):
+def dollo_evaluate_direct_level3(reads, alpha, beta, individual):
     """ Evaluation of the individual. Takes into account false positives on
         three positions.        
     Args:
@@ -202,13 +202,13 @@ def dollo_evaluate_direct_level3(reads, alpha, individual):
     Returns:            
          objection value of the individual to be evaluated.    
     """
-    objection_value = dollo_evaluate_direct_only_level0(reads, alpha, individual) * (1-alpha-alpha*alpha-alpha*alpha*alpha)
-    objection_value += dollo_evaluate_direct_only_level1(reads, alpha, individual) * alpha
-    objection_value += dollo_evaluate_direct_only_level2(reads, alpha, individual) * alpha * alpha
-    objection_value += dollo_evaluate_direct_only_level3(reads, alpha, individual) * alpha * alpha * alpha
+    objection_value = dollo_evaluate_direct_only_level0(reads, alpha, beta, individual) * (1-alpha-alpha*alpha-alpha*alpha*alpha)
+    objection_value += dollo_evaluate_direct_only_level1(reads, alpha, beta,  individual) * alpha
+    objection_value += dollo_evaluate_direct_only_level2(reads, alpha, beta, individual) * alpha * alpha
+    objection_value += dollo_evaluate_direct_only_level3(reads, alpha, beta, individual) * alpha * alpha * alpha
     return objection_value
 
-def evaluate_dollo_node_direct(reads, individual, alpha):
+def evaluate_dollo_node_direct(reads, individual, alpha, beta):
     """ Evaluation of the individual.
 
     Args:
@@ -220,5 +220,5 @@ def evaluate_dollo_node_direct(reads, individual, alpha):
         pair where first element is objection value of the individual to be
             evaluated.    
     """
-    return (dollo_evaluate_direct_level2(reads, individual, alpha),)    
+    return (dollo_evaluate_direct_level1(reads, individual, alpha, beta),)    
 
