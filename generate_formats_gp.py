@@ -23,8 +23,7 @@ def label(node):
         else:
             label_node+=char
     if sign =='-':
-        return '" [color=indianred1, style=filled, label="'
-                +label_node+'"];\n'
+        return '" [color=indianred1, style=filled, label="'+label_node+'"];\n'
     if sign =='+':
         return '" [label="'+label_node+'"];\n'
 

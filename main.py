@@ -15,6 +15,8 @@ from deap import base
 from deap import creator
 from deap import tools
 
+from generate_formats_gp import generate_matrix
+from generate_formats_gp import generate_digraph
 
 from command_line import get_execution_parameters
 from read_input import read_labels_scrs_format_in
@@ -22,6 +24,7 @@ from read_input import read_labels_scrs_format_in
 from ea_node import EaNode
 from dollo_node import DolloNode
 
+from support_operators_output import matrix_inferred_E
 
 from dollo_node_initialization_operators import init_dollo_node_individual
 
@@ -408,6 +411,13 @@ def main():
         print (pop)  
     best_ind = tools.selBest(pop, 1)[0]
     print("Best individual is\n%s\n, with fitness %s" % (best_ind, best_ind.fitness.values))
+    matrix_E=matrix_inferred_E(reads,alpha,beta,best_ind)
+    generate_matrix(matrix_E[0],parameters['InputFile']+"_fitness_"+str(best_ind.fitness.values)+".txt")
+       # " alpha:"+str(alpha)+" beta:" +str(beta)+" dollo_k"+str(dollo_k)+" pro_cro"+
+       # str(crossover_probability)+" pro_mut"+str(mutation_probability)+" pop_size"+
+       # str(population_size)+" fitness"+str(best_ind.fitness.values)+".txt")
+    generate_digraph(best_ind,labels,"tree_DOT_"+parameters['InputFile']+"_fitness_"+
+                    str(best_ind.fitness.values)+".gv")  
     if( options.verbose):        
         print("Efficiency of cashing for funcion dolo_closest_node_distance")
         print(dollo_closest_node_distance.cache_info())
