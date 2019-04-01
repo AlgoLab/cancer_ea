@@ -1,0 +1,6 @@
+option debug is deactivated
+option verbose is deactivated
+Execution parameters:  {'InputFile': '/home/lxc_prj_ppp/miniconda3/envs/environment/cancer_gp/data/simulated/exp1/sim1_scs.txt.in', 'InputFormat': 'in', 'DolloK': '1', 'Alpha': '0.4', 'Beta': 1e-05, 'RandomSeed': 1528981076, 'PopulationSize': '7', 'EliteSize': 2, 'CrossoverProbability': '0.32', 'MutationProbability': '0.96', 'FineGrainedTournamentSize': '3.5', 'MaxNumberGenerations': '3'}
+------------------------
+Random seed:  1528981076
+------------------------
