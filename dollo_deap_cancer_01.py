@@ -37,16 +37,16 @@ def main():
     
     # obtaining execution paramters
     parameters = {'InputFile': 'XXX.in', 
-                  'InputFormat': 'in',
-                  'DolloK': 2,
-                  'Alpha': 0.4,
-                  'Beta': 0.00001,
-                  'RandomSeed': -1,
-                  'PopulationSize': 5,
-                  'CrossoverProbability': 0.85,
-                  'MutationProbability': 0.3,
-                  'FineGrainedTournamentSize': 2.1,
-                  'MaxNumberGenerations': 3}
+                    'InputFormat': 'in',
+                    'DolloK': 2,
+                    'Alpha': 0.4,
+                    'Beta': 0.00001,
+                    'RandomSeed': -1,
+                    'PopulationSize': 5,
+                    'CrossoverProbability': 0.85,
+                    'MutationProbability': 0.3,
+                    'FineGrainedTournamentSize': 2.1,
+                    'MaxNumberGenerations': 3}
     parameters = get_execution_parameters(options, args, parameters)
     if(options.debug or options.verbose):
         print("Execution parameters: ", parameters);
@@ -71,7 +71,7 @@ def main():
     
     # create fitness function
     creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
-   
+
     # create strucute of the individual
     creator.create("Individual", DolloNode, fitness=creator.FitnessMin)
     # parameter k in Dollo model
@@ -85,49 +85,48 @@ def main():
 
     # register individual creation to toolbbox 
     toolbox.register("individual", 
-                     init_dollo_node_individual, 
-                     creator.Individual, 
-                     labels=labels, 
-                     k=dollo_k)
-      
+                        init_dollo_node_individual, 
+                        creator.Individual, 
+                        labels=labels, 
+                        k=dollo_k)
+
     # register population to toolbbox 
     toolbox.register("population", 
-                     tools.initRepeat, 
-                     list, 
-                     toolbox.individual)
- 
+                        tools.initRepeat, 
+                        list, 
+                        toolbox.individual)
+
     # probability of false positives and false negatives
     alpha = float(parameters['Alpha'])
     beta = float(parameters['Beta'])
     # register evaluation function
     toolbox.register("evaluate", 
-                     evaluate_dollo_node_individual, 
-                     reads,
-                     alpha)
+                        evaluate_dollo_node_individual, 
+                        reads,
+                        alpha)
 
     # register the crossover operator
     toolbox.register("mate", 
-                     crossover_dollo_node_individuals,
-                     labels)
+                        crossover_dollo_node_individuals,
+                        labels)
     # probability with which two individuals are crossed
     crossover_probability = float(parameters['CrossoverProbability'])
-       
     
     # register a mutation operator 
     toolbox.register("mutate", 
-                     mutate_dollo_node_individual, 
-                     labels,
-                     dollo_k)
+                        mutate_dollo_node_individual, 
+                        labels,
+                        dollo_k)
     # probability for mutating an individual
     mutation_probability = float(parameters['MutationProbability'])
- 
+
     # operator for selecting individuals for breeding the next
     # generation: each individual of the current generation
     # is replaced by the 'fittest' (best) of three individuals
     # drawn randomly from the current generation.
     toolbox.register("select", 
-                     tools.selTournamentFineGrained, 
-                     fgtournsize=float(parameters['FineGrainedTournamentSize']))
+                        tools.selTournamentFineGrained, 
+                        fgtournsize=float(parameters['FineGrainedTournamentSize']))
 
     # create an initial population, where each individual is a tree
     population_size = int(parameters['PopulationSize'])
@@ -135,7 +134,7 @@ def main():
     if( options.verbose):
         print("Population (size %d) - initial\n"%len(pop))
         print (pop)
- 
+
     if( options.debug or options.verbose):
         print("Start of evolution")
     
@@ -153,7 +152,7 @@ def main():
     max_number_generations = int(parameters['MaxNumberGenerations'])
     # Variable keeping track of the number of generations
     generation = 0
-  
+
     # Begin the evolution
     while True:
         if( options.debug or options.verbose):
@@ -172,7 +171,7 @@ def main():
             print("  Std %s" % std)
             best_in_generation = tools.selBest(pop, 1)[0]
             print("  Best individual: \n %s", best_in_generation)
-      
+
         # A new generation
         generation += 1
         
@@ -208,7 +207,7 @@ def main():
         
         # The population is entirely replaced by the offspring
         pop[:] = offspring
-               
+
         # Check if any of finishing criteria is meet
         # Criteria based on number of generations
         if( generation > max_number_generations ):
@@ -219,7 +218,7 @@ def main():
         std = abs(sum2 / length - mean**2)**0.5 
         if( std <= 0):
             break
-          
+
     if( options.debug or options.verbose):
         print("-- End of evolution --")
     if( options.verbose):
