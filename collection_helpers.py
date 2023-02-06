@@ -55,7 +55,7 @@ def sets_are_equal(set1,set2):
     Args:
         set1 (set): first set for comparison.
         set2 (set): second set for comparison.
-     
+
     Returns:            
         boolean that indicate equality of the sets
     """

@@ -20,8 +20,8 @@ def mutation_dollo_node_add(labels,dollo_k,individual):
         labels (list): list of the lables of the nodes in the tree that should 
             be initialized.
         dollo_k(int): Value od the Dollo k parameter.
-         individual (DolloNode): individual that will be mutated.
-     
+        individual (DolloNode): individual that will be mutated.
+
     Returns:            
         pair where the first componet is indicator of succes and the second is
         individual that is mutated e.g. output of the mutation process.

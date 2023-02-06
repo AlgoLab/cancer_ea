@@ -7,7 +7,7 @@ import re
 
 def get_execution_parameters(options, args, parameters):
     """  Obtains execution parameters.
- 
+
     Args:
         parameters (:dictionary) : Parameter 'parameters' represent initial 
             values of execution parameters
@@ -15,7 +15,7 @@ def get_execution_parameters(options, args, parameters):
         args (:list): Parameter `args` represents the argument list.
     Returns:
         dictionary: Execution parameters affter reading command line.
-      """
+    """
 
     if len(args) == 0:
         raise ValueError("Error!\nCommand line parameters:\n" + usage_explanation(parameters))
@@ -35,10 +35,10 @@ def get_execution_parameters(options, args, parameters):
     if options.evaluateLikelihood:
         print ('option evaluteLikelihood is activated')
     if options.debug or options.verbose:
-       print("Command-line parameters:", end=' ')
-       for arg in args:
-           print( arg, end = ' ')
-       print()     
+        print("Command-line parameters:", end=' ')
+        for arg in args:
+            print( arg, end = ' ')
+        print()     
     
     inputFile_re = re.compile(r'[I|i]nput[F|f]ile=.*\.in')
     inputFormat_re = re.compile(r'[I|i]nput[F|f]ormat=.*')
@@ -52,7 +52,7 @@ def get_execution_parameters(options, args, parameters):
     mutationProbability_re = re.compile(r'[M|m]utation[P|p]robability=[0-9].[0-9]+')
     fineGrainedTournamentSize_re = re.compile(r'[F|f]ine[G|g]rained[T|t]ournament[S|s]ize=[0-9].[0-9]+')
     maxNumberGenerations_re = re.compile(r'[M|m]ax[N|n]umber[G|g]enerations=[0-9]+')
-   
+
     inputFileIsSet = False
     for arg in args:
         if inputFile_re.match(arg):
@@ -108,10 +108,10 @@ def get_execution_parameters(options, args, parameters):
             break
 
     return parameters
- 
+
 def usage_explanation(parameters):
     """  Create ussage explanation text.
- 
+
     Args:
         parameters : Parameter `papramters is a dictionary that` represents parameters of the execution.
     """

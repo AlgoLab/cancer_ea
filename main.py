@@ -71,17 +71,17 @@ def main():
     
     # obtaining execution paramters
     parameters = {'InputFile': 'xxx.in', 
-                  'InputFormat': 'in',
-                  'DolloK': 1,
-                  'Alpha': 0.4,
-                  'Beta': 0.00001,
-                  'RandomSeed': 1528981076,
-                  'PopulationSize': 90,
-                  'EliteSize': 0,
-                  'CrossoverProbability': 0.96,
-                  'MutationProbability': 0.64,
-                  'FineGrainedTournamentSize': 3.5,
-                  'MaxNumberGenerations': 7}
+                    'InputFormat': 'in',
+                    'DolloK': 1,
+                    'Alpha': 0.4,
+                    'Beta': 0.00001,
+                    'RandomSeed': 1528981076,
+                    'PopulationSize': 90,
+                    'EliteSize': 0,
+                    'CrossoverProbability': 0.96,
+                    'MutationProbability': 0.64,
+                    'FineGrainedTournamentSize': 3.5,
+                    'MaxNumberGenerations': 7}
     parameters = get_execution_parameters(options, args, parameters)
     print("Execution parameters: ", parameters);
     print("------------------------")
@@ -114,14 +114,14 @@ def main():
     if( options.verbose):
         current_time = time.clock()
         print("Parameters read after: ", 
-              (current_time - time_of_start)/1000.0, " sec.")
+                (current_time - time_of_start)/1000.0, " sec.")
         time_of_start = current_time
 
     if( options.debug or options.verbose):
         print("Start of evolution")
     # create fitness function
     creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
-   
+
     # create strucute of the individual
     creator.create("Individual", DolloNode, fitness=creator.FitnessMin)
     
@@ -138,17 +138,17 @@ def main():
         return
     # register individual creation to toolbbox 
     toolbox.register("individual", 
-                     init_dollo_node_individual, 
-                     creator.Individual, 
-                     labels=labels, 
-                     k=dollo_k)
-      
+                        init_dollo_node_individual, 
+                        creator.Individual, 
+                        labels=labels, 
+                        k=dollo_k)
+
     # register population to toolbbox 
     toolbox.register("population", 
-                     tools.initRepeat, 
-                     list, 
-                     toolbox.individual)
- 
+                        tools.initRepeat, 
+                        list, 
+                        toolbox.individual)
+
     # probability of false positives and false negatives
     alpha = float(parameters['Alpha'])
     if( alpha < 0):
@@ -166,21 +166,21 @@ def main():
         return
     # register evaluation function
     toolbox.register("evaluate", 
-                     evaluate_dollo_node_likelihood, 
-                     reads,
-                     alpha,
-                     beta)
+                        evaluate_dollo_node_likelihood, 
+                        reads,
+                        alpha,
+                        beta)
     if( options.evaluateDirect ):
         toolbox.register("evaluate", 
-                     evaluate_dollo_node_direct, 
-                     reads,
-                     alpha,
-                     beta)
+                        evaluate_dollo_node_direct, 
+                        reads,
+                        alpha,
+                        beta)
         
     # register the crossover operator
     toolbox.register("mate", 
-                     crossover_dollo_node_exchange_parent_indices,
-                     labels, dollo_k)
+                        crossover_dollo_node_exchange_parent_indices,
+                        labels, dollo_k)
     # probability with which two individuals are crossed
     crossover_probability = float(parameters['CrossoverProbability'])
     if( crossover_probability < 0):
@@ -189,12 +189,12 @@ def main():
     if( crossover_probability > 1):
         print("Error: parameter CrossoverProbability should not be greater than 1.")
         return
-           
+
     # register a mutation operator 
     toolbox.register("mutate", 
-                     mutation_dollo_node_combine, 
-                     labels,
-                     dollo_k)
+                        mutation_dollo_node_combine, 
+                        labels,
+                        dollo_k)
     # probability for mutating an individual
     mutation_probability = float(parameters['MutationProbability'])
     if( mutation_probability < 0):
@@ -213,7 +213,7 @@ def main():
     if( options.verbose):
         print("Population (size %d) - initial\n"%len(pop))
         print (pop)
- 
+
     # operator for selecting individuals for breeding the next
     # generation
     fgt_size = float(parameters['FineGrainedTournamentSize'])
@@ -221,13 +221,13 @@ def main():
         print("Error: parameter FineGrainedTournamentSize should be positive.")
         return
     toolbox.register("select", 
-                     tools.selTournamentFineGrained, 
-                     fgtournsize=fgt_size)
+                        tools.selTournamentFineGrained, 
+                        fgtournsize=fgt_size)
 
     if( options.verbose):
         current_time = time.clock()
         print("Registering operators for deap after: ", 
-              (current_time - time_of_start)/1000.0, " sec.")
+                (current_time - time_of_start)/1000.0, " sec.")
         time_of_start = current_time
     
     # Evaluate the entire population
@@ -247,16 +247,16 @@ def main():
         return
     # Variable keeping track of the number of generations
     generation = 0
-  
+
     # Begin the evolution
     while True:
         if( options.debug or options.verbose):
             print("-- Generation %i --" % generation)
             current_time_generation = time.clock()
             print("New generation after: ",  
-                  (current_time_generation - time_of_start_generation)/1000.0, " sec.")
+                    (current_time_generation - time_of_start_generation)/1000.0, " sec.")
             time_of_start_generation = current_time_generation
-   
+
         if( options.debug or options.verbose):
             fits = [ind.fitness.values[0] for ind in pop]
             length = len(pop)
@@ -295,7 +295,7 @@ def main():
         non_elite = list(map(toolbox.clone, non_elite))
         if(options.verbose):
             print("non_elite =", non_elite)
-         
+
         # Select the ofsprings
         offspring = toolbox.select(pop, len(pop))
         # Clone the selected offsprings
@@ -305,9 +305,9 @@ def main():
         if( options.verbose):
             current_time = time.clock()
             print("Selecting offsprings after: ", 
-                  (current_time - time_of_start)/1000.0, " sec.")
+                    (current_time - time_of_start)/1000.0, " sec.")
             time_of_start = current_time
-  
+
         # Apply crossover on the offsprings
         for i in range(0,len(offspring)):
             # cross two individuals with previously determined probability 
@@ -329,7 +329,7 @@ def main():
         if( options.verbose):
             current_time = time.clock()
             print("Crossover after: ", 
-                  (current_time - time_of_start)/1000.0, " sec.")
+                    (current_time - time_of_start)/1000.0, " sec.")
             time_of_start = current_time
 
         # Apply mutation on the offspring
@@ -345,9 +345,9 @@ def main():
         if( options.verbose):
             current_time = time.clock()
             print("Mutation after: ", 
-                  (current_time - time_of_start)/1000.0, " sec.")
+                    (current_time - time_of_start)/1000.0, " sec.")
             time_of_start = current_time
-   
+
         # Evaluate the new individuals that has no fitness until now
         invalid_ind = [ind for ind in offspring if not ind.fitness.valid]
         fitnesses = map(toolbox.evaluate, invalid_ind)
@@ -362,7 +362,7 @@ def main():
             pool.append(non_elite[i])
         if(options.verbose):
             print("pool (for new generation) \n =", pool)
-      
+
         # Elite individuals are copied into population
         for i in range(0,elite_size):
             pop[i] = elite[i]
@@ -387,9 +387,8 @@ def main():
         if( options.verbose):
             current_time = time.clock()
             print("Evaluation of changed individuals after: ", 
-                  (current_time - time_of_start)/1000.0, " sec.")
+                    (current_time - time_of_start)/1000.0, " sec.")
             time_of_start = current_time
-
 
         # Check if any of finishing criteria is meet
         # Criteria based on number of generations
@@ -403,7 +402,7 @@ def main():
         std = abs(sum2 / length - mean**2)**0.5 
         if( std <= 0):
             break
-          
+
     if( options.debug or options.verbose):
         print("-- End of evolution --")
     if( options.verbose):
@@ -413,9 +412,9 @@ def main():
     print("Best individual is\n%s\n, with fitness %s" % (best_ind, best_ind.fitness.values))
     matrix_E=matrix_inferred_E(reads,alpha,beta,best_ind)
     generate_matrix(matrix_E[0],parameters['InputFile']+"_fitness_"+str(best_ind.fitness.values)+".txt")
-       # " alpha:"+str(alpha)+" beta:" +str(beta)+" dollo_k"+str(dollo_k)+" pro_cro"+
-       # str(crossover_probability)+" pro_mut"+str(mutation_probability)+" pop_size"+
-       # str(population_size)+" fitness"+str(best_ind.fitness.values)+".txt")
+        # " alpha:"+str(alpha)+" beta:" +str(beta)+" dollo_k"+str(dollo_k)+" pro_cro"+
+        # str(crossover_probability)+" pro_mut"+str(mutation_probability)+" pop_size"+
+        # str(population_size)+" fitness"+str(best_ind.fitness.values)+".txt")
     generate_digraph(best_ind,labels,"tree_DOT_"+parameters['InputFile']+"_fitness_"+
                     str(best_ind.fitness.values)+".gv")  
     if( options.verbose):        
@@ -423,7 +422,7 @@ def main():
         print(dollo_closest_node_distance.cache_info())
         print("Efficiency of cashing for funcion dolo_closest_node_distance")
         print(sub_evaluate.cache_info())
-       #print("Efficiency of cashing for funcion dolo_closest_node_distance")
+        #print("Efficiency of cashing for funcion dolo_closest_node_distance")
         #print(EaNode.closest_node_in_tree.cache_info())
     return
 

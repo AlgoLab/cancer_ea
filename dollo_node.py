@@ -16,11 +16,11 @@ from collection_helpers import remove_empty_set_occurences
 class DolloNode(EaNode):
     """ Information about nodes of the mutattion tree, according to Dollo model.
     """
- 
+
     def __init__(self, node_label, binary_tag, parent=None):
         """ Instance initialization.
         
-         Args:
+        Args:
             node_label (str): Parameter `node_label`represents the label of the 
                 node.
             binary_tag (:BitArray): Parameter `binary_tag` represents the
@@ -73,7 +73,7 @@ class DolloNode(EaNode):
             return ret
         plus_sub_labels = self.tree_get_plus_labels_contains() 
         if( len(plus_sub_labels) == 0 
-           or (len(plus_sub_labels)==1 and self.node_label in plus_sub_labels) ):
+                or (len(plus_sub_labels)==1 and self.node_label in plus_sub_labels) ):
             ret[self.node_label] = []
             return ret
         l = []
@@ -201,8 +201,8 @@ class DolloNode(EaNode):
         is_ok = self.is_correct(labels, dollo_k) 
         if(not is_ok[0]):
             raise ValueError("Error!" + "\n" 
-                             + "reason: " + is_ok[1] + "\n" 
-                             + "inidividual: " + "\n", self) 
+                                + "reason: " + is_ok[1] + "\n" 
+                                + "inidividual: " + "\n", self) 
         return
 
 
