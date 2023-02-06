@@ -3,7 +3,7 @@
 from read_input import read_labels_scrs_format_in
 from ea_node import EaNode
 from ea_node_operators import init_ea_node_individual, mutate_ea_node_individual
-from likelihood import evaluate
+from likelihood import sub_evaluate
 from bitstring import BitArray
 import random
 import sys
@@ -11,10 +11,16 @@ import re
 
 
 def main():
-        f=sys.argv[1]
-        alpha=float(sys.argv[2])
-        beta=float(sys.argv[3])
-        seed=int(sys.argv[4])
+        if(len(sys.argv)==1):
+                f = "./files/inputs/example_01.txt"
+                alpha = 0.01
+                beta = 0.0005
+                seed = 11147
+        else:        
+                f=sys.argv[1]
+                alpha=float(sys.argv[2])
+                beta=float(sys.argv[3])
+                seed=int(sys.argv[4])
         ex='\A(\w+): ((0|1)+)'
         (mutations,matrix) =read_labels_scrs_format_in(f)
 

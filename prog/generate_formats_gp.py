@@ -28,7 +28,7 @@ def label(node):
         return '" [label="'+label_node+'"];\n'
 
 def generate_digraph(tree,mutations,name_f):
-       
+
     file=open(name_f,"w")
     file.write("digraph g { \n")
     index_parent={}

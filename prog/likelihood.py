@@ -14,7 +14,6 @@ def evaluate_dollo_node_direct1(reads,alpha,beta,individual):
             l.append(result)
         likelihood+=max(l)
     return likelihood
-   
 
 def sub_evaluate(node,read,alpha,beta):
     likelihood=0

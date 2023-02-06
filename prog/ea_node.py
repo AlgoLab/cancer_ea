@@ -25,7 +25,7 @@ class EaNode(EaNodeInfo, NodeMixin):
     def __init__(self, node_label, binary_tag, parent=None):
         """ Instance initialization.
         
-         Args:
+        Args:
             node_label (str): Parameter `node_label`represents the label of the 
                 node.
             binary_tag (:BitArray): Parameter `binary_tag` represents the
@@ -39,7 +39,7 @@ class EaNode(EaNodeInfo, NodeMixin):
 
     def __repr__(self):
         """ Obtaining representation of the instance.
-   
+
         Representation of the node instance is the whole tree formed by the 
         descendats of that nide instance.
     
