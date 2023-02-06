@@ -1,6 +1,12 @@
 """ script contente funzione per la generazione della matrice inferita
     in un file txt e per la generazione del formato DOT.
 """
+
+import path
+import sys
+directory = path.Path(__file__).abspath()
+sys.path.append(directory.parent.parent)
+
 from anytree import RenderTree
 
 def generate_matrix(m,name_f):

@@ -1,3 +1,8 @@
+import path
+import sys
+directory = path.Path(__file__).abspath()
+sys.path.append(directory.parent.parent)
+
 from bitstring import BitArray
 from anytree import RenderTree
 from read_element import ReadElement

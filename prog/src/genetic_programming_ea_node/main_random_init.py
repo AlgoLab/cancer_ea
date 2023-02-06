@@ -2,6 +2,10 @@
 methods from `GaNode` class and functions from module `ga_node_operators`.
 
 """
+import path
+import sys
+directory = path.Path(__file__).abspath()
+sys.path.append(directory.parent.parent)
 
 from ea_node import EaNode
 from ea_node_operators import init_ea_node_individual, mutate_ea_node_individual

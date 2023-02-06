@@ -4,6 +4,10 @@ Example for command-line parameters:
 inputFile=example_01.in RandomSeed=1113 PopulationSize=150 EliteSize=50 --debug
 
 """
+import path
+import sys
+directory = path.Path(__file__).abspath()
+sys.path.append(directory.parent.parent)
 
 import optparse
 import random
@@ -41,7 +45,6 @@ from dollo_node_crossover_operators import crossover_dollo_node_combined
 from dollo_node_mutation_operators import mutation_dollo_node_add
 from dollo_node_mutation_operators import mutation_dollo_node_combine
 from dollo_node_mutation_operators import mutation_dollo_node_remove
-
 
 def contains(individuals, individual):
     """ This function check if list of individuals contains an

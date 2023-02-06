@@ -1,14 +1,19 @@
-"""  The :mod:`cancer_gp` module represents an entry  point of the application.
+""" The :mod:`deap_cancer_ga_02` module contains an example how to use Deap for GA
+that solves problem we are dealing with.
 
 Example for command-line parameters:
 inputFile=example_01.in randomSeed=1113 --debug
 
 """
 
+import path
+import sys
+directory = path.Path(__file__).abspath()
+sys.path.append(directory.parent.parent)
+
 import optparse
 import random
 
-from datetime import datetime
 
 from deap import base
 from deap import creator
@@ -18,15 +23,14 @@ from deap import tools
 from utils.command_line import get_execution_parameters
 from read_input import read_labels_scrs_format_in
 
-from ea_node.dollo_node.dollo_node import DolloNode
-from ea_node.dollo_node.dollo_node_initialization_operators import init_dollo_node_individual
-from ea_node.dollo_node.dollo_node_evaluation_operators import dollo_closest_node_distance
-from ea_node.dollo_node.dollo_node_evaluation_operators import evaluate_dollo_node_direct 
-from ea_node.dollo_node.dollo_node_crossover_operators import crossover_dollo_node_individuals
-from ea_node.dollo_node.dollo_node_mutation_operators import mutate_dollo_node_individual
+from ea_node import EaNode
+from ea_node_operators import init_ea_node_individual  
+from ea_node_operators import evaluate_ea_node_individual
+from ea_node_operators import crossover_ea_node_individuals
+from ea_node_operators import mutate_ea_node_individual
 
 def main():
-    """ This function is an entry  point of the application.
+    """  This function is an entry  point of the application.
     """
     # reading command-line argumets and options
     parser = optparse.OptionParser()
@@ -37,45 +41,30 @@ def main():
     
     # obtaining execution paramters
     parameters = {'InputFile': 'XXX.in', 
-                    'InputFormat': 'in',
-                    'DolloK': 2,
-                    'Alpha': 0.4,
-                    'Beta': 0.00001,
-                    'RandomSeed': -1,
-                    'PopulationSize': 5,
-                    'CrossoverProbability': 0.85,
-                    'MutationProbability': 0.3,
-                    'FineGrainedTournamentSize': 2.1,
-                    'MaxNumberGenerations': 3}
+                  'InputFormat': 'in',
+                  'RandomSeed': -1,
+                  'PopulationSize': 5}
     parameters = get_execution_parameters(options, args, parameters)
     if(options.debug or options.verbose):
         print("Execution parameters: ", parameters);
     
-    # setting random seed
-    if( int(parameters['RandomSeed']) > 0 ):
-        random.seed(int(parameters['RandomSeed']))
-    else:
-        random.seed(datetime.now())
-
+    # seeding random process
+    if( int(parameters['RandomSeed'])>0 ):
+        random.seed(parameters['RandomSeed'])
+     
     # reading read elements from input file
-    if( parameters['InputFormat'] == 'in' ):
-        (labels, reads) = read_labels_scrs_format_in(options, parameters)
-        if(options.debug or options.verbose):
-            print("Mutation labels (from input file):\n", labels);
-            print("Reads[Unknowns] (from input file):")
-            for x in reads:
-                print(x);
-    else:
-        print("Input format is not right.")
-        return
+    (labels, reads) = read_labels_scrs_format_in(options, parameters)
+    if(options.debug or options.verbose):
+        print("Mutation labels:", labels);
+        print("Reads (from input):")
+        for x in reads:
+            print(x);
     
     # create fitness function
     creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
-
+   
     # create strucute of the individual
-    creator.create("Individual", DolloNode, fitness=creator.FitnessMin)
-    # parameter k in Dollo model
-    dollo_k = int(parameters['DolloK'])
+    creator.create("Individual", EaNode, fitness=creator.FitnessMin)
     
     # create toolbox for execution of the genetic algorithm
     toolbox = base.Toolbox()
@@ -85,60 +74,54 @@ def main():
 
     # register individual creation to toolbbox 
     toolbox.register("individual", 
-                        init_dollo_node_individual, 
-                        creator.Individual, 
-                        labels=labels, 
-                        k=dollo_k)
-
+                     init_ea_node_individual, 
+                     creator.Individual, 
+                     labels=labels, 
+                     size=2 * len(labels))
+      
     # register population to toolbbox 
     toolbox.register("population", 
-                        tools.initRepeat, 
-                        list, 
-                        toolbox.individual)
-
-    # probability of false positives and false negatives
-    alpha = float(parameters['Alpha'])
-    beta = float(parameters['Beta'])
+                     tools.initRepeat, 
+                     list, 
+                     toolbox.individual)
+ 
     # register evaluation function
     toolbox.register("evaluate", 
-                        evaluate_dollo_node_direct, 
-                        reads,
-                        alpha,
-                        beta)
+                     evaluate_ea_node_individual, 
+                     reads)
 
     # register the crossover operator
     toolbox.register("mate", 
-                        crossover_dollo_node_individuals,
-                        labels)
-    # probability with which two individuals are crossed
-    crossover_probability = float(parameters['CrossoverProbability'])
+                     crossover_ea_node_individuals)
     
     # register a mutation operator 
     toolbox.register("mutate", 
-                        mutate_dollo_node_individual, 
-                        labels,
-                        dollo_k)
-    # probability for mutating an individual
-    mutation_probability = float(parameters['MutationProbability'])
-
+                     mutate_ea_node_individual)
+     
     # operator for selecting individuals for breeding the next
     # generation: each individual of the current generation
     # is replaced by the 'fittest' (best) of three individuals
     # drawn randomly from the current generation.
     toolbox.register("select", 
-                        tools.selTournamentFineGrained, 
-                        fgtournsize=float(parameters['FineGrainedTournamentSize']))
+                     tools.selTournament, 
+                     tournsize=3)
 
-    # create an initial population, where each individual is a tree
-    population_size = int(parameters['PopulationSize'])
+    # create an initial population, where each individual is a GaTree
+    population_size = 150
     pop = toolbox.population(n=population_size)
     if( options.verbose):
         print("Population (size %d) - initial\n"%len(pop))
         print (pop)
+ 
+    # Probability with which two individuals are crossed
+    crossover_probability = 0.5
+       
+    # Probability for mutating an individual
+    mutation_probability = 0.2
 
     if( options.debug or options.verbose):
         print("Start of evolution")
-    
+ 
     # Evaluate the entire population
     fitnesses = list(map(toolbox.evaluate, pop))
     if( options.debug):
@@ -148,12 +131,10 @@ def main():
     # Assign fitness to individuals in population
     for ind, fit in zip(pop, fitnesses):
         ind.fitness.values = fit
-    
-    # Variable for maximum number of generations    
-    max_number_generations = int(parameters['MaxNumberGenerations'])
+        
     # Variable keeping track of the number of generations
     generation = 0
-
+  
     # Begin the evolution
     while True:
         if( options.debug or options.verbose):
@@ -172,7 +153,7 @@ def main():
             print("  Std %s" % std)
             best_in_generation = tools.selBest(pop, 1)[0]
             print("  Best individual: \n %s", best_in_generation)
-
+      
         # A new generation
         generation += 1
         
@@ -208,10 +189,12 @@ def main():
         
         # The population is entirely replaced by the offspring
         pop[:] = offspring
-
+        
+        # Gather all the fitnesses in one list and print the stats
+        
         # Check if any of finishing criteria is meet
         # Criteria based on number of generations
-        if( generation > max_number_generations ):
+        if( generation > 10 ):
             break
         # Criteria based on standard deviation of fitness in population
         fits = [ind.fitness.values[0] for ind in pop]
@@ -219,7 +202,7 @@ def main():
         std = abs(sum2 / length - mean**2)**0.5 
         if( std <= 0):
             break
-
+          
     if( options.debug or options.verbose):
         print("-- End of evolution --")
     if( options.verbose):
@@ -227,9 +210,6 @@ def main():
         print (pop)  
     best_ind = tools.selBest(pop, 1)[0]
     print("Best individual is\n%s\n, with fitness %s" % (best_ind, best_ind.fitness.values))
-    if( options.verbose):        
-        print("Efficiency of cashing for funcion dollo_closest_node_distance")
-        print(dollo_closest_node_distance.cache_info())
     return
 
 # this means that if this script is executed, then 

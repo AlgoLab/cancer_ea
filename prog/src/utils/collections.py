@@ -2,6 +2,11 @@
 for collection.
 
 """
+import path
+import sys
+directory = path.Path(__file__).abspath()
+sys.path.append(directory.parent.parent)
+
 
 def count(collection):
     """ Helper function that count elements in collection.

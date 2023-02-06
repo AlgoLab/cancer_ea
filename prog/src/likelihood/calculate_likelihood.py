@@ -2,6 +2,12 @@
     la matrice iniziale , la matrice finale , alpha e beta.
 	Esempio = python calculate_likelihood.py matrix_in.txt matrix_out.txt 0.15 0.001
 """
+
+import path
+import sys
+directory = path.Path(__file__).abspath()
+sys.path.append(directory.parent.parent)
+
 import sys
 from likelihood import evaluate_dollo_node_direct1
 

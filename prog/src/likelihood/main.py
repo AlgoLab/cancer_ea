@@ -1,5 +1,10 @@
 """input file = example.in alpha beta seed"""
 
+import path
+import sys
+directory = path.Path(__file__).abspath()
+sys.path.append(directory.parent.parent)
+
 from read_input import read_labels_scrs_format_in
 from ea_node import EaNode
 from ea_node_operators import init_ea_node_individual, mutate_ea_node_individual

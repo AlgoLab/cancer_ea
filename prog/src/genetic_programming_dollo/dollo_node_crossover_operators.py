@@ -27,7 +27,7 @@ def dollo_node_exchange_subtrees(individual1, individual2, labels, dollo_k):
         individual1 (DolloNode): first individual in crossover.
         individual2 (DolloNode): second individual in crossover.
         labels (list): list of the lables of the nodes that exists in the tree.
-     
+
     Returns:            
         pair where the first componet is indicator of succes and the second is
         individual that is mutated e.g. output of the mutation process.

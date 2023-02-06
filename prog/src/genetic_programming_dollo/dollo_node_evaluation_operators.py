@@ -3,6 +3,12 @@ for evaluation of DolloNode individuals.
 
 """
 
+import path
+import sys
+directory = path.Path(__file__).abspath()
+sys.path.append(directory.parent.parent)
+
+
 from functools import lru_cache 
 
 from bitstring import BitArray

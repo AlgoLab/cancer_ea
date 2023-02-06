@@ -1,5 +1,11 @@
 """funzioni di support per il modulo calculate_likelihood.py"""
 
+
+import path
+import sys
+directory = path.Path(__file__).abspath()
+sys.path.append(directory.parent.parent)
+
 import math
 
 

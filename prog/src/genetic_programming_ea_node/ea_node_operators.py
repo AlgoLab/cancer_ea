@@ -1,4 +1,4 @@
-""" The :mod:`ea_node_operators` module contains ovolutionary operators
+""" The :mod:`ea_node_operators` module contains evolutionary operators
 for EaNode individuals.
 
 """
@@ -12,7 +12,8 @@ from anytree import NodeMixin, RenderTree, PostOrderIter
 from bitstring import BitArray
 
 from utils.collections import count, index_of, last_index_of
-from ea_node import EaNode
+
+from ea_node.ea_node import EaNode
 
 
 def assign_reads_to_ea_tree( root, reads):
@@ -25,7 +26,7 @@ def assign_reads_to_ea_tree( root, reads):
 
     Returns:            
         list that contains two components: 
-            1) list of the asignments  - list of pairs (node, read);
+            1) list of the assignments  - list of pairs (node, read);
             2) sum of the distances among reads and the closest nodes that
             are assigned to those reads respectively.
     

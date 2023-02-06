@@ -6,9 +6,13 @@ inputFile=example_01.in randomSeed=1113 --debug
 
 """
 
+import path
+import sys
+directory = path.Path(__file__).abspath()
+sys.path.append(directory.parent.parent)
+
 import optparse
 import random
-
 
 from deap import base
 from deap import creator

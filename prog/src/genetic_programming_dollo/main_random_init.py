@@ -2,8 +2,12 @@
 methods from `EaNode` class and functions from module `ea_node_operators`.
 
 """
+import path
+import sys
+directory = path.Path(__file__).abspath()
+sys.path.append(directory.parent.parent)
 
-from dollo_node import DolloNode
+from dollonode.dollo_node import DolloNode
 from dollo_node_initialization_operators import init_dollo_node_individual
 
 import random
