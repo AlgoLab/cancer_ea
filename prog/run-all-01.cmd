@@ -27,4 +27,4 @@ python ./src/genetic_programming_ea_node/main_03.py
 REM 
 python ./src/genetic_programming_dollo/main_random_init.py
 REM 
-python ./src/genetic_programming_dollo/main.py
+python ./src/genetic_programming_dollo/main_gp_direct.py
