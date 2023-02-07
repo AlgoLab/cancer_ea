@@ -18,3 +18,4 @@ prog/logs/run_2023_02_07_11_53_38.log
 prog/logs/run_2023_02_07_11_54_19.log
 prog/logs/run_2023_02_07_11_55_18.log
 prog/src/utils/__pycache__/logger.cpython-310.pyc
+*.log
