@@ -40,7 +40,7 @@ def main():
     parser.add_option('--verbose', action='store_true', dest='verbose')
     (options, args) = parser.parse_args()
     
-    # obtaining execution paramters
+    # obtaining execution parameters
     parameters = {'InputFile': 'XXX.in', 
                     'InputFormat': 'in',
                     'DolloK': 2,

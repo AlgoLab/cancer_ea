@@ -9,6 +9,18 @@ sys.path.append(directory.parent.parent)
 
 import re
 
+default_parameters = {'InputFile': 'XXX.in', 
+                    'InputFormat': 'in',
+                    'RandomSeed': -1,
+                    'PopulationSize': 5,
+                    'DolloK': 2,
+                    'Alpha': 0.35,
+                    'Beta': 0.005,
+                    'EliteSize': 1,
+                    'CrossoverProbability': 0.95,
+                    'MutationProbability': 0.001,
+                    'MaxNumberGenerations': 10}
+
 def get_execution_parameters(options, args, parameters):
     """  Obtains execution parameters.
 

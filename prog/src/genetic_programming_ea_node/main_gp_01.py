@@ -1,4 +1,4 @@
-""" The :mod:`deap_cancer_ga_01` module contains an example how to use Deap for GA
+""" The :mod:`main_gp_01` module contains an example how to use Deap for GP
 that solves problem we are dealing with.
 
 Example for command-line parameters:
@@ -19,13 +19,15 @@ from deap import creator
 from deap import tools
 
 from utils.command_line import get_execution_parameters
-from read_input import read_labels_scrs_format_in
+from utils.command_line import default_parameters
+
+from reads.read_input import read_labels_scrs_format_in
 
 from ea_node.ea_node import EaNode
-from ea_node.ea_node_operators import init_ea_node_individual  
-from ea_node.ea_node_operators import assign_reads_to_ea_tree 
-from ea_node.ea_node_operators import evaluate_ea_node_individual
-from ea_node.ea_node_operators import mutate_ea_node_individual
+from gp_ea_node_operators import init_ea_node_individual  
+from gp_ea_node_operators import assign_reads_to_ea_tree 
+from gp_ea_node_operators import evaluate_ea_node_individual
+from gp_ea_node_operators import mutate_ea_node_individual
 
 def main():
     """ This function is an entry  point of the application.
@@ -37,12 +39,8 @@ def main():
     parser.add_option('--verbose', action='store_true', dest='verbose')
     (options, args) = parser.parse_args()
     
-    # obtaining execution paramters
-    parameters = {'InputFile': 'XXX.in', 
-                    'InputFormat': 'in',
-                    'RandomSeed': -1,
-                    'PopulationSize': 5}
-    parameters = get_execution_parameters(options, args, parameters)
+    # obtaining execution parameters
+    parameters = get_execution_parameters(options, args, default_parameters)
     if(options.debug):
         print("Execution parameters: ", parameters);
     
@@ -70,18 +68,18 @@ def main():
     toolbox.register("attr_bool", random.randint, 0, 1)
     # registering individual creation to toolbbox 
     toolbox.register("individual", 
-                     init_ea_node_individual, 
-                     creator.Individual, 
-                     labels=labels, 
-                     size=3 * len(labels))
+                        init_ea_node_individual, 
+                        creator.Individual, 
+                        labels=labels, 
+                        size=3 * len(labels))
     # registering mutation operator to toolbbox 
     toolbox.register("mutate", mutate_ea_node_individual)
     # registering population to toolbbox 
     toolbox.register("population", 
-                     tools.initRepeat, 
-                     list, 
-                     toolbox.individual)
- 
+                        tools.initRepeat, 
+                        list, 
+                        toolbox.individual)
+
     toolbox.register("evaluate", evaluate_ea_node_individual, reads)
 
     

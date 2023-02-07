@@ -21,13 +21,15 @@ from deap import tools
 
 
 from utils.command_line import get_execution_parameters
-from read_input import read_labels_scrs_format_in
+from utils.command_line import default_parameters
 
-from ea_node import EaNode
-from ea_node_operators import init_ea_node_individual
-from ea_node_operators import evaluate_ea_node_individual 
-from ea_node_operators import crossover_ea_node_individuals
-from ea_node_operators import mutate_ea_node_individual
+from reads.read_input import read_labels_scrs_format_in
+
+from ea_node.ea_node import EaNode
+from gp_ea_node_operators import init_ea_node_individual
+from gp_ea_node_operators import evaluate_ea_node_individual 
+from gp_ea_node_operators import crossover_ea_node_individuals
+from gp_ea_node_operators import mutate_ea_node_individual
 
 def main():
     """ This function is an entry  point of the application.
@@ -39,19 +41,8 @@ def main():
     parser.add_option('--verbose', action='store_true', dest='verbose')
     (options, args) = parser.parse_args()
     
-    # obtaining execution paramters
-    parameters = {'InputFile': 'XXX.in', 
-                  'InputFormat': 'in',
-                  'DolloK': 2,
-                  'Alpha': 0.35,
-                  'Beta': 0.005,
-                  'RandomSeed': -1,
-                  'PopulationSize': 5,
-                  'CrossoverProbability': 0.85,
-                  'MutationProbability': 0.05}
-
-    # obtaining execution paramters
-    parameters = get_execution_parameters(options, args, parameters)
+    # obtaining execution parameters
+    parameters = get_execution_parameters(options, args, default_parameters)
     if(options.debug or options.verbose):
         print("Execution parameters: ", parameters);
     

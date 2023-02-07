@@ -1,4 +1,4 @@
-""" The :mod:`ea_node_operators` module contains evolutionary operators
+""" The :mod:`gp_ea_node_operators` module contains evolutionary operators
 for EaNode individuals.
 
 """

@@ -6,7 +6,7 @@ sys.path.append(directory.parent.parent)
 
 from bitstring import BitArray
 
-from read_element import ReadElement
+from reads.read_element import ReadElement
 
 
 def read_labels_scrs_format_in(parameters):

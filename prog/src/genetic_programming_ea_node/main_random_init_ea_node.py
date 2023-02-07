@@ -1,5 +1,5 @@
-"""  The :mod:`ga_node_ilustration_01` module contains an example how to use 
-methods from `GaNode` class and functions from module `ga_node_operators`.
+"""  The :mod:`main_random_init_ea_node` module contains an example how to use 
+methods from `GaNode` class and functions from module `gp_ea_node_operators`.
 
 """
 import path
@@ -7,8 +7,8 @@ import sys
 directory = path.Path(__file__).abspath()
 sys.path.append(directory.parent.parent)
 
-from ea_node import EaNode
-from ea_node_operators import init_ea_node_individual, mutate_ea_node_individual
+from ea_node.ea_node import EaNode
+from gp_ea_node_operators import init_ea_node_individual, mutate_ea_node_individual
 
 import random
 

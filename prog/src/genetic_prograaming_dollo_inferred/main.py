@@ -72,7 +72,7 @@ def main():
     
     (options, args) = parser.parse_args()
     
-    # obtaining execution paramters
+    # obtaining execution parameters
     parameters = {'InputFile': 'xxx.in', 
                     'InputFormat': 'in',
                     'DolloK': 1,
