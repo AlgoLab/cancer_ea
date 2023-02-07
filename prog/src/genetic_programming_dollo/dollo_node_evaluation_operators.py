@@ -15,8 +15,6 @@ from bitstring import BitArray
 
 from reads.read_element import ReadElement
 
-
-
 def assign_reads_to_dollo_tree(root, reads):
     """ Assigns all the reads to the closest nodes in the tree,
     respectively.
@@ -55,8 +53,8 @@ def dollo_closest_node_distance(individual, read):
     Notes:    
         Node is the closest according to metrics that is induced with Hamming
         distance.
-        This method consults informations about unknown reads (that are stored 
-        in bitarry unknown_read) within read element. 
+        This method consults information about unknown reads (that are stored 
+        in bitarray unknown_read) within read element. 
     """
     (c_n,d) = individual.closest_node_in_tree(read)
     return (c_n,d)

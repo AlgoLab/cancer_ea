@@ -13,9 +13,9 @@ python ./src/ea_node/main_is_equal.py
 REM 
 python ./src/ea_node/main_random_init.py
 REM 
-python ./src/ea_node/main_rearange_by_label.py
+python ./src/ea_node/main_rearrange_by_label.py
 REM 
-python ./src/ea_node/main_rearange.py
+python ./src/ea_node/main_rearrange.py
 REM 
 python ./src/genetic_programming_ea_node/main_random_init.py
 REM 

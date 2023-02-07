@@ -8,7 +8,7 @@ directory = path.Path(__file__).abspath()
 sys.path.append(directory.parent.parent)
 
 class ReadInfo(object):
-    """ Represents informations about reads.
+    """ Represents information about reads.
     
     """
     typeDescription = "ReadInfo"

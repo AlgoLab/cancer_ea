@@ -75,7 +75,7 @@ class EaNode(EaNodeInfo, NodeMixin):
     def tree_print( self, endS = '\n'):
         """ Function for printing EA tree.
 
-         Args:
+        Args:
             endS (str, optional): Parameter `endS` serve to decide what should be
                 printed at the end of the method. Default value of this 
                 parameter is new line.
@@ -87,9 +87,9 @@ class EaNode(EaNodeInfo, NodeMixin):
         return
     
     def attach_child( self, child):
-        """ Function for adding child GA node.
+        """ Function for adding child EA node.
 
-         Args:
+        Args:
             child (EaNode): Parameter `child` is a EaNode that shouls be 
                 attached as direct descendent of the current EaNode.
         """
@@ -134,11 +134,11 @@ class EaNode(EaNodeInfo, NodeMixin):
         else:
             j = 1
             for node in PostOrderIter(self):
-               if( j== position):
-                   ret = node
-                   break
-               else:
-                   j += 1
+                if( j== position):
+                    ret = node
+                    break
+                else:
+                    j += 1
         return ret
 
     def tree_node_ancesstor_find(self, label):
@@ -245,7 +245,7 @@ class EaNode(EaNodeInfo, NodeMixin):
     def tree_get_plus_labels_contains(self):
         """ Obtain of all plus nodes that are within this tree.
         
-       Returns:
+        Returns:
             set: Set of plus nodes within this tree.
         """
         labels_within = self.tree_get_labels_contains()
@@ -285,9 +285,9 @@ class EaNode(EaNodeInfo, NodeMixin):
             if( not self.children[i].tree_is_equal(another.children[i])):
                 return False
         return True
- 
-    def tree_rearange_by_label(self, ascending = True):
-        """ Rearange nodes of the tree so label of the sibbling nodes are 
+
+    def tree_rearrange_by_label(self, ascending = True):
+        """ rearrange nodes of the tree so label of the sibbling nodes are 
         sorted in given order.
         
         Args:
@@ -321,33 +321,32 @@ class EaNode(EaNodeInfo, NodeMixin):
         for i in range(0,num_children):
             self.attach_child(ordered[i])
         for node in self.children:
-            node.tree_rearange_by_label(ascending)            
+            node.tree_rearrange_by_label(ascending)            
         return
-     
-   
+
     def children_compact_horizontal(self):
-       """ Horizontal compaction of the children (direct descendents).
+        """ Horizontal compaction of the children (direct descendents).
         
-       Whenever there are two childs of the node that have the same label, tree
-       should be compacted.
-       """
-       if( self.children is None):
+        Whenever there are two childs of the node that have the same label, tree
+        should be compacted.
+        """
+        if( self.children is None):
             return
-       num_children = len(self.children)
-       to_remove = []
-       for i in range(0,num_children):
-           x =  self.children[i]
-           for j in range(i+1, num_children):
-               y =  self.children[j]
-               if( not(i in to_remove) and x.node_label == y.node_label ):
+        num_children = len(self.children)
+        to_remove = []
+        for i in range(0,num_children):
+            x =  self.children[i]
+            for j in range(i+1, num_children):
+                y =  self.children[j]
+                if( not(i in to_remove) and x.node_label == y.node_label ):
                     to_remove.append(y)
                     for node in y.children:
                         node.parent = x
-       if( not to_remove is None):
-           for x in to_remove:
-               x.parent = None
-       return
- 
+        if( not to_remove is None):
+            for x in to_remove:
+                x.parent = None
+        return
+
     def tree_compact_horizontal(self):
         """ Horizontal compaction of the tree.
         
@@ -361,7 +360,7 @@ class EaNode(EaNodeInfo, NodeMixin):
         
     def tree_compact_vertical(self):
         """ Vertical compaction od the tree.
-  
+
         Whenever there are parent and the child that have oposite labels, tree
         should be compacted.
         """
@@ -385,14 +384,13 @@ class EaNode(EaNodeInfo, NodeMixin):
                         node = parent_node
                         parent_node = parent_node.parent
         return
- 
-    
+
     def tree_remove_incorrect_minus_nodes(self):
         """ Function for removing incorect minus nodes within contained subtree.
         
         Returns:
             Number of removed nodes.
-         
+
         Note
             Minus node is incorrect if there is no relevant plus nodes up to 
             the root.
@@ -417,14 +415,14 @@ class EaNode(EaNodeInfo, NodeMixin):
                     node.parent = None
                     number_of_removed += 1
         return number_of_removed;
-    
+
     def closest_node_in_tree_ignore_unknowns( self, read ):
         """ Finds the closest node in the tree for the given read.
         
         Node is the closest according to metrics that is induced with Hamming
         distance.
-        In this method, bitarry unknown_read within read element (that holds 
-        informations about unknown elements) is not consulted. 
+        In this method, bitarray unknown_read within read element (that holds 
+        information about unknown elements) is not consulted. 
         """
         closest = self
         closest_bit_array = self.binary_tag ^ read.binary_read 
@@ -438,14 +436,13 @@ class EaNode(EaNodeInfo, NodeMixin):
                 closest_distance = current_distance
         return (closest, closest_distance)
 
-
     def closest_node_in_tree( self, read ):
         """ Finds the closest node in the tree for the given read.
         
         Node is the closest according to metrics that is induced with Hamming
         distance.
-        This method consults informations about unknown reads (that are stored 
-        in bitarry unknown_read) within read element. 
+        This method consults information about unknown reads (that are stored 
+        in bitarray unknown_read) within read element. 
         """
         len_r = read.binary_read.length
         num_unc_r = read.unknown_read.count(True) 
@@ -481,49 +478,49 @@ class EaNode(EaNodeInfo, NodeMixin):
         current_tree_size = 1
         probability_of_node_creation = 0.9
         for i in range( 2 * size ):
-               if( random.random() < probability_of_node_creation):
-                   # create new leaf node
-                   label_to_insert = random.choice( labels ) + '+'
-                   leaf_bit_array = BitArray()
-                   leaf = EaNode(label_to_insert, leaf_bit_array)
-                   # find the parent of the leaf node
-                   position = random.randint(0, current_tree_size)
-                   if( position == 0):
-                       parent_of_leaf = self
-                   else:
-                       j = 1
-                       for node in PostOrderIter(self):
-                           if( j== position):
-                               parent_of_leaf = node
-                               break
-                           else:
-                               j += 1    
-                   # attach leaf node
-                   parent_of_leaf.attach_child(leaf)
-                   # reverse node label, if necessary
-                   node = leaf.parent
-                   while( node.parent != None):
-                       if( leaf.node_label == node.node_label):
-                           leaf.flip_node_label()
-                           break
-                       if( leaf.node_label[:-1] == node.node_label[:-1]):
-                           break
-                       node = node.parent
-                   current_tree_size += 1 
-                   # delete leaf is label is duplicate within siblings
-                   for node in leaf.parent.children:
-                       if( node.node_label == leaf.node_label and node != leaf):
-                           leaf.parent = None;
-                           current_tree_size -= 1
-                           break
-               if( i > size ):
+            if( random.random() < probability_of_node_creation):
+                # create new leaf node
+                label_to_insert = random.choice( labels ) + '+'
+                leaf_bit_array = BitArray()
+                leaf = EaNode(label_to_insert, leaf_bit_array)
+                # find the parent of the leaf node
+                position = random.randint(0, current_tree_size)
+                if( position == 0):
+                    parent_of_leaf = self
+                else:
+                    j = 1
+                    for node in PostOrderIter(self):
+                        if( j== position):
+                            parent_of_leaf = node
+                            break
+                        else:
+                            j += 1    
+                # attach leaf node
+                parent_of_leaf.attach_child(leaf)
+                # reverse node label, if necessary
+                node = leaf.parent
+                while( node.parent != None):
+                    if( leaf.node_label == node.node_label):
+                        leaf.flip_node_label()
+                        break
+                    if( leaf.node_label[:-1] == node.node_label[:-1]):
+                        break
+                    node = node.parent
+                current_tree_size += 1 
+                # delete leaf is label is duplicate within siblings
+                for node in leaf.parent.children:
+                    if( node.node_label == leaf.node_label and node != leaf):
+                        leaf.parent = None;
+                        current_tree_size -= 1
+                        break
+                if( i > size ):
                     probability_of_node_creation *= 0.7
         self.tree_compact_vertical()
         self.tree_compact_horizontal()
-        self.tree_rearange_by_label()
+        self.tree_rearrange_by_label()
         self.tree_set_binary_tags(labels)
         return
-       
+
 
 
 

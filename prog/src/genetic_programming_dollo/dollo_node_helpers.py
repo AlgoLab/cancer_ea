@@ -59,7 +59,7 @@ def dollo_subtree_add_correct_minus_node(subtree, labels, dollo_k):
         position_node.attach_child(leaf)
         position_node.tree_compact_vertical()
         position_node.tree_compact_horizontal()
-        position_node.tree_rearange_by_label()
+        position_node.tree_rearrange_by_label()
         return
     return
 

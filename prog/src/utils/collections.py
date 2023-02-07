@@ -93,7 +93,7 @@ def largest_set_in_both_lists(list1, list2):
 
 def intersection_list_dictionary(list1, dictionary2, key_to_exclude):
     """ Obtain intersection of elements between list and dictionary where one
-         key is excluded.
+        key is excluded.
 
     Args:
         list1 (list): list of sets.
@@ -106,8 +106,8 @@ def intersection_list_dictionary(list1, dictionary2, key_to_exclude):
     intersect = []
     for k2 in dictionary2:
         if( not(key_to_exclude==k2) ):
-             inter1 = largest_set_in_both_lists(list1, dictionary2[k2])
-             if( not len(inter1)==0 ):
+            inter1 = largest_set_in_both_lists(list1, dictionary2[k2])
+            if( not len(inter1)==0 ):
                 intersect.append((k2, inter1))
     return intersect
 
@@ -140,7 +140,7 @@ def intersection_dictionary(dictionary1, dictionary2):
     Args:
         dictionary1 (dictionary): key is a label, value is list of sets.
         dictionary2 (dictionary): key is a label, value is list of sets.
-     
+
     Returns:            
         list of triplets: key in dictionary1. key in dictionary2. set of
         interecting lists.
@@ -159,7 +159,7 @@ def set_consits_of_plus_lebels(list_of_sets):
 
     Args:
         list_of_sets (list): list of the set that is to be searched.
-     
+
     Returns:            
         set of the plus labels in list
     """
@@ -176,7 +176,7 @@ def remove_empty_set_occurences(original):
 
     Args:
         original (dicitionary): dictionary that should be cleared.
-     
+
     Returns:            
         dictionary where empty sets are removed.
     """

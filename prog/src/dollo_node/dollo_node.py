@@ -201,7 +201,7 @@ class DolloNode(EaNode):
                     break 
         self.tree_compact_vertical()
         self.tree_compact_horizontal()
-        self.tree_rearange_by_label()
+        self.tree_rearrange_by_label()
         self.tree_set_binary_tags(labels)
         is_ok = self.is_correct(labels, dollo_k) 
         if(not is_ok[0]):
