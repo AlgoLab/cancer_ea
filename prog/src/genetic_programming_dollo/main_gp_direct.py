@@ -50,7 +50,6 @@ def main():
     """ This function is an entry  point of the application.
     """
     ensure_dir(OUTPUT_DIR)
-    logger.info('Execution started.')    
     logger.debug('Execution started.')    
     # reading command-line argumets and options
     parser = optparse.OptionParser()
@@ -75,12 +74,12 @@ def main():
         if( parameters['InputFormat'] == 'in' ):
             (labels, reads) = read_labels_scrs_format_in(options, parameters)
             if(options.debug or options.verbose):
-                print("Mutation labels (from input file):\n", labels);
-                print("Reads[Unknowns] (from input file):")
+                logger.debug("Mutation labels (from input file):\n", labels);
+                logger.debug("Reads[Unknowns] (from input file):")
                 for x in reads:
-                    print(x);
+                    logger.debug(x);
         else:
-            print("Input format is not right.")
+            logger.debug("Input format is not right.")
             return
         
         # create fitness function
@@ -147,17 +146,17 @@ def main():
         population_size = int(parameters['PopulationSize'])
         pop = toolbox.population(n=population_size)
         if( options.verbose):
-            print("Population (size %d) - initial\n"%len(pop))
-            print (pop)
+            logger.debug("Population (size %d) - initial\n"%len(pop))
+            logger.debug(pop)
 
         if( options.debug or options.verbose):
-            print("Start of evolution")
+            logger.debug("Start of evolution")
         
         # Evaluate the entire population
         fitnesses = list(map(toolbox.evaluate, pop))
         if( options.debug):
-            print("Fitnesses of individuals in population - initial")
-            print (fitnesses)
+            logger.debug("Fitnesses of individuals in population - initial")
+            logger.debug(fitnesses)
         
         # Assign fitness to individuals in population
         for ind, fit in zip(pop, fitnesses):
@@ -171,7 +170,7 @@ def main():
         # Begin the evolution
         while True:
             if( options.debug or options.verbose):
-                print("-- Generation %i --" % generation)
+                logger.debug("-- Generation %i --" % generation)
 
             if( options.debug or options.verbose):
                 fits = [ind.fitness.values[0] for ind in pop]
@@ -179,13 +178,13 @@ def main():
                 mean = sum(fits) / length
                 sum2 = sum(x*x for x in fits)
                 std = abs(sum2 / length - mean**2)**0.5
-                print("  Fitness: ", fits)
-                print("  Min %s" % min(fits))
-                print("  Max %s" % max(fits))
-                print("  Avg %s" % mean)
-                print("  Std %s" % std)
+                logger.debug("  Fitness: ", fits)
+                logger.debug("  Min %s" % min(fits))
+                logger.debug("  Max %s" % max(fits))
+                logger.debug("  Avg %s" % mean)
+                logger.debug("  Std %s" % std)
                 best_in_generation = tools.selBest(pop, 1)[0]
-                print("  Best individual: \n %s", best_in_generation)
+                logger.debug("  Best individual: \n %s", best_in_generation)
 
             # A new generation
             generation += 1
@@ -235,15 +234,15 @@ def main():
                 break
 
         if( options.debug or options.verbose):
-            print("-- End of evolution --")
+            logger.debug("-- End of evolution --")
         if( options.verbose):
-            print("Population (size %d) - at end\n"%len(pop))
-            print (pop)  
+            logger.debug("Population (size %d) - at end\n"%len(pop))
+            logger.debug(pop)  
         best_ind = tools.selBest(pop, 1)[0]
-        print("Best individual is\n%s\n, with fitness %s" % (best_ind, best_ind.fitness.values))
+        logger.debug("Best individual is\n%s\n, with fitness %s" % (best_ind, best_ind.fitness.values))
         if( options.verbose):        
-            print("Efficiency of cashing for funcion dollo_closest_node_distance")
-            print(dollo_closest_node_distance.cache_info())
+            logger.debug("Efficiency of cashing for funcion dollo_closest_node_distance")
+            logger.debug(dollo_closest_node_distance.cache_info())
         logger.info('Execution finished.')
         return
     except Exception as exp:
