@@ -7,7 +7,7 @@ import sys
 directory = path.Path(__file__).abspath()
 sys.path.append(directory.parent.parent)
 
-from dollonode.dollo_node import DolloNode
+from dollo_node.dollo_node import DolloNode
 from dollo_node_initialization_operators import init_dollo_node_individual
 
 import random

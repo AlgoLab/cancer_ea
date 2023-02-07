@@ -20,8 +20,8 @@ from deap import creator
 from deap import tools
 
 
-from utils.command_line import get_execution_parameters
-from utils.command_line import default_parameters
+from utils.command_line_gp import get_execution_parameters
+from utils.command_line_gp import default_parameters
 
 from reads.read_input import read_labels_scrs_format_in
 

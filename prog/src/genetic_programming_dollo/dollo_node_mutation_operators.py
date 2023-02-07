@@ -15,7 +15,7 @@ from bitstring import BitArray
 
 from anytree import search
 
-from dollo_node import DolloNode
+from dollo_node.dollo_node import DolloNode
 
 from dollo_node_helpers import dollo_subtree_add_correct_minus_node
 

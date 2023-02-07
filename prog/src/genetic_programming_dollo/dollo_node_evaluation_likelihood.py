@@ -10,7 +10,7 @@ import sys
 directory = path.Path(__file__).abspath()
 sys.path.append(directory.parent.parent)
 
-from read_element import ReadElement
+from reads.read_element import ReadElement
 
 from bitstring import BitArray
 from anytree import RenderTree

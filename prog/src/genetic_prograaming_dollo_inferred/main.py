@@ -22,7 +22,7 @@ from deap import tools
 from generate_formats_gp import generate_matrix
 from generate_formats_gp import generate_digraph
 
-from utils.command_line import get_execution_parameters
+from utils.command_line_gp import get_execution_parameters
 from read_input import read_labels_scrs_format_in
 
 from ea_node import EaNode

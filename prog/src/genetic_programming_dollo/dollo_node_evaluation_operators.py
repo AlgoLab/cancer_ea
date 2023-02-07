@@ -13,7 +13,7 @@ from functools import lru_cache
 
 from bitstring import BitArray
 
-from read_element import ReadElement
+from reads.read_element import ReadElement
 
 
 

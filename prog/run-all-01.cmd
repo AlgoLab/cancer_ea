@@ -17,4 +17,14 @@ python ./src/ea_node/main_rearange_by_label.py
 REM 
 python ./src/ea_node/main_rearange.py
 REM 
-python ./src/ea_node/dollo_node/main_random_init.py
+python ./src/genetic_programming_ea_node/main_random_init.py
+REM 
+python ./src/genetic_programming_ea_node/main_01.py
+REM 
+python ./src/genetic_programming_ea_node/main_02.py
+REM 
+python ./src/genetic_programming_ea_node/main_03.py
+REM 
+python ./src/genetic_programming_dollo/main_random_init.py
+REM 
+python ./src/genetic_programming_dollo/main.py

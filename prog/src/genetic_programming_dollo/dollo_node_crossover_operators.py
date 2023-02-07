@@ -127,7 +127,7 @@ def dollo_node_exchange_subtrees(individual1, individual2, labels, dollo_k):
         num_removed = subnode1.tree_remove_incorrect_minus_nodes()
         for i in range(0,num_removed):
             dollo_subtree_add_correct_minus_node(subnode1,labels,dollo_k)
-         # Compaction and regularization in subtree roted with node2
+        # Compaction and regularization in subtree roted with node2
         num_removed = subnode2.tree_remove_incorrect_minus_nodes()
         for i in range(0,num_removed):
             dollo_subtree_add_correct_minus_node(subnode2,labels,dollo_k)
@@ -163,7 +163,7 @@ def dollo_node_exchange_parent_indices(individual1, individual2, labels, dollo_k
         individual2 (DolloNode): second individual in exchanging.
         labels (list): list of the lables of the nodes that exists in the tree.
         dollo_k (int): parametar k in Dollo model
-     
+    
     Returns:            
         triple where the first componet is indicator of succes and the second 
         and third are resulted individuals after exchanging.    

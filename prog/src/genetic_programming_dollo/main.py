@@ -20,15 +20,25 @@ from deap import creator
 from deap import tools
 
 
-from utils.command_line import get_execution_parameters
-from read_input import read_labels_scrs_format_in
+from utils.command_line_gp import get_execution_parameters
+from utils.command_line_gp import default_parameters
 
-from ea_node.dollo_node.dollo_node import DolloNode
-from ea_node.dollo_node.dollo_node_initialization_operators import init_dollo_node_individual
-from ea_node.dollo_node.dollo_node_evaluation_operators import dollo_closest_node_distance
-from ea_node.dollo_node.dollo_node_evaluation_operators import evaluate_dollo_node_direct 
-from ea_node.dollo_node.dollo_node_crossover_operators import crossover_dollo_node_individuals
-from ea_node.dollo_node.dollo_node_mutation_operators import mutate_dollo_node_individual
+from reads.read_input import read_labels_scrs_format_in
+
+from dollo_node.dollo_node import DolloNode
+
+from dollo_node_initialization_operators import init_dollo_node_individual
+
+
+from dollo_node_evaluation_operators import dollo_closest_node_distance
+from dollo_node_evaluation_operators import evaluate_dollo_node_direct 
+
+
+from dollo_node_crossover_operators import dollo_node_exchange_subtrees
+from dollo_node_crossover_operators import dollo_node_exchange_parent_indices
+
+from dollo_node_mutation_operators import dollo_subtree_add_correct_minus_node
+from dollo_node_mutation_operators import mutation_dollo_node_local_search
 
 def main():
     """ This function is an entry  point of the application.
@@ -41,18 +51,7 @@ def main():
     (options, args) = parser.parse_args()
     
     # obtaining execution parameters
-    parameters = {'InputFile': 'XXX.in', 
-                    'InputFormat': 'in',
-                    'DolloK': 2,
-                    'Alpha': 0.4,
-                    'Beta': 0.00001,
-                    'RandomSeed': -1,
-                    'PopulationSize': 5,
-                    'CrossoverProbability': 0.85,
-                    'MutationProbability': 0.3,
-                    'FineGrainedTournamentSize': 2.1,
-                    'MaxNumberGenerations': 3}
-    parameters = get_execution_parameters(options, args, parameters)
+    parameters = get_execution_parameters(options, args, default_parameters)
     if(options.debug or options.verbose):
         print("Execution parameters: ", parameters);
     

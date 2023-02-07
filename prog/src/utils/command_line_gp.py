@@ -1,4 +1,5 @@
-""" The :mod:`command_line` module is used for obtaining execution paramteters.
+""" The :mod:`command_line_gp` module is used for obtaining execution parameters for execution of the 
+    genetic programming algorithm.
 
 """
 
@@ -19,6 +20,7 @@ default_parameters = {'InputFile': 'XXX.in',
                     'EliteSize': 1,
                     'CrossoverProbability': 0.95,
                     'MutationProbability': 0.001,
+                    'FineGrainedTournamentSize': 3.4,
                     'MaxNumberGenerations': 10}
 
 def get_execution_parameters(options, args, parameters):
@@ -30,7 +32,7 @@ def get_execution_parameters(options, args, parameters):
         options : Parameter `options` represents options of the execution.
         args (:list): Parameter `args` represents the argument list.
     Returns:
-        dictionary: Execution parameters affter reading command line.
+        dictionary: Execution parameters after reading command line.
     """
 
     if len(args) == 0:
@@ -143,7 +145,7 @@ def usage_explanation(parameters):
     ret += "EliteSize=<size>\t(optional, integer - default value: '" + str(parameters['EliteSize']) + "')\n"
     ret += "CrossoverProbability=<probability>\t(optional, float - default value: '" + str(parameters['CrossoverProbability']) + "')\n"
     ret += "MutationProbability=<probability>\t(optional, float - default value: '" + str(parameters['MutationProbability']) + "')\n"
-    ret += "FineGrainedTournamentSize=<fgts_size>\t(optional, float - default value: '" + str(parameters['MutationProbability']) + "')\n"
+    ret += "FineGrainedTournamentSize=<fgts_size>\t(optional, float - default value: '" + str(parameters['FineGrainedTournamentSize']) + "')\n"
     ret += "MaxNumberGenerations=<max_num>\t(optional, integer - default value: '" + str(parameters['MaxNumberGenerations']) + "')\n"
     ret += "\nOptions: --debug --verbose --evaluateDirect --evaluateLikelihood"
     return ret

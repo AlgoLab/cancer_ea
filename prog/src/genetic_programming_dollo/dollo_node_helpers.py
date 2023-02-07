@@ -14,7 +14,7 @@ from bitstring import BitArray
 
 from anytree import search
 
-from dollo_node import DolloNode
+from dollo_node.dollo_node import DolloNode
 
 from utils.collections import next_element_in_cyclic
 

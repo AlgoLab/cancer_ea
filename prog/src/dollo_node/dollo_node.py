@@ -8,9 +8,10 @@ import path
 import sys
 directory = path.Path(__file__).abspath()
 sys.path.append(directory.parent.parent)
+
 import random
 
-from ea_node import EaNode
+from ea_node.ea_node import EaNode
 
 from bitstring import BitArray
 
