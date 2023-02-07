@@ -19,32 +19,31 @@ from deap import base
 from deap import creator
 from deap import tools
 
-from generate_formats_gp import generate_matrix
-from generate_formats_gp import generate_digraph
+from utils.generate_formats_gp import generate_matrix
+from utils.generate_formats_gp import generate_digraph
 
 from utils.command_line_gp import get_execution_parameters
-from read_input import read_labels_scrs_format_in
+from reads.read_input import read_labels_scrs_format_in
 
-from ea_node import EaNode
-from dollo_node import DolloNode
+from dollo_node.dollo_node import DolloNode
 
 from support_operators_output import matrix_inferred_E
 
-from dollo_node_initialization_operators import init_dollo_node_individual
+from genetic_programming_dollo.dollo_node_initialization_operators import init_dollo_node_individual
 
-from dollo_node_evaluation_operators import dollo_closest_node_distance
-from dollo_node_evaluation_operators import evaluate_dollo_node_direct 
+from genetic_programming_dollo.dollo_node_evaluation_operators import dollo_closest_node_distance
+from genetic_programming_dollo.dollo_node_evaluation_operators import evaluate_dollo_node_direct 
 
-from dollo_node_evaluation_likelihood import evaluate_dollo_node_likelihood
-from dollo_node_evaluation_likelihood import sub_evaluate
+from genetic_programming_dollo.dollo_node_evaluation_likelihood import evaluate_dollo_node_likelihood
+from genetic_programming_dollo.dollo_node_evaluation_likelihood import sub_evaluate
 
-from dollo_node_crossover_operators import crossover_dollo_node_exchange_parent_indices
-from dollo_node_crossover_operators import crossover_dollo_node_exchange_subtrees
-from dollo_node_crossover_operators import crossover_dollo_node_combined
+from genetic_programming_dollo.dollo_node_crossover_operators import crossover_dollo_node_exchange_parent_indices
+from genetic_programming_dollo.dollo_node_crossover_operators import crossover_dollo_node_exchange_subtrees
+from genetic_programming_dollo.dollo_node_crossover_operators import crossover_dollo_node_combined
 
-from dollo_node_mutation_operators import mutation_dollo_node_add
-from dollo_node_mutation_operators import mutation_dollo_node_combine
-from dollo_node_mutation_operators import mutation_dollo_node_remove
+from genetic_programming_dollo.dollo_node_mutation_operators import mutation_dollo_node_add
+from genetic_programming_dollo.dollo_node_mutation_operators import mutation_dollo_node_combine
+from genetic_programming_dollo.dollo_node_mutation_operators import mutation_dollo_node_remove
 
 def contains(individuals, individual):
     """ This function check if list of individuals contains an
@@ -426,7 +425,6 @@ def main():
         print("Efficiency of cashing for funcion dollo_closest_node_distance")
         print(sub_evaluate.cache_info())
         #print("Efficiency of cashing for funcion dollo_closest_node_distance")
-        #print(EaNode.closest_node_in_tree.cache_info())
     return
 
 # this means that if this script is executed, then 

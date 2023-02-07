@@ -5,7 +5,9 @@ sys.path.append(directory.parent.parent)
 
 from bitstring import BitArray
 from anytree import RenderTree
-from read_element import ReadElement
+
+from reads.read_element import ReadElement
+
 import math
 
 def matrix_inferred_E(reads,alpha,beta,individual):
