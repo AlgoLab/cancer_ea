@@ -16,7 +16,7 @@ from anytree import search
 
 from dollo_node.dollo_node import DolloNode
 
-from utils.collections import next_element_in_cyclic
+from utils.collections_helper import next_element_in_cyclic
 
 def dollo_subtree_add_correct_minus_node(subtree, labels, dollo_k):
     """ Adds correct minus node into tree rooted with self. 

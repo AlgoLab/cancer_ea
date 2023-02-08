@@ -13,9 +13,9 @@ import random
 
 from anytree import search
 
-from utils.collections import index_of_largest_set_in_list
-from utils.collections import intersection_list_dictionary
-from utils.collections import next_element_in_cyclic
+from utils.collections_helper import index_of_largest_set_in_list
+from utils.collections_helper import intersection_list_dictionary
+from utils.collections_helper import next_element_in_cyclic
 
 from dollo_node_helpers import dollo_subtree_add_correct_minus_node
 

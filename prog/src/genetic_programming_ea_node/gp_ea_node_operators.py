@@ -11,7 +11,7 @@ sys.path.append(directory.parent.parent)
 from anytree import NodeMixin, RenderTree, PostOrderIter
 from bitstring import BitArray
 
-from utils.collections import count, index_of, last_index_of
+from utils.collections_helper import count, index_of, last_index_of
 
 from ea_node.ea_node import EaNode
 

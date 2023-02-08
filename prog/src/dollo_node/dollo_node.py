@@ -15,8 +15,8 @@ from ea_node.ea_node import EaNode
 
 from bitstring import BitArray
 
-from utils.collections import next_element_in_cyclic
-from utils.collections import remove_empty_set_occurences
+from utils.collections_helper import next_element_in_cyclic
+from utils.collections_helper import remove_empty_set_occurences
 
 class DolloNode(EaNode):
     """ Information about nodes of the mutation tree, according to Dollo model.

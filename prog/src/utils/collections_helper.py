@@ -1,4 +1,4 @@
-""" The :mod:`collections` module contains  contains helper functions 
+""" The :mod:`collections_helper` module contains  contains helper functions 
 for collection.
 
 """

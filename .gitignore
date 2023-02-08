@@ -19,3 +19,7 @@ prog/logs/run_2023_02_07_11_54_19.log
 prog/logs/run_2023_02_07_11_55_18.log
 prog/src/utils/__pycache__/logger.cpython-310.pyc
 *.log
+prog/src/dollo_node/__pycache__/dollo_node.cpython-310.pyc
+*.pyc
+*.pyc
+prog/src/genetic_programming_dollo/__pycache__/dollo_node_helpers.cpython-310.pyc
