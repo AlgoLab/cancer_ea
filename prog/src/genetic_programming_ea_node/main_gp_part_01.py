@@ -19,13 +19,13 @@ from deap import creator
 from deap import tools
 
 from utils.command_line import get_execution_parameters
-from read_input import read_labels_scrs_format_in
+from reads.read_input import read_labels_scrs_format_in
 
 from ea_node.ea_node import EaNode
-from ea_node.ea_node_operators import init_ea_node_individual  
-from ea_node.ea_node_operators import assign_reads_to_ea_tree 
-from ea_node.ea_node_operators import evaluate_ea_node_individual
-from ea_node.ea_node_operators import mutate_ea_node_individual
+from genetic_programming_ea_node.ea_node_operators import init_ea_node_individual  
+from genetic_programming_ea_node.ea_node_operators import assign_reads_to_ea_tree 
+from genetic_programming_ea_node.ea_node_operators import evaluate_ea_node_individual
+from genetic_programming_ea_node.ea_node_operators import mutate_ea_node_individual
 
 def main():
     """ This function is an entry  point of the application.
